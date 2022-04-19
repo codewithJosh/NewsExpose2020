@@ -62,7 +62,7 @@ public class CreateUpdateActivity extends AppCompatActivity {
         });
 
         CropImage.activity()
-                .setAspectRatio(1,1)
+                .setAspectRatio(1, 1)
                 .start(CreateUpdateActivity.this);
 
         storageReference = FirebaseStorage.getInstance().getReference("Updates");
@@ -80,7 +80,7 @@ public class CreateUpdateActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE && resultCode == RESULT_OK){
+        if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE && resultCode == RESULT_OK) {
             CropImage.ActivityResult result = CropImage.getActivityResult(data);
             imageUri = result.getUri();
 
@@ -92,12 +92,12 @@ public class CreateUpdateActivity extends AppCompatActivity {
         }
     }
 
-    private void uploadImage(){
+    private void uploadImage() {
         final ProgressDialog pd = new ProgressDialog(this);
         pd.setMessage("Updating");
         pd.show();
 
-        if(imageUri != null){
+        if (imageUri != null) {
             final StorageReference filereference = storageReference.child(System.currentTimeMillis()
                     + "." + getFileExtension(imageUri));
 
@@ -105,7 +105,7 @@ public class CreateUpdateActivity extends AppCompatActivity {
             uploadTask.continueWithTask(new Continuation() {
                 @Override
                 public Object then(@NonNull Task task) throws Exception {
-                    if(!task.isSuccessful()){
+                    if (!task.isSuccessful()) {
                         throw task.getException();
                     }
 
@@ -114,7 +114,7 @@ public class CreateUpdateActivity extends AppCompatActivity {
             }).addOnCompleteListener(new OnCompleteListener<Uri>() {
                 @Override
                 public void onComplete(@NonNull Task<Uri> task) {
-                    if(task.isSuccessful()){
+                    if (task.isSuccessful()) {
                         Uri downloadUri = task.getResult();
                         myUrl = downloadUri.toString();
 
@@ -145,7 +145,7 @@ public class CreateUpdateActivity extends AppCompatActivity {
             }).addOnFailureListener(new OnFailureListener() {
                 @Override
                 public void onFailure(@NonNull Exception e) {
-                    Toast.makeText(CreateUpdateActivity.this, ""+e.getMessage(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(CreateUpdateActivity.this, "" + e.getMessage(), Toast.LENGTH_SHORT).show();
                 }
             });
         } else {
@@ -153,7 +153,7 @@ public class CreateUpdateActivity extends AppCompatActivity {
         }
     }
 
-    private String getFileExtension(Uri uri){
+    private String getFileExtension(Uri uri) {
         ContentResolver contentResolver = getContentResolver();
         MimeTypeMap mime = MimeTypeMap.getSingleton();
         return mime.getExtensionFromMimeType(contentResolver.getType(uri));

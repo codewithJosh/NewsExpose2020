@@ -1,45 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/img_background"
     android:orientation="vertical"
-    tools:context=".CreateUpdateActivity"
-    android:background="@drawable/img_background">
+    tools:context=".CreateUpdateActivity">
 
     <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/bar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/bar">
+        android:layout_height="wrap_content">
 
         <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/colorChineseBlack"
-            android:id="@+id/toolbar">
+            android:background="@color/colorChineseBlack">
 
             <RelativeLayout
                 android:layout_width="378dp"
                 android:layout_height="wrap_content">
 
                 <ImageView
+                    android:id="@+id/back"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentStart="true"
-                    android:id="@+id/back"
                     android:src="@drawable/ic_back" />
 
                 <TextView
+                    android:id="@+id/update"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
-                    android:id="@+id/update"
                     android:text="UPDATE"
-                    android:textSize="16sp"
                     android:textColor="?attr/colorPrimary"
-                    android:textStyle="bold"/>
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
 
             </RelativeLayout>
 
@@ -54,43 +53,43 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="?attr/colorOnSecondary"
-            android:alpha="0.7"/>
+            android:alpha="0.7"
+            android:background="?attr/colorOnSecondary" />
 
         <RelativeLayout
-            android:layout_centerInParent="true"
             android:layout_width="390dp"
             android:layout_height="370dp"
+            android:layout_centerInParent="true"
             android:layout_marginTop="30dp"
-            android:background="?attr/colorOnSecondary"
-            android:alpha="0.3"/>
+            android:alpha="0.3"
+            android:background="?attr/colorOnSecondary" />
 
         <RelativeLayout
-            android:layout_centerInParent="true"
             android:layout_width="390dp"
             android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
             android:layout_marginTop="30dp"
             android:padding="15dp">
 
             <ImageView
+                android:id="@+id/image_added"
                 android:layout_width="match_parent"
                 android:layout_height="200dp"
-                android:scaleType="centerInside"
                 android:layout_gravity="center"
-                android:id="@+id/image_added"/>
+                android:scaleType="centerInside" />
 
             <EditText
+                android:id="@+id/subject"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_below="@id/image_added"
                 android:layout_marginTop="15dp"
+                android:background="@color/colorRaisinBlack"
                 android:hint="Subject"
                 android:maxLines="5"
-                android:id="@+id/subject"
                 android:padding="10dp"
                 android:textColor="?attr/colorOnPrimary"
-                android:textColorHint="#8a8a8a"
-                android:background="@color/colorRaisinBlack"
-                android:layout_below="@id/image_added"/>
+                android:textColorHint="#8a8a8a" />
 
         </RelativeLayout>
 
