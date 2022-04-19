@@ -184,7 +184,7 @@ public class UpdateAdapter extends RecyclerView.Adapter<UpdateAdapter.ViewHolder
         });
     }
 
-    private void getComments(String updateid, final TextView comments){
+    private void getComments(String updateid, final TextView comments) {
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("Comments").child(updateid);
 
         reference.addValueEventListener(new ValueEventListener() {

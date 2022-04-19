@@ -58,23 +58,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
         return mComment.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
-
-        public ImageView image_profile;
-        public TextView username, comment;
-
-        public ViewHolder(@NonNull View itemView) {
-            super(itemView);
-
-            image_profile = itemView.findViewById(R.id.image_profile);
-            username = itemView.findViewById(R.id.username);
-            comment = itemView.findViewById(R.id.comment);
-
-        }
-
-    }
-
-    private void getUserInfo(final ImageView imageView, final TextView username, String id){
+    private void getUserInfo(final ImageView imageView, final TextView username, String id) {
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("Users").child(id);
 
         reference.addValueEventListener(new ValueEventListener() {
@@ -90,6 +74,22 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
 
             }
         });
+    }
+
+    public class ViewHolder extends RecyclerView.ViewHolder {
+
+        public ImageView image_profile;
+        public TextView username, comment;
+
+        public ViewHolder(@NonNull View itemView) {
+            super(itemView);
+
+            image_profile = itemView.findViewById(R.id.image_profile);
+            username = itemView.findViewById(R.id.username);
+            comment = itemView.findViewById(R.id.comment);
+
+        }
+
     }
 
 }
