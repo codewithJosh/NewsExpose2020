@@ -55,5 +55,6 @@ dependencies {
 //    add dependency on A. Teplitzki, Edmodo AndroidImageCropper
     implementation 'com.theartofdev.edmodo:android-image-cropper:2.7.+'
 
+//    add dependency on Google Firebase Cloud Storage
     implementation 'com.google.firebase:firebase-storage:16.0.4'
 }
