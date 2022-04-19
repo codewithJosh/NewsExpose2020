@@ -36,7 +36,7 @@ public class HomeActivity extends AppCompatActivity {
         reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if(dataSnapshot.child("admin").getValue().equals(true)){
+                if (dataSnapshot.child("admin").getValue().equals(true)) {
                     update.setVisibility(View.VISIBLE);
                 } else {
                     update.setVisibility(View.GONE);
