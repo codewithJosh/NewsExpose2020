@@ -1,6 +1,26 @@
 # NEWS EXPOSÉ 2K20
 
+> _A New and Fresh News Mobile App for Android_
+
+<p align="center"><img alt="News Expose Logo" src="https://raw.githubusercontent.com/codewithJosh/NewsExpose2k20/main/app/src/main/res/drawable/ic_logo.png" width="200"/></p>
+
+<p align="justify">News Exposé is an android application used to help the user needs in daily or trending news and events of the local city of Dagupan. The project aims to display news articles and videos of the chosen local city. It aims to raise awareness about the current or trending news and events and it lets the user to make a part of it by sharing their likes and comments. We chose this project to cope the problem of Public Information Office Dagupan City and What's Up Dagupan Facebook page. Furthermore, there is no such combination of news app and social media made intentionally. Our mission and vision is to group every resident of the Dagupan City as one.</p>
+
+## FEATURES:sparkles:
+- Login and Register
+- Create an Update (Admin only)
+- React and Comment on Update
+- User Profile (Coming Soon)
+
+## TOUR:eyes:
 > _Coming Soon_
+
+## CREDITS:tada:
+We would like to give THANKS to the following:
+- Google [Firebase][1]
+- H. Dodenhof [CircleImageView][2]
+- Bumptech [Glide][3]
+- A. Teplitzki, Edmodo [AndroidImageCropper][4]
 
 ## LICENSE:memo:
 
@@ -26,3 +46,7 @@
     OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
     SOFTWARE.
     
+[1]: https://firebase.google.com/
+[2]: https://github.com/hdodenhof/CircleImageView
+[3]: https://github.com/bumptech/glide
+[4]: https://github.com/ArthurHub/Android-Image-Cropper
