@@ -25,6 +25,31 @@ public class HomeActivity extends AppCompatActivity {
     DatabaseReference reference;
 
     @Override
+    protected void onStart() {
+        super.onStart();
+
+        reference = FirebaseDatabase.getInstance().getReference()
+                .child("Users")
+                .child(FirebaseAuth.getInstance().getCurrentUser().getUid());
+
+        reference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(dataSnapshot.child("admin").getValue().equals(true)){
+                    update.setVisibility(View.VISIBLE);
+                } else {
+                    update.setVisibility(View.GONE);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
