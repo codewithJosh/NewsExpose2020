@@ -68,7 +68,7 @@ public class RegisterActivity extends AppCompatActivity {
                 String str_password = passwordEditText.getText().toString();
                 String str_re_password = repasswordEditText.getText().toString();
 
-                if(TextUtils.isEmpty(str_username) || TextUtils.isEmpty(str_email)
+                if (TextUtils.isEmpty(str_username) || TextUtils.isEmpty(str_email)
                         || TextUtils.isEmpty(str_password) || TextUtils.isEmpty(str_re_password)) {
                     pd.dismiss();
                     Toast.makeText(RegisterActivity.this, "All fields are required!", Toast.LENGTH_SHORT).show();
@@ -91,7 +91,7 @@ public class RegisterActivity extends AppCompatActivity {
                 .addOnCompleteListener(RegisterActivity.this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()){
+                        if (task.isSuccessful()) {
                             FirebaseUser firebaseUser = auth.getCurrentUser();
                             String userid = firebaseUser.getUid();
 
@@ -107,7 +107,7 @@ public class RegisterActivity extends AppCompatActivity {
                             reference.setValue(hashMap).addOnCompleteListener(new OnCompleteListener<Void>() {
                                 @Override
                                 public void onComplete(@NonNull Task<Void> task) {
-                                    if (task.isSuccessful()){
+                                    if (task.isSuccessful()) {
                                         pd.dismiss();
                                         Toast.makeText(RegisterActivity.this, "You're Successfully Added!", Toast.LENGTH_SHORT).show();
                                         Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
