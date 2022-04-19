@@ -42,4 +42,13 @@ dependencies {
 
 //    add dependency on Google Firebase Realtime Database
     implementation 'com.google.firebase:firebase-database:16.0.4'
+
+//    add dependency on H. Dodenhof CircleImageView
+    implementation 'de.hdodenhof:circleimageview:2.2.0'
+
+//    add dependency on Bumptech Glide
+    implementation 'com.github.bumptech.glide:glide:4.12.0'
+
+//    add dependency on Legacy Support
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
 }
