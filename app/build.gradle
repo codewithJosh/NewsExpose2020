@@ -52,5 +52,6 @@ dependencies {
 //    add dependency on Legacy Support
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
 
+//    add dependency on A. Teplitzki, Edmodo AndroidImageCropper
     implementation 'com.theartofdev.edmodo:android-image-cropper:2.7.+'
 }
