@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:background="@drawable/create_secondary_item_decoration_round"
-    android:padding="20dp"
     android:layout_marginTop="20dp"
-    android:layout_marginBottom="5dp">
+    android:layout_marginBottom="5dp"
+    android:background="@drawable/create_secondary_item_decoration_round"
+    android:padding="20dp">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -19,18 +18,18 @@
             android:orientation="horizontal">
 
             <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/image_profile"
                 android:layout_width="60dp"
-                android:layout_height="60dp"
-                android:id="@+id/image_profile" />
+                android:layout_height="60dp" />
 
             <TextView
+                android:id="@+id/username"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:layout_marginStart="15dp"
-                android:id="@+id/username"
-                android:textSize="16sp"
-                android:textColor="?attr/colorOnPrimary" />
+                android:textColor="?attr/colorOnPrimary"
+                android:textSize="16sp" />
 
         </LinearLayout>
 
@@ -40,17 +39,17 @@
             android:orientation="vertical">
 
             <TextView
+                android:id="@+id/subject"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/subject"
-                android:textColor="?attr/colorOnPrimary"
-                android:layout_marginTop="15dp"/>
+                android:layout_marginTop="15dp"
+                android:textColor="?attr/colorOnPrimary" />
 
             <ImageView
+                android:id="@+id/update_image"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/update_image"
-                android:layout_marginTop="15dp"/>
+                android:layout_marginTop="15dp" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -65,41 +64,41 @@
                     android:gravity="center">
 
                     <ImageView
+                        android:id="@+id/seen"
                         android:layout_width="30dp"
                         android:layout_height="30dp"
-                        android:id="@+id/seen"
                         android:src="@drawable/ic_seen" />
 
                     <TextView
+                        android:id="@+id/seens"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="15dp"
-                        android:textStyle="bold"
-                        android:id="@+id/seens"
-                        android:textColor="#d3d3d3" />
+                        android:textColor="#d3d3d3"
+                        android:textStyle="bold" />
 
                 </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="center"
                     android:layout_weight="0.5"
-                    android:gravity="center"
-                    android:layout_gravity="center">
+                    android:gravity="center">
 
                     <ImageView
+                        android:id="@+id/comment"
                         android:layout_width="25dp"
                         android:layout_height="25dp"
-                        android:id="@+id/comment"
                         android:src="@drawable/ic_comment" />
 
                     <TextView
+                        android:id="@+id/comments"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="15dp"
-                        android:textStyle="bold"
-                        android:id="@+id/comments"
-                        android:textColor="#d3d3d3" />
+                        android:textColor="#d3d3d3"
+                        android:textStyle="bold" />
 
                 </LinearLayout>
 

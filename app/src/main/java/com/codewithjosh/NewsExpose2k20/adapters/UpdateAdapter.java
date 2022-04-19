@@ -53,14 +53,14 @@ public class UpdateAdapter extends RecyclerView.Adapter<UpdateAdapter.ViewHolder
 
         Glide.with(mContext).load(update.getUpdateimage()).into(holder.update_image);
 
-        if(update.getSubject().equals("")){
+        if (update.getSubject().equals("")) {
             holder.subject.setVisibility(View.GONE);
         } else {
             holder.subject.setVisibility(View.VISIBLE);
             holder.subject.setText(update.getSubject());
         }
 
-        if(update.getSource().equals("")){
+        if (update.getSource().equals("")) {
             holder.source.setVisibility(View.VISIBLE);
             holder.source.setText("Anonymous");
         } else {
@@ -75,7 +75,7 @@ public class UpdateAdapter extends RecyclerView.Adapter<UpdateAdapter.ViewHolder
         holder.seen.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(holder.seen.getTag().equals("seen")){
+                if (holder.seen.getTag().equals("seen")) {
                     FirebaseDatabase.getInstance().getReference().child("Seen").child(update.getUpdateid())
                             .child(firebaseUser.getUid()).setValue(true);
                 } else {
@@ -114,6 +114,74 @@ public class UpdateAdapter extends RecyclerView.Adapter<UpdateAdapter.ViewHolder
         return mUpdate.size();
     }
 
+    private void updateInfo(final ImageView image_profile, final TextView username, final String userid) {
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users").child(userid);
+
+        reference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                User user = dataSnapshot.getValue(User.class);
+                Glide.with(mContext).load(user.getImageurl()).into(image_profile);
+                username.setText(user.getUsername());
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    private void isSeen(String updateid, final ImageView imageView) {
+
+        final FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference()
+                .child("Seen")
+                .child(updateid);
+
+        reference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.child(firebaseUser.getUid()).exists()) {
+                    imageView.setImageResource(R.drawable.ic_seened);
+                    imageView.setTag("seened");
+                } else {
+                    imageView.setImageResource(R.drawable.ic_seen);
+                    imageView.setTag("seen");
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    private void numSeen(final TextView seens, String updateimage) {
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference()
+                .child("Seen")
+                .child(updateimage);
+        reference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                seens.setText(String.valueOf(dataSnapshot.getChildrenCount()));
+                if (dataSnapshot.child(firebaseUser.getUid()).exists()) {
+
+                    seens.setTextColor(Color.parseColor("#e50913"));
+                } else {
+                    seens.setTextColor(Color.parseColor("#d3d3d3"));
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
         public ImageView update_image, seen, comment, image_profile;
@@ -134,74 +202,6 @@ public class UpdateAdapter extends RecyclerView.Adapter<UpdateAdapter.ViewHolder
 
         }
 
-    }
-
-    private void updateInfo(final ImageView image_profile, final TextView username, final String userid){
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users").child(userid);
-
-        reference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                User user = dataSnapshot.getValue(User.class);
-                Glide.with(mContext).load(user.getImageurl()).into(image_profile);
-                username.setText(user.getUsername());
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-    }
-
-    private void isSeen(String updateid, final ImageView imageView){
-
-        final FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference()
-                .child("Seen")
-                .child(updateid);
-
-        reference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if(dataSnapshot.child(firebaseUser.getUid()).exists()){
-                    imageView.setImageResource(R.drawable.ic_seened);
-                    imageView.setTag("seened");
-                } else {
-                    imageView.setImageResource(R.drawable.ic_seen);
-                    imageView.setTag("seen");
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-    }
-
-    private void numSeen(final TextView seens, String updateimage){
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference()
-                .child("Seen")
-                .child(updateimage);
-        reference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                seens.setText(String.valueOf(dataSnapshot.getChildrenCount()));
-                if(dataSnapshot.child(firebaseUser.getUid()).exists()){
-
-                    seens.setTextColor(Color.parseColor("#e50913"));
-                } else {
-                    seens.setTextColor(Color.parseColor("#d3d3d3"));
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
     }
 
 }

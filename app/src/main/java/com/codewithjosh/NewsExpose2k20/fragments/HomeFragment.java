@@ -50,14 +50,14 @@ public class HomeFragment extends Fragment {
 
     }
 
-    private void readUpdates(){
+    private void readUpdates() {
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Updates");
 
         reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 updateList.clear();
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()){
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     Update update = snapshot.getValue(Update.class);
                     updateList.add(update);
                 }
