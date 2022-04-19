@@ -46,5 +46,6 @@ dependencies {
 //    add dependency on H. Dodenhof CircleImageView
     implementation 'de.hdodenhof:circleimageview:2.2.0'
 
+//    add dependency on Bumptech Glide
     implementation 'com.github.bumptech.glide:glide:4.12.0'
 }
