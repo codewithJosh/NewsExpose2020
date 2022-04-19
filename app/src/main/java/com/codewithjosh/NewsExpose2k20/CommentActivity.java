@@ -9,8 +9,12 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.codewithjosh.NewsExpose2k20.adapters.CommentAdapter;
+import com.codewithjosh.NewsExpose2k20.models.Comment;
 import com.codewithjosh.NewsExpose2k20.models.User;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -20,7 +24,9 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public class CommentActivity extends AppCompatActivity {
 
@@ -29,6 +35,10 @@ public class CommentActivity extends AppCompatActivity {
 
     String updateid;
     String userid;
+
+    private RecyclerView recyclerView;
+    private CommentAdapter commentAdapter;
+    private List<Comment> commentList;
 
     FirebaseUser firebaseUser;
 
@@ -68,6 +78,16 @@ public class CommentActivity extends AppCompatActivity {
             }
         });
 
+        recyclerView = findViewById(R.id.recycler_view);
+        recyclerView.setHasFixedSize(true); // false
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        recyclerView.setLayoutManager(linearLayoutManager);
+        commentList = new ArrayList<>();
+        commentAdapter = new CommentAdapter(this, commentList);
+        recyclerView.setAdapter(commentAdapter);
+
+        readComments();
+
     }
 
     private void getImage(){
@@ -96,6 +116,28 @@ public class CommentActivity extends AppCompatActivity {
 
         reference.push().setValue(hashMap);
         add_comment.setText("");
+    }
+
+    private void readComments(){
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Comments").child(updateid);
+
+        reference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                commentList.clear();
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()){
+                    Comment comment = snapshot.getValue(Comment.class);
+                    commentList.add(comment);
+                }
+
+                commentAdapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
     }
 
 }
