@@ -39,4 +39,6 @@ dependencies {
 
 //    add dependency on Google Firebase Authentication
     implementation 'com.google.firebase:firebase-auth:16.0.5'
+
+    implementation 'com.google.firebase:firebase-database:16.0.4'
 }
