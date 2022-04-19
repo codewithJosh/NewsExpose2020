@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -19,10 +20,15 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.HashMap;
+
 public class CommentActivity extends AppCompatActivity {
 
     EditText add_comment;
     ImageView image_profile, send, back;
+
+    String updateid;
+    String userid;
 
     FirebaseUser firebaseUser;
 
@@ -47,6 +53,21 @@ public class CommentActivity extends AppCompatActivity {
 
         getImage();
 
+        Intent intent = getIntent();
+        updateid = intent.getStringExtra("updateid");
+        userid = intent.getStringExtra("userid");
+
+        send.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(add_comment.getText().toString().equals("")){
+                    Toast.makeText(CommentActivity.this, "You can't send empty comment", Toast.LENGTH_SHORT).show();
+                } else {
+                    add_comment();
+                }
+            }
+        });
+
     }
 
     private void getImage(){
@@ -64,6 +85,17 @@ public class CommentActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+    private void add_comment(){
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Comments").child(updateid);
+
+        HashMap<String, Object> hashMap = new HashMap<>();
+        hashMap.put("comment", add_comment.getText().toString().trim());
+        hashMap.put("userid", firebaseUser.getUid());
+
+        reference.push().setValue(hashMap);
+        add_comment.setText("");
     }
 
 }
