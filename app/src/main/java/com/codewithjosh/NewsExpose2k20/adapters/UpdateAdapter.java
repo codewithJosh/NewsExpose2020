@@ -107,6 +107,8 @@ public class UpdateAdapter extends RecyclerView.Adapter<UpdateAdapter.ViewHolder
             }
         });
 
+        getComments(update.getUpdateid(), holder.comments);
+
     }
 
     @Override
@@ -173,6 +175,22 @@ public class UpdateAdapter extends RecyclerView.Adapter<UpdateAdapter.ViewHolder
                 } else {
                     seens.setTextColor(Color.parseColor("#d3d3d3"));
                 }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    private void getComments(String updateid, final TextView comments){
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("Comments").child(updateid);
+
+        reference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                comments.setText(String.valueOf(dataSnapshot.getChildrenCount()));
             }
 
             @Override
