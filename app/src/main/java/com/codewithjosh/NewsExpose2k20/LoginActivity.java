@@ -64,16 +64,16 @@ public class LoginActivity extends AppCompatActivity {
                 String str_email = emailEditText.getText().toString();
                 String str_password = passwordEditText.getText().toString();
 
-                if(TextUtils.isEmpty(str_email) || TextUtils.isEmpty(str_password)) {
+                if (TextUtils.isEmpty(str_email) || TextUtils.isEmpty(str_password)) {
                     pd.dismiss();
                     Toast.makeText(LoginActivity.this, "All fields are required!", Toast.LENGTH_SHORT).show();
-                }  else {
+                } else {
 
                     auth.signInWithEmailAndPassword(str_email, str_password)
                             .addOnCompleteListener(LoginActivity.this, new OnCompleteListener<AuthResult>() {
                                 @Override
                                 public void onComplete(@NonNull Task<AuthResult> task) {
-                                    if (task.isSuccessful()){
+                                    if (task.isSuccessful()) {
                                         reference = FirebaseDatabase.getInstance().getReference().child("Users")
                                                 .child(auth.getCurrentUser().getUid());
 
