@@ -42,4 +42,6 @@ dependencies {
 
 //    add dependency on Google Firebase Realtime Database
     implementation 'com.google.firebase:firebase-database:16.0.4'
+
+    implementation 'de.hdodenhof:circleimageview:2.2.0'
 }
