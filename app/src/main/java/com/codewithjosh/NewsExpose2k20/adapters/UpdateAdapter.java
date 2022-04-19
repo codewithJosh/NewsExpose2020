@@ -1,6 +1,7 @@
 package com.codewithjosh.NewsExpose2k20.adapters;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -81,6 +82,8 @@ public class UpdateAdapter extends RecyclerView.Adapter<UpdateAdapter.ViewHolder
                 }
             }
         });
+
+        numSeen(holder.seens, update.getUpdateid());
     }
 
     @Override
@@ -145,6 +148,29 @@ public class UpdateAdapter extends RecyclerView.Adapter<UpdateAdapter.ViewHolder
                 } else {
                     imageView.setImageResource(R.drawable.ic_seen);
                     imageView.setTag("seen");
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    private void numSeen(final TextView seens, String updateimage){
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference()
+                .child("Seen")
+                .child(updateimage);
+        reference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                seens.setText(String.valueOf(dataSnapshot.getChildrenCount()));
+                if(dataSnapshot.child(firebaseUser.getUid()).exists()){
+
+                    seens.setTextColor(Color.parseColor("#e50913"));
+                } else {
+                    seens.setTextColor(Color.parseColor("#d3d3d3"));
                 }
             }
 
