@@ -1,6 +1,7 @@
 package com.codewithjosh.NewsExpose2k20.adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.codewithjosh.NewsExpose2k20.CommentActivity;
 import com.codewithjosh.NewsExpose2k20.R;
 import com.codewithjosh.NewsExpose2k20.models.Update;
 import com.codewithjosh.NewsExpose2k20.models.User;
@@ -84,6 +86,27 @@ public class UpdateAdapter extends RecyclerView.Adapter<UpdateAdapter.ViewHolder
         });
 
         numSeen(holder.seens, update.getUpdateid());
+
+        holder.comment.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(mContext, CommentActivity.class);
+                intent.putExtra("updateid", update.getUpdateid());
+                intent.putExtra("userid", update.getSource());
+                mContext.startActivity(intent);
+            }
+        });
+
+        holder.comments.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(mContext, CommentActivity.class);
+                intent.putExtra("updateid", update.getUpdateid());
+                intent.putExtra("userid", update.getSource());
+                mContext.startActivity(intent);
+            }
+        });
+
     }
 
     @Override
