@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "104413738981",
+    "firebase_url": "https://news-expose-2k20-default-rtdb.firebaseio.com",
+    "project_id": "news-expose-2k20",
+    "storage_bucket": "news-expose-2k20.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:104413738981:android:aae94d64806c5d0094a10c",
+        "android_client_info": {
+          "package_name": "com.codewithjosh.NewsExpose2k20"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "104413738981-rfap0vv6rkum8b8ki9qhufcjq16uup73.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDmESa_Q4jSl6-TzvKGGfUhLwrLCAqgRz8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "104413738981-rfap0vv6rkum8b8ki9qhufcjq16uup73.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
