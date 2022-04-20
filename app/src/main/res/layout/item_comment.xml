@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="8dp">
+    android:padding="8dp"
+    android:orientation="horizontal">
 
     <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/image_profile"
+        android:id="@+id/civ_user_image"
         android:layout_width="40dp"
         android:layout_height="40dp" />
 
@@ -13,24 +14,23 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="5dp"
-        android:layout_toEndOf="@id/image_profile"
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/username"
+            android:id="@+id/tv_user_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="?attr/colorOnPrimary"
             android:textStyle="bold" />
 
         <TextView
-            android:id="@+id/comment"
+            android:id="@+id/tv_comment_content"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:maxLines="5"
             android:textColor="@color/colorChineseSilver"
-            android:textStyle="bold" />
+            android:textStyle="bold"/>
 
     </LinearLayout>
 
-</RelativeLayout>
+</LinearLayout>
