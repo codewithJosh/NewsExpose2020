@@ -1,6 +1,6 @@
 package com.codewithjosh.NewsExpose2k20.models;
 
-public class Update {
+public class UpdateModel {
 
     private String updateid;
     private String updateimage;

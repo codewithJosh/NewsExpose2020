@@ -15,7 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.codewithjosh.NewsExpose2k20.CommentActivity;
 import com.codewithjosh.NewsExpose2k20.R;
-import com.codewithjosh.NewsExpose2k20.models.Update;
+import com.codewithjosh.NewsExpose2k20.models.UpdateModel;
 import com.codewithjosh.NewsExpose2k20.models.UserModel;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -30,11 +30,11 @@ import java.util.List;
 public class UpdateAdapter extends RecyclerView.Adapter<UpdateAdapter.ViewHolder> {
 
     public Context mContext;
-    public List<Update> mUpdate;
+    public List<UpdateModel> mUpdate;
 
     private FirebaseUser firebaseUser;
 
-    public UpdateAdapter(Context mContext, List<Update> mUpdate) {
+    public UpdateAdapter(Context mContext, List<UpdateModel> mUpdate) {
         this.mContext = mContext;
         this.mUpdate = mUpdate;
     }
@@ -49,50 +49,50 @@ public class UpdateAdapter extends RecyclerView.Adapter<UpdateAdapter.ViewHolder
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-        final Update update = mUpdate.get(position);
+        final UpdateModel updateModel = mUpdate.get(position);
 
-        Glide.with(mContext).load(update.getUpdateimage()).into(holder.update_image);
+        Glide.with(mContext).load(updateModel.getUpdateimage()).into(holder.update_image);
 
-        if (update.getSubject().equals("")) {
+        if (updateModel.getSubject().equals("")) {
             holder.subject.setVisibility(View.GONE);
         } else {
             holder.subject.setVisibility(View.VISIBLE);
-            holder.subject.setText(update.getSubject());
+            holder.subject.setText(updateModel.getSubject());
         }
 
-        if (update.getSource().equals("")) {
+        if (updateModel.getSource().equals("")) {
             holder.source.setVisibility(View.VISIBLE);
             holder.source.setText("Anonymous");
         } else {
             holder.source.setVisibility(View.VISIBLE);
-            holder.source.setText(update.getSource());
+            holder.source.setText(updateModel.getSource());
         }
 
-        updateInfo(holder.image_profile, holder.username, update.getSource());
+        updateInfo(holder.image_profile, holder.username, updateModel.getSource());
 
-        isSeen(update.getUpdateid(), holder.seen);
+        isSeen(updateModel.getUpdateid(), holder.seen);
 
         holder.seen.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (holder.seen.getTag().equals("seen")) {
-                    FirebaseDatabase.getInstance().getReference().child("Seen").child(update.getUpdateid())
+                    FirebaseDatabase.getInstance().getReference().child("Seen").child(updateModel.getUpdateid())
                             .child(firebaseUser.getUid()).setValue(true);
                 } else {
-                    FirebaseDatabase.getInstance().getReference().child("Seen").child(update.getUpdateid())
+                    FirebaseDatabase.getInstance().getReference().child("Seen").child(updateModel.getUpdateid())
                             .child(firebaseUser.getUid()).removeValue();
                 }
             }
         });
 
-        numSeen(holder.seens, update.getUpdateid());
+        numSeen(holder.seens, updateModel.getUpdateid());
 
         holder.comment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(mContext, CommentActivity.class);
-                intent.putExtra("updateid", update.getUpdateid());
-                intent.putExtra("userid", update.getSource());
+                intent.putExtra("updateid", updateModel.getUpdateid());
+                intent.putExtra("userid", updateModel.getSource());
                 mContext.startActivity(intent);
             }
         });
@@ -101,13 +101,13 @@ public class UpdateAdapter extends RecyclerView.Adapter<UpdateAdapter.ViewHolder
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(mContext, CommentActivity.class);
-                intent.putExtra("updateid", update.getUpdateid());
-                intent.putExtra("userid", update.getSource());
+                intent.putExtra("updateid", updateModel.getUpdateid());
+                intent.putExtra("userid", updateModel.getSource());
                 mContext.startActivity(intent);
             }
         });
 
-        getComments(update.getUpdateid(), holder.comments);
+        getComments(updateModel.getUpdateid(), holder.comments);
 
     }
 

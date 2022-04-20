@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.codewithjosh.NewsExpose2k20.R;
 import com.codewithjosh.NewsExpose2k20.adapters.UpdateAdapter;
-import com.codewithjosh.NewsExpose2k20.models.Update;
+import com.codewithjosh.NewsExpose2k20.models.UpdateModel;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -26,7 +26,7 @@ public class HomeFragment extends Fragment {
 
     private RecyclerView recyclerView;
     private UpdateAdapter updateAdapter;
-    private List<Update> updateList;
+    private List<UpdateModel> updateList;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -58,8 +58,8 @@ public class HomeFragment extends Fragment {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 updateList.clear();
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    Update update = snapshot.getValue(Update.class);
-                    updateList.add(update);
+                    UpdateModel updateModel = snapshot.getValue(UpdateModel.class);
+                    updateList.add(updateModel);
                 }
 
                 updateAdapter.notifyDataSetChanged();
