@@ -45,10 +45,10 @@ public class CommentActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_comment);
 
-        add_comment = findViewById(R.id.add_comment);
-        image_profile = findViewById(R.id.image_profile);
-        send = findViewById(R.id.send);
-        back = findViewById(R.id.back);
+        add_comment = findViewById(R.id.et_comment_content);
+        image_profile = findViewById(R.id.civ_user_image);
+        send = findViewById(R.id.btn_comment);
+        back = findViewById(R.id.btn_back);
 
         back.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -76,7 +76,7 @@ public class CommentActivity extends AppCompatActivity {
             }
         });
 
-        recyclerView = findViewById(R.id.recycler_view);
+        recyclerView = findViewById(R.id.recycler_comments);
         recyclerView.setHasFixedSize(true); // false
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(linearLayoutManager);
