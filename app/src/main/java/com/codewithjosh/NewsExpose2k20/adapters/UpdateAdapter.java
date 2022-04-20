@@ -2,10 +2,10 @@ package com.codewithjosh.NewsExpose2k20.adapters;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -18,7 +18,6 @@ import com.codewithjosh.NewsExpose2k20.R;
 import com.codewithjosh.NewsExpose2k20.models.UpdateModel;
 import com.codewithjosh.NewsExpose2k20.models.UserModel;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -27,88 +26,81 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.List;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
 public class UpdateAdapter extends RecyclerView.Adapter<UpdateAdapter.ViewHolder> {
 
     public Context mContext;
     public List<UpdateModel> mUpdate;
-
-    private FirebaseUser firebaseUser;
 
     public UpdateAdapter(Context mContext, List<UpdateModel> mUpdate) {
         this.mContext = mContext;
         this.mUpdate = mUpdate;
     }
 
+    FirebaseAuth firebaseAuth;
+    FirebaseDatabase firebaseDatabase;
+
     @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(mContext).inflate(R.layout.item_update, parent, false);
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {
+        View view = LayoutInflater.from(mContext).inflate(R.layout.item_update, viewGroup, false);
         return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+
         final UpdateModel updateModel = mUpdate.get(position);
 
-        Glide.with(mContext).load(updateModel.getUpdateimage()).into(holder.update_image);
+        firebaseAuth = FirebaseAuth.getInstance();
+        firebaseDatabase = FirebaseDatabase.getInstance();
 
-        if (updateModel.getSubject().equals("")) {
-            holder.subject.setVisibility(View.GONE);
-        } else {
-            holder.subject.setVisibility(View.VISIBLE);
-            holder.subject.setText(updateModel.getSubject());
+        final String s_user_id = firebaseAuth.getCurrentUser().getUid();
+
+//        TODO: FOUND ISSUE: UPDATE MODELS
+        Glide.with(mContext).load(updateModel.getUpdateimage()).into(holder.iv_update_image);
+
+        if (updateModel.getSubject().isEmpty()) holder.tv_update_content.setVisibility(View.GONE);
+        else {
+            holder.tv_update_content.setVisibility(View.VISIBLE);
+            holder.tv_update_content.setText(updateModel.getSubject());
         }
 
-        if (updateModel.getSource().equals("")) {
-            holder.source.setVisibility(View.VISIBLE);
-            holder.source.setText("Anonymous");
-        } else {
-            holder.source.setVisibility(View.VISIBLE);
-            holder.source.setText(updateModel.getSource());
+        if (updateModel.getSource().isEmpty()) {
+            holder.tv_user_name.setVisibility(View.VISIBLE);
+            holder.tv_user_name.setText(mContext.getResources().getString(R.string.def_user_name));
+        }
+        else {
+            holder.tv_user_name.setVisibility(View.VISIBLE);
+            holder.tv_user_name.setText(updateModel.getSource());
         }
 
-        updateInfo(holder.image_profile, holder.username, updateModel.getSource());
+        isSeen(updateModel.getUpdateid(), s_user_id, holder.btn_seen);
+        seenCount(holder.tv_seen_count, s_user_id, updateModel.getUpdateid());
+        commentCount(updateModel.getUpdateid(), holder.tv_comment_count);
 
-        isSeen(updateModel.getUpdateid(), holder.seen);
+        holder.btn_seen.setOnClickListener(v -> {
 
-        holder.seen.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (holder.seen.getTag().equals("seen")) {
-                    FirebaseDatabase.getInstance().getReference().child("Seen").child(updateModel.getUpdateid())
-                            .child(firebaseUser.getUid()).setValue(true);
-                } else {
-                    FirebaseDatabase.getInstance().getReference().child("Seen").child(updateModel.getUpdateid())
-                            .child(firebaseUser.getUid()).removeValue();
-                }
-            }
+            final DatabaseReference seenRef = firebaseDatabase
+                    .getReference()
+                    .child("Seen")
+                    .child(updateModel.getUpdateid())
+                    .child(s_user_id);
+
+            if (holder.btn_seen.getTag().equals("seen")) seenRef.setValue(true);
+            else seenRef.removeValue();
+
         });
 
-        numSeen(holder.seens, updateModel.getUpdateid());
-
-        holder.comment.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(mContext, CommentActivity.class);
-                intent.putExtra("updateid", updateModel.getUpdateid());
-                intent.putExtra("userid", updateModel.getSource());
-                mContext.startActivity(intent);
-            }
+        holder.nav_comment.setOnClickListener(v -> {
+            Intent intent = new Intent(mContext, CommentActivity.class);
+            intent.putExtra("updateid", updateModel.getUpdateid());
+            intent.putExtra("userid", updateModel.getSource());
+            mContext.startActivity(intent);
         });
 
-        holder.comments.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(mContext, CommentActivity.class);
-                intent.putExtra("updateid", updateModel.getUpdateid());
-                intent.putExtra("userid", updateModel.getSource());
-                mContext.startActivity(intent);
-            }
-        });
-
-        getComments(updateModel.getUpdateid(), holder.comments);
-
+        getSource(holder.civ_user_image, holder.tv_user_name, updateModel.getSource());
     }
 
     @Override
@@ -116,110 +108,131 @@ public class UpdateAdapter extends RecyclerView.Adapter<UpdateAdapter.ViewHolder
         return mUpdate.size();
     }
 
-    private void updateInfo(final ImageView image_profile, final TextView username, final String userid) {
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users").child(userid);
-
-        reference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                UserModel userModel = dataSnapshot.getValue(UserModel.class);
-                Glide.with(mContext).load(userModel.getImageurl()).into(image_profile);
-                username.setText(userModel.getUsername());
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-    }
-
-    private void isSeen(String updateid, final ImageView imageView) {
-
-        final FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference()
-                .child("Seen")
-                .child(updateid);
-
-        reference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if (dataSnapshot.child(firebaseUser.getUid()).exists()) {
-                    imageView.setImageResource(R.drawable.ic_seened);
-                    imageView.setTag("seened");
-                } else {
-                    imageView.setImageResource(R.drawable.ic_seen);
-                    imageView.setTag("seen");
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-    }
-
-    private void numSeen(final TextView seens, String updateimage) {
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference()
-                .child("Seen")
-                .child(updateimage);
-        reference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                seens.setText(String.valueOf(dataSnapshot.getChildrenCount()));
-                if (dataSnapshot.child(firebaseUser.getUid()).exists()) {
-
-                    seens.setTextColor(Color.parseColor("#e50913"));
-                } else {
-                    seens.setTextColor(Color.parseColor("#d3d3d3"));
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-    }
-
-    private void getComments(String updateid, final TextView comments) {
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("Comments").child(updateid);
-
-        reference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                comments.setText(String.valueOf(dataSnapshot.getChildrenCount()));
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-    }
-
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
-        public ImageView update_image, seen, comment, image_profile;
-        public TextView source, seens, subject, comments, username;
+        CircleImageView civ_user_image;
+        ImageButton btn_seen, nav_comment;
+        ImageView iv_update_image;
+        TextView tv_seen_count, tv_update_content, tv_comment_count, tv_user_name;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
 
-            image_profile = itemView.findViewById(R.id.civ_user_image);
-            username = itemView.findViewById(R.id.tv_user_name);
-            update_image = itemView.findViewById(R.id.iv_update_image);
-            seens = itemView.findViewById(R.id.tv_seen_count);
-            comment = itemView.findViewById(R.id.nav_comment);
-            source = itemView.findViewById(R.id.tv_user_name);
-            seen = itemView.findViewById(R.id.btn_seen);
-            subject = itemView.findViewById(R.id.tv_update_content);
-            comments = itemView.findViewById(R.id.tv_comment_count);
+            civ_user_image = itemView.findViewById(R.id.civ_user_image);
+            btn_seen = itemView.findViewById(R.id.btn_seen);
+            nav_comment = itemView.findViewById(R.id.nav_comment);
+            iv_update_image = itemView.findViewById(R.id.iv_update_image);
+            tv_user_name = itemView.findViewById(R.id.tv_user_name);
+            tv_update_content = itemView.findViewById(R.id.tv_update_content);
+            tv_seen_count = itemView.findViewById(R.id.tv_seen_count);
+            tv_comment_count = itemView.findViewById(R.id.tv_comment_count);
 
         }
+    }
+
+    private void getSource(final CircleImageView civ_user_image, final TextView tv_user_name, final String s_user_id) {
+
+        final DatabaseReference userRef = firebaseDatabase.getReference("Users").child(s_user_id);
+
+//        TODO: USE GET METHOD ONCE IT IS AVAILABLE
+        userRef.addValueEventListener(new ValueEventListener() {
+
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                UserModel usermodel = dataSnapshot.getValue(UserModel.class);
+                Glide.with(mContext).load(usermodel.getImageurl()).into(civ_user_image);
+                tv_user_name.setText(usermodel.getUsername());
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    private void isSeen(final String s_update_id, final String s_user_id, final ImageButton btn_seen) {
+
+        final DatabaseReference updateRef = firebaseDatabase
+                .getReference()
+                .child("Seen")
+                .child(s_update_id);
+
+//        TODO: USE GET METHOD ONCE IT IS AVAILABLE
+        updateRef.addValueEventListener(new ValueEventListener() {
+
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                if (dataSnapshot.child(s_user_id).exists()) {
+                    btn_seen.setImageResource(R.drawable.ic_seened);
+                    btn_seen.setTag("seened");
+                }
+                else {
+                    btn_seen.setImageResource(R.drawable.ic_seen);
+                    btn_seen.setTag("seen");
+                }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
 
     }
 
+    private void seenCount(final TextView tv_seen_count, final String s_user_id, final String s_update_id) {
+
+        final DatabaseReference updateRef = firebaseDatabase
+                .getReference()
+                .child("Seen")
+                .child(s_update_id);
+
+//        TODO: USE GET METHOD ONCE IT IS AVAILABLE
+        updateRef.addValueEventListener(new ValueEventListener() {
+
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                tv_seen_count.setText(String.valueOf(dataSnapshot.getChildrenCount()));
+                if (dataSnapshot.child(s_user_id).exists()) tv_seen_count.setTextColor(mContext.getResources().getColor(R.color.colorKUCrimson));
+                else tv_seen_count.setTextColor(mContext.getResources().getColor(R.color.colorLightGray));
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+    }
+
+    private void commentCount(final String s_update_id, final TextView tv_comment_count) {
+
+        final DatabaseReference updateRef = firebaseDatabase
+                .getReference()
+                .child("Comments")
+                .child(s_update_id);
+
+//        TODO: USE GET METHOD ONCE IT IS AVAILABLE
+        updateRef.addValueEventListener(new ValueEventListener() {
+
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                tv_comment_count.setText(String.valueOf(dataSnapshot.getChildrenCount()));
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
 }

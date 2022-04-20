@@ -12,4 +12,5 @@
     <string name="text_sign_in">Sign In</string>
     <string name="hint_update_content">Add a caption…</string>
     <string name="text_update">update</string>
+    <string name="def_user_name">Anonymous</string>
 </resources>
