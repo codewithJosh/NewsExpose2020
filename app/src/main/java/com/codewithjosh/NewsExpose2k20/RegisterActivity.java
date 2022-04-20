@@ -58,20 +58,17 @@ public class RegisterActivity extends AppCompatActivity {
             s_password = et_password.getText().toString();
             s_re_password = et_re_password.getText().toString();
 
-            if(s_user_name.isEmpty() || s_email.isEmpty()
+            if (s_user_name.isEmpty() || s_email.isEmpty()
                     || s_password.isEmpty() || s_re_password.isEmpty()) {
                 pd.dismiss();
                 Toast.makeText(this, "All fields are required!", Toast.LENGTH_SHORT).show();
-            }
-            else if (s_password.length() < 6) {
+            } else if (s_password.length() < 6) {
                 pd.dismiss();
                 Toast.makeText(this, "Password must at least 6 characters", Toast.LENGTH_SHORT).show();
-            }
-            else if (!s_password.equals(s_re_password)) {
+            } else if (!s_password.equals(s_re_password)) {
                 pd.dismiss();
                 Toast.makeText(this, "Password doesn't match!", Toast.LENGTH_SHORT).show();
-            }
-            else onRegister(s_user_name, s_email, s_password);
+            } else onRegister(s_user_name, s_email, s_password);
         });
 
     }

@@ -1,16 +1,16 @@
 package com.codewithjosh.NewsExpose2k20;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.codewithjosh.NewsExpose2k20.adapters.CommentAdapter;
@@ -28,18 +28,15 @@ import java.util.List;
 
 public class CommentActivity extends AppCompatActivity {
 
-    private CommentAdapter commentAdapter;
-    private List<CommentModel> mComment;
-
     String s_update_id;
     String s_user_id;
-
     EditText et_comment_content;
     ImageButton btn_back, btn_comment;
     ImageView iv_user_image;
     RecyclerView recycler_comments;
-
     FirebaseDatabase firebaseDatabase;
+    private CommentAdapter commentAdapter;
+    private List<CommentModel> mComment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,7 +68,8 @@ public class CommentActivity extends AppCompatActivity {
 
         btn_comment.setOnClickListener(v -> {
 
-            if (et_comment_content.getText().toString().isEmpty()) Toast.makeText(this, "You can't send empty comment", Toast.LENGTH_SHORT).show();
+            if (et_comment_content.getText().toString().isEmpty())
+                Toast.makeText(this, "You can't send empty comment", Toast.LENGTH_SHORT).show();
             else onSend();
 
         });
@@ -134,7 +132,7 @@ public class CommentActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
                 mComment.clear();
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()){
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     CommentModel commentModel = snapshot.getValue(CommentModel.class);
                     mComment.add(commentModel);
                 }

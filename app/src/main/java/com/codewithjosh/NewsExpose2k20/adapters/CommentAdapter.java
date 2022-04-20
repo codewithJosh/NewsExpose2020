@@ -27,14 +27,12 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
 
     public Context mContext;
     public List<CommentModel> mComment;
-
+    FirebaseDatabase firebaseDatabase;
 
     public CommentAdapter(Context mContext, List<CommentModel> mComment) {
         this.mContext = mContext;
         this.mComment = mComment;
     }
-
-    FirebaseDatabase firebaseDatabase;
 
     @NonNull
     @Override
@@ -62,20 +60,6 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
         return mComment.size();
     }
 
-    public static class ViewHolder extends RecyclerView.ViewHolder {
-
-        CircleImageView civ_user_image;
-        TextView tv_user_name, tv_comment_content;
-
-        public ViewHolder(@NonNull View itemView) {
-            super(itemView);
-
-            civ_user_image = itemView.findViewById(R.id.civ_user_image);
-            tv_user_name = itemView.findViewById(R.id.tv_user_name);
-            tv_comment_content = itemView.findViewById(R.id.tv_comment_content);
-        }
-    }
-
     private void getUser(final CircleImageView civ_user_image, final TextView tv_user_name, final String s_user_id) {
 
         final DatabaseReference userRef = firebaseDatabase
@@ -100,6 +84,20 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
             }
         });
 
+    }
+
+    public static class ViewHolder extends RecyclerView.ViewHolder {
+
+        CircleImageView civ_user_image;
+        TextView tv_user_name, tv_comment_content;
+
+        public ViewHolder(@NonNull View itemView) {
+            super(itemView);
+
+            civ_user_image = itemView.findViewById(R.id.civ_user_image);
+            tv_user_name = itemView.findViewById(R.id.tv_user_name);
+            tv_comment_content = itemView.findViewById(R.id.tv_comment_content);
+        }
     }
 
 }

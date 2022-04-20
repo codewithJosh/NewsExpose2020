@@ -1,8 +1,5 @@
 package com.codewithjosh.NewsExpose2k20;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,6 +7,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -59,8 +59,7 @@ public class LoginActivity extends AppCompatActivity {
             if (s_email.isEmpty() || s_password.isEmpty()) {
                 pd.dismiss();
                 Toast.makeText(this, "All fields are required!", Toast.LENGTH_SHORT).show();
-            }
-            else {
+            } else {
 
                 firebaseAuth.signInWithEmailAndPassword(s_email, s_password)
                         .addOnSuccessListener(authResult -> {

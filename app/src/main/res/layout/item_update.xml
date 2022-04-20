@@ -2,8 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="5dp"
     android:layout_marginTop="20dp"
+    android:layout_marginBottom="5dp"
     android:background="@drawable/create_secondary_item_decoration_round"
     android:orientation="vertical"
     android:padding="20dp">
@@ -24,8 +24,8 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_marginStart="15dp"
-            android:textSize="16sp"
-            android:textColor="?attr/colorOnPrimary" />
+            android:textColor="?attr/colorOnPrimary"
+            android:textSize="16sp" />
 
     </LinearLayout>
 
@@ -85,9 +85,9 @@
                 android:orientation="horizontal">
 
                 <ImageButton
+                    android:id="@+id/nav_comment"
                     android:layout_width="25dp"
                     android:layout_height="25dp"
-                    android:id="@+id/nav_comment"
                     android:background="@drawable/ic_comment" />
 
                 <TextView

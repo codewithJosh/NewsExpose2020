@@ -4,9 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".HomeActivity"
     android:background="@color/colorRaisinBlack"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    tools:context=".HomeActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -33,7 +33,7 @@
                     android:layout_width="75dp"
                     android:layout_height="75dp"
                     android:layout_gravity="end"
-                    android:layout_marginEnd="18dp"/>
+                    android:layout_marginEnd="18dp" />
 
             </androidx.appcompat.widget.Toolbar>
 
@@ -50,8 +50,8 @@
         android:id="@+id/nav_create_update"
         android:layout_width="75dp"
         android:layout_height="75dp"
-        android:layout_marginBottom="20dp"
         android:layout_marginEnd="15dp"
+        android:layout_marginBottom="20dp"
         android:background="@drawable/ic_create_update"
         android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"

@@ -1,8 +1,5 @@
 package com.codewithjosh.NewsExpose2k20;
 
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.app.ProgressDialog;
 import android.content.ContentResolver;
 import android.content.Intent;
@@ -14,6 +11,9 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
@@ -68,7 +68,7 @@ public class CreateUpdateActivity extends AppCompatActivity {
         btn_create_update.setOnClickListener(v -> onUpdate());
 
         CropImage.activity()
-                .setAspectRatio(1,1)
+                .setAspectRatio(1, 1)
                 .start(this);
     }
 
@@ -90,7 +90,7 @@ public class CreateUpdateActivity extends AppCompatActivity {
 
             uTask = _storageRef.putFile(uri);
             uTask.continueWithTask(task -> {
-                if(!task.isSuccessful()) throw task.getException();
+                if (!task.isSuccessful()) throw task.getException();
                 return _storageRef.getDownloadUrl();
 
             }).addOnSuccessListener(uri -> {
@@ -122,8 +122,7 @@ public class CreateUpdateActivity extends AppCompatActivity {
                             });
 
             });
-        }
-        else Toast.makeText(this, "No Image Selected!", Toast.LENGTH_SHORT).show();
+        } else Toast.makeText(this, "No Image Selected!", Toast.LENGTH_SHORT).show();
 
     }
 
@@ -131,12 +130,11 @@ public class CreateUpdateActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE && resultCode == RESULT_OK){
+        if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE && resultCode == RESULT_OK) {
             CropImage.ActivityResult result = CropImage.getActivityResult(data);
             uri = result.getUri();
             iv_update_image.setImageURI(uri);
-        }
-        else {
+        } else {
             Toast.makeText(this, "Something gone wrong!", Toast.LENGTH_SHORT).show();
             startActivity(new Intent(this, HomeActivity.class));
             finish();

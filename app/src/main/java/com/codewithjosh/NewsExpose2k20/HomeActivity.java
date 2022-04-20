@@ -1,12 +1,12 @@
 package com.codewithjosh.NewsExpose2k20;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageButton;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
 import com.codewithjosh.NewsExpose2k20.fragments.HomeFragment;
@@ -52,7 +52,8 @@ public class HomeActivity extends AppCompatActivity {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
-                        if (dataSnapshot.child("admin").getValue().equals(true)) nav_create_update.setVisibility(View.VISIBLE);
+                        if (dataSnapshot.child("admin").getValue().equals(true))
+                            nav_create_update.setVisibility(View.VISIBLE);
                         else nav_create_update.setVisibility(View.GONE);
 
                     }

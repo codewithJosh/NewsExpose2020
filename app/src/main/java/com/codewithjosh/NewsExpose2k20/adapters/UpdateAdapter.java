@@ -32,14 +32,12 @@ public class UpdateAdapter extends RecyclerView.Adapter<UpdateAdapter.ViewHolder
 
     public Context mContext;
     public List<UpdateModel> mUpdate;
-
+    FirebaseAuth firebaseAuth;
+    FirebaseDatabase firebaseDatabase;
     public UpdateAdapter(Context mContext, List<UpdateModel> mUpdate) {
         this.mContext = mContext;
         this.mUpdate = mUpdate;
     }
-
-    FirebaseAuth firebaseAuth;
-    FirebaseDatabase firebaseDatabase;
 
     @NonNull
     @Override
@@ -70,8 +68,7 @@ public class UpdateAdapter extends RecyclerView.Adapter<UpdateAdapter.ViewHolder
         if (updateModel.getSource().isEmpty()) {
             holder.tv_user_name.setVisibility(View.VISIBLE);
             holder.tv_user_name.setText(mContext.getResources().getString(R.string.def_user_name));
-        }
-        else {
+        } else {
             holder.tv_user_name.setVisibility(View.VISIBLE);
             holder.tv_user_name.setText(updateModel.getSource());
         }
@@ -106,28 +103,6 @@ public class UpdateAdapter extends RecyclerView.Adapter<UpdateAdapter.ViewHolder
     @Override
     public int getItemCount() {
         return mUpdate.size();
-    }
-
-    public static class ViewHolder extends RecyclerView.ViewHolder {
-
-        CircleImageView civ_user_image;
-        ImageButton btn_seen, nav_comment;
-        ImageView iv_update_image;
-        TextView tv_seen_count, tv_update_content, tv_comment_count, tv_user_name;
-
-        public ViewHolder(@NonNull View itemView) {
-            super(itemView);
-
-            civ_user_image = itemView.findViewById(R.id.civ_user_image);
-            btn_seen = itemView.findViewById(R.id.btn_seen);
-            nav_comment = itemView.findViewById(R.id.nav_comment);
-            iv_update_image = itemView.findViewById(R.id.iv_update_image);
-            tv_user_name = itemView.findViewById(R.id.tv_user_name);
-            tv_update_content = itemView.findViewById(R.id.tv_update_content);
-            tv_seen_count = itemView.findViewById(R.id.tv_seen_count);
-            tv_comment_count = itemView.findViewById(R.id.tv_comment_count);
-
-        }
     }
 
     private void getSource(final CircleImageView civ_user_image, final TextView tv_user_name, final String s_user_id) {
@@ -169,8 +144,7 @@ public class UpdateAdapter extends RecyclerView.Adapter<UpdateAdapter.ViewHolder
                 if (dataSnapshot.child(s_user_id).exists()) {
                     btn_seen.setImageResource(R.drawable.ic_seened);
                     btn_seen.setTag("seened");
-                }
-                else {
+                } else {
                     btn_seen.setImageResource(R.drawable.ic_seen);
                     btn_seen.setTag("seen");
                 }
@@ -199,8 +173,10 @@ public class UpdateAdapter extends RecyclerView.Adapter<UpdateAdapter.ViewHolder
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
                 tv_seen_count.setText(String.valueOf(dataSnapshot.getChildrenCount()));
-                if (dataSnapshot.child(s_user_id).exists()) tv_seen_count.setTextColor(mContext.getResources().getColor(R.color.colorKUCrimson));
-                else tv_seen_count.setTextColor(mContext.getResources().getColor(R.color.colorLightGray));
+                if (dataSnapshot.child(s_user_id).exists())
+                    tv_seen_count.setTextColor(mContext.getResources().getColor(R.color.colorKUCrimson));
+                else
+                    tv_seen_count.setTextColor(mContext.getResources().getColor(R.color.colorLightGray));
 
             }
 
@@ -234,5 +210,27 @@ public class UpdateAdapter extends RecyclerView.Adapter<UpdateAdapter.ViewHolder
 
             }
         });
+    }
+
+    public static class ViewHolder extends RecyclerView.ViewHolder {
+
+        CircleImageView civ_user_image;
+        ImageButton btn_seen, nav_comment;
+        ImageView iv_update_image;
+        TextView tv_seen_count, tv_update_content, tv_comment_count, tv_user_name;
+
+        public ViewHolder(@NonNull View itemView) {
+            super(itemView);
+
+            civ_user_image = itemView.findViewById(R.id.civ_user_image);
+            btn_seen = itemView.findViewById(R.id.btn_seen);
+            nav_comment = itemView.findViewById(R.id.nav_comment);
+            iv_update_image = itemView.findViewById(R.id.iv_update_image);
+            tv_user_name = itemView.findViewById(R.id.tv_user_name);
+            tv_update_content = itemView.findViewById(R.id.tv_update_content);
+            tv_seen_count = itemView.findViewById(R.id.tv_seen_count);
+            tv_comment_count = itemView.findViewById(R.id.tv_comment_count);
+
+        }
     }
 }
