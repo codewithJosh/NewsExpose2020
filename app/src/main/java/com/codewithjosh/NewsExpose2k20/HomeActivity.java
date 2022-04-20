@@ -55,7 +55,7 @@ public class HomeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
-        update = findViewById(R.id.update);
+        update = findViewById(R.id.nav_create_update);
         nav_home = findViewById(R.id.nav_home);
         nav_profile = findViewById(R.id.nav_profile);
 
@@ -80,7 +80,7 @@ public class HomeActivity extends AppCompatActivity {
         nav_home.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                getSupportFragmentManager().beginTransaction().replace(R.id.frame,
                         new HomeFragment()).commit();
             }
         });
@@ -88,12 +88,12 @@ public class HomeActivity extends AppCompatActivity {
         nav_profile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                getSupportFragmentManager().beginTransaction().replace(R.id.frame,
                         new ProfileFragment()).commit();
             }
         });
 
-        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+        getSupportFragmentManager().beginTransaction().replace(R.id.frame,
                 new HomeFragment()).commit();
 
         update.setOnClickListener(new View.OnClickListener() {
