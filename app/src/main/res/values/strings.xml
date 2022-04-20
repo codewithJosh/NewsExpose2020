@@ -2,4 +2,17 @@
     <string name="app_name">News Exposé</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="text_button_login">login</string>
+    <string name="text_button_register">register</string>
+    <string name="text_sign_up">Sign Up</string>
+    <string name="hint_user_name">Username</string>
+    <string name="hint_email">Email</string>
+    <string name="hint_password">Password</string>
+    <string name="hint_re_password">Re-Enter Password</string>
+    <string name="text_sign_in">Sign In</string>
+    <string name="hint_update_content">Add a caption…</string>
+    <string name="text_update">update</string>
+    <string name="def_user_name">Anonymous</string>
+    <string name="text_comments">Comments</string>
+    <string name="hint_comment_content">Add a comment…</string>
 </resources>

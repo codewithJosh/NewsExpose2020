@@ -2,7 +2,6 @@ package com.codewithjosh.NewsExpose2k20;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -12,7 +11,7 @@ import com.google.firebase.auth.FirebaseUser;
 
 public class MainActivity extends AppCompatActivity {
 
-    Button login, register;
+    Button btn_login, btn_register;
 
     FirebaseUser firebaseUser;
 
@@ -23,7 +22,7 @@ public class MainActivity extends AppCompatActivity {
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
 
         if (firebaseUser != null) {
-            startActivity(new Intent(MainActivity.this, HomeActivity.class));
+            startActivity(new Intent(this, HomeActivity.class));
             finish();
         }
 
@@ -34,22 +33,13 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        login = findViewById(R.id.login);
-        register = findViewById(R.id.register);
+        btn_login = findViewById(R.id.btn_login);
+        btn_register = findViewById(R.id.btn_register);
 
-        login.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(new Intent(MainActivity.this, LoginActivity.class));
-            }
-        });
+//        TODO: FOUND ISSUE: DISABLE BACK BUTTON
+        btn_login.setOnClickListener(v -> startActivity(new Intent(this, LoginActivity.class)));
 
-        register.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(new Intent(MainActivity.this, RegisterActivity.class));
-            }
-        });
+        btn_register.setOnClickListener(v -> startActivity(new Intent(this, RegisterActivity.class)));
 
     }
 

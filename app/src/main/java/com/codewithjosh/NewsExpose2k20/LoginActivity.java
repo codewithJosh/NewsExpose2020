@@ -3,8 +3,6 @@ package com.codewithjosh.NewsExpose2k20;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.TextUtils;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -13,9 +11,6 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -25,13 +20,16 @@ import com.google.firebase.database.ValueEventListener;
 
 public class LoginActivity extends AppCompatActivity {
 
-    EditText emailEditText, passwordEditText;
-    Button login;
-    TextView signupTextView;
+    Button btn_login;
+    EditText et_email, et_password;
+    TextView nav_register;
 
-    FirebaseAuth auth;
+    String s_email, s_password;
 
-    DatabaseReference reference, admin;
+    FirebaseAuth firebaseAuth;
+    FirebaseDatabase firebaseDatabase;
+
+    DatabaseReference databaseRef;
 
     ProgressDialog pd;
 
@@ -40,70 +38,62 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        emailEditText = findViewById(R.id.emailEditText);
-        passwordEditText = findViewById(R.id.passwordEditText);
-        login = findViewById(R.id.login);
-        signupTextView = findViewById(R.id.registerTextView);
+        btn_login = findViewById(R.id.btn_login);
+        et_email = findViewById(R.id.et_email);
+        et_password = findViewById(R.id.et_password);
+        nav_register = findViewById(R.id.nav_register);
 
-        signupTextView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(new Intent(LoginActivity.this, RegisterActivity.class));
-            }
-        });
+        firebaseAuth = FirebaseAuth.getInstance();
+        firebaseDatabase = FirebaseDatabase.getInstance();
 
-        auth = FirebaseAuth.getInstance();
+        nav_register.setOnClickListener(v -> startActivity(new Intent(this, RegisterActivity.class)));
 
-        login.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                pd = new ProgressDialog(LoginActivity.this);
-                pd.setMessage("Logging in");
-                pd.show();
+        btn_login.setOnClickListener(v -> {
+            pd = new ProgressDialog(this);
+            pd.setMessage("Logging in");
+            pd.show();
 
-                String str_email = emailEditText.getText().toString();
-                String str_password = passwordEditText.getText().toString();
+            s_email = et_email.getText().toString();
+            s_password = et_password.getText().toString();
 
-                if (TextUtils.isEmpty(str_email) || TextUtils.isEmpty(str_password)) {
+            if (s_email.isEmpty() || s_password.isEmpty()) {
+                pd.dismiss();
+                Toast.makeText(this, "All fields are required!", Toast.LENGTH_SHORT).show();
+            } else {
+
+                firebaseAuth.signInWithEmailAndPassword(s_email, s_password)
+                        .addOnSuccessListener(authResult -> {
+
+                            final String s_user_id = firebaseAuth.getCurrentUser().getUid();
+
+                            databaseRef = firebaseDatabase
+                                    .getReference()
+                                    .child("Users")
+                                    .child(s_user_id);
+
+//                            TODO: USE GET METHOD ONCE IT IS AVAILABLE
+                            databaseRef
+                                    .addValueEventListener(new ValueEventListener() {
+
+                                        @Override
+                                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                            pd.dismiss();
+                                            startActivity(new Intent(LoginActivity.this, RegisterActivity.class));
+                                            finish();
+
+                                        }
+
+                                        @Override
+                                        public void onCancelled(@NonNull DatabaseError error) {
+                                            pd.dismiss();
+
+                                        }
+                                    });
+
+                        }).addOnFailureListener(e -> {
                     pd.dismiss();
-                    Toast.makeText(LoginActivity.this, "All fields are required!", Toast.LENGTH_SHORT).show();
-                } else {
-
-                    auth.signInWithEmailAndPassword(str_email, str_password)
-                            .addOnCompleteListener(LoginActivity.this, new OnCompleteListener<AuthResult>() {
-                                @Override
-                                public void onComplete(@NonNull Task<AuthResult> task) {
-                                    if (task.isSuccessful()) {
-                                        reference = FirebaseDatabase.getInstance().getReference().child("Users")
-                                                .child(auth.getCurrentUser().getUid());
-
-                                        admin = FirebaseDatabase.getInstance().getReference().child("Users").child(auth.getCurrentUser().getUid()).child("admin");
-
-                                        reference.addValueEventListener(new ValueEventListener() {
-                                            @Override
-                                            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                                pd.dismiss();
-
-
-                                                Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
-                                                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                                                startActivity(intent);
-
-
-                                            }
-
-                                            @Override
-                                            public void onCancelled(@NonNull DatabaseError error) {
-                                                pd.dismiss();
-                                            }
-                                        });
-                                    } else {
-                                        pd.dismiss();
-                                        Toast.makeText(LoginActivity.this, "Incorrect Email or Password", Toast.LENGTH_SHORT).show();
-                                    }
-                                }
-                            });
-                }
+                    Toast.makeText(this, "Incorrect Email or Password", Toast.LENGTH_SHORT).show();
+                });
             }
         });
 

@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.codewithjosh.NewsExpose2k20.R;
 import com.codewithjosh.NewsExpose2k20.adapters.UpdateAdapter;
-import com.codewithjosh.NewsExpose2k20.models.Update;
+import com.codewithjosh.NewsExpose2k20.models.UpdateModel;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -24,45 +24,53 @@ import java.util.List;
 
 public class HomeFragment extends Fragment {
 
-    private RecyclerView recyclerView;
+    RecyclerView recycler_updates;
+    FirebaseDatabase firebaseDatabase;
+    DatabaseReference databaseRef;
     private UpdateAdapter updateAdapter;
-    private List<Update> updateList;
+    private List<UpdateModel> updateList;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_home, container, false);
 
-        recyclerView = view.findViewById(R.id.recycler_view);
-        recyclerView.setHasFixedSize(true); // false
+        recycler_updates = view.findViewById(R.id.recycler_updates);
+        recycler_updates.setHasFixedSize(true);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         linearLayoutManager.setReverseLayout(true);
         linearLayoutManager.setStackFromEnd(true);
-        recyclerView.setLayoutManager(linearLayoutManager);
+        recycler_updates.setLayoutManager(linearLayoutManager);
         updateList = new ArrayList<>();
         updateAdapter = new UpdateAdapter(getContext(), updateList);
-        recyclerView.setAdapter(updateAdapter);
+        recycler_updates.setAdapter(updateAdapter);
 
-        readUpdates();
+        firebaseDatabase = FirebaseDatabase.getInstance();
+
+        getUpdates();
 
         return view;
 
     }
 
-    private void readUpdates() {
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Updates");
+    private void getUpdates() {
 
-        reference.addValueEventListener(new ValueEventListener() {
+        databaseRef = firebaseDatabase.getReference("Updates");
+
+//        TODO: USE GET METHOD ONCE IT IS AVAILABLE
+        databaseRef.addValueEventListener(new ValueEventListener() {
+
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
                 updateList.clear();
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    Update update = snapshot.getValue(Update.class);
-                    updateList.add(update);
+                    UpdateModel updateModel = snapshot.getValue(UpdateModel.class);
+                    updateList.add(updateModel);
                 }
-
                 updateAdapter.notifyDataSetChanged();
+
             }
 
             @Override
@@ -70,6 +78,7 @@ public class HomeFragment extends Fragment {
 
             }
         });
+
     }
 
 }

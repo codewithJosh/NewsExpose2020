@@ -3,7 +3,7 @@ package com.codewithjosh.NewsExpose2k20;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.ImageView;
+import android.widget.ImageButton;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -11,7 +11,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.bumptech.glide.Glide;
 import com.codewithjosh.NewsExpose2k20.fragments.HomeFragment;
 import com.codewithjosh.NewsExpose2k20.fragments.ProfileFragment;
-import com.codewithjosh.NewsExpose2k20.models.User;
+import com.codewithjosh.NewsExpose2k20.models.UserModel;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -19,35 +19,51 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
 public class HomeActivity extends AppCompatActivity {
 
-    ImageView nav_home, nav_profile, update;
+    CircleImageView nav_profile;
+    ImageButton nav_home, nav_create_update;
 
-    DatabaseReference reference;
+    FirebaseAuth firebaseAuth;
+    FirebaseDatabase firebaseDatabase;
+
+    DatabaseReference databaseRef;
 
     @Override
     protected void onStart() {
         super.onStart();
 
-        reference = FirebaseDatabase.getInstance().getReference()
+        firebaseAuth = FirebaseAuth.getInstance();
+        firebaseDatabase = FirebaseDatabase.getInstance();
+
+        final String s_user_id = firebaseAuth.getCurrentUser().getUid();
+
+        databaseRef = firebaseDatabase
+                .getReference()
                 .child("Users")
-                .child(FirebaseAuth.getInstance().getCurrentUser().getUid());
+                .child(s_user_id);
 
-        reference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if (dataSnapshot.child("admin").getValue().equals(true)) {
-                    update.setVisibility(View.VISIBLE);
-                } else {
-                    update.setVisibility(View.GONE);
-                }
-            }
+//        TODO: USE GET METHOD ONCE IT IS AVAILABLE
+        databaseRef
+                .addValueEventListener(new ValueEventListener() {
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
-            }
-        });
+                        if (dataSnapshot.child("admin").getValue().equals(true))
+                            nav_create_update.setVisibility(View.VISIBLE);
+                        else nav_create_update.setVisibility(View.GONE);
+
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
+
     }
 
     @Override
@@ -55,53 +71,48 @@ public class HomeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
-        update = findViewById(R.id.update);
-        nav_home = findViewById(R.id.nav_home);
         nav_profile = findViewById(R.id.nav_profile);
+        nav_home = findViewById(R.id.nav_home);
+        nav_create_update = findViewById(R.id.nav_create_update);
 
-        reference = FirebaseDatabase.getInstance().getReference()
+        firebaseAuth = FirebaseAuth.getInstance();
+        firebaseDatabase = FirebaseDatabase.getInstance();
+
+        final String s_user_id = firebaseAuth.getCurrentUser().getUid();
+
+        databaseRef = firebaseDatabase
+                .getReference()
                 .child("Users")
-                .child(FirebaseAuth.getInstance().getCurrentUser().getUid());
+                .child(s_user_id);
 
-        reference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                User user = dataSnapshot.getValue(User.class);
-                Glide.with(getApplicationContext()).load(user.getImageurl()).into(nav_profile);
+//        TODO: USE GET METHOD ONCE IT IS AVAILABLE
+        databaseRef
+                .addValueEventListener(new ValueEventListener() {
 
-            }
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        UserModel userModel = dataSnapshot.getValue(UserModel.class);
+//                        TODO: FOUND ISSUE: UPDATE THE CREDENTIALS
+                        Glide.with(getApplicationContext()).load(userModel.getImageurl()).into(nav_profile);
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
+                    }
 
-            }
-        });
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
 
-        nav_home.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                        new HomeFragment()).commit();
-            }
-        });
+                    }
+                });
 
-        nav_profile.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                        new ProfileFragment()).commit();
-            }
-        });
+        nav_create_update.setOnClickListener(v -> startActivity(new Intent(this, CreateUpdateActivity.class)));
 
-        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+        nav_home.setOnClickListener(v -> getSupportFragmentManager().beginTransaction().replace(R.id.frame,
+                new HomeFragment()).commit());
+
+        nav_profile.setOnClickListener(v -> getSupportFragmentManager().beginTransaction().replace(R.id.frame,
+                new ProfileFragment()).commit());
+
+        getSupportFragmentManager().beginTransaction().replace(R.id.frame,
                 new HomeFragment()).commit();
-
-        update.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(new Intent(HomeActivity.this, CreateUpdateActivity.class));
-            }
-        });
 
     }
 

@@ -4,7 +4,6 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -12,10 +11,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.codewithjosh.NewsExpose2k20.R;
-import com.codewithjosh.NewsExpose2k20.models.Comment;
-import com.codewithjosh.NewsExpose2k20.models.User;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
+import com.codewithjosh.NewsExpose2k20.models.CommentModel;
+import com.codewithjosh.NewsExpose2k20.models.UserModel;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -24,33 +21,38 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.List;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
 public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHolder> {
 
-    private Context mContext;
-    private List<Comment> mComment;
+    public Context mContext;
+    public List<CommentModel> mComment;
+    FirebaseDatabase firebaseDatabase;
 
-    private FirebaseUser firebaseUser;
-
-    public CommentAdapter(Context mContext, List<Comment> mComment) {
+    public CommentAdapter(Context mContext, List<CommentModel> mComment) {
         this.mContext = mContext;
         this.mComment = mComment;
     }
 
     @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(mContext).inflate(R.layout.comment_item, parent, false);
-        return new CommentAdapter.ViewHolder(view);
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {
+        View view = LayoutInflater.from(mContext).inflate(R.layout.item_comment, viewGroup, false);
+        return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-        final Comment comment = mComment.get(position);
 
-        holder.comment.setText(comment.getComment());
+        final CommentModel commentModel = mComment.get(position);
 
-        getUserInfo(holder.image_profile, holder.username, comment.getUserid());
+        firebaseDatabase = FirebaseDatabase.getInstance();
+
+//        TODO: FOUND ISSUE: UPDATE THE MODELS
+        holder.tv_comment_content.setText(commentModel.getComment());
+
+        getUser(holder.civ_user_image, holder.tv_user_name, commentModel.getUserid());
+
     }
 
     @Override
@@ -58,15 +60,22 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
         return mComment.size();
     }
 
-    private void getUserInfo(final ImageView imageView, final TextView username, String id) {
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("Users").child(id);
+    private void getUser(final CircleImageView civ_user_image, final TextView tv_user_name, final String s_user_id) {
 
-        reference.addValueEventListener(new ValueEventListener() {
+        final DatabaseReference userRef = firebaseDatabase
+                .getReference()
+                .child("Users")
+                .child(s_user_id);
+
+//        TODO: USE GET METHOD ONCE IT IS AVAILABLE
+        userRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                User user = dataSnapshot.getValue(User.class);
-                Glide.with(mContext).load(user.getImageurl()).into(imageView);
-                username.setText(user.getUsername());
+
+                UserModel userModel = dataSnapshot.getValue(UserModel.class);
+                Glide.with(mContext).load(userModel.getImageurl()).into(civ_user_image);
+                tv_user_name.setText(userModel.getUsername());
+
             }
 
             @Override
@@ -74,22 +83,21 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
 
             }
         });
+
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public static class ViewHolder extends RecyclerView.ViewHolder {
 
-        public ImageView image_profile;
-        public TextView username, comment;
+        CircleImageView civ_user_image;
+        TextView tv_user_name, tv_comment_content;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
 
-            image_profile = itemView.findViewById(R.id.image_profile);
-            username = itemView.findViewById(R.id.username);
-            comment = itemView.findViewById(R.id.comment);
-
+            civ_user_image = itemView.findViewById(R.id.civ_user_image);
+            tv_user_name = itemView.findViewById(R.id.tv_user_name);
+            tv_comment_content = itemView.findViewById(R.id.tv_comment_content);
         }
-
     }
 
 }

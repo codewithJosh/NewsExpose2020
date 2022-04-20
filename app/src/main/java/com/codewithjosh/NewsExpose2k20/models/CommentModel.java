@@ -1,6 +1,6 @@
 package com.codewithjosh.NewsExpose2k20.models;
 
-public class Comment {
+public class CommentModel {
 
     private String comment;
     private String userid;

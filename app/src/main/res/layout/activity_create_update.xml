@@ -1,98 +1,90 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/img_background"
-    android:orientation="vertical"
     tools:context=".CreateUpdateActivity">
 
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:alpha="0.7"
+        android:background="?attr/colorOnSecondary" />
+
     <com.google.android.material.appbar.AppBarLayout
-        android:id="@+id/bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
         <androidx.appcompat.widget.Toolbar
-            android:id="@+id/toolbar"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/colorChineseBlack">
+            android:layout_height="match_parent"
+            android:background="?attr/colorSecondary">
 
-            <RelativeLayout
-                android:layout_width="378dp"
-                android:layout_height="wrap_content">
+            <ImageButton
+                android:id="@+id/btn_back"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/ic_back" />
 
-                <ImageView
-                    android:id="@+id/back"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentStart="true"
-                    android:src="@drawable/ic_back" />
-
-                <TextView
-                    android:id="@+id/update"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
-                    android:layout_centerVertical="true"
-                    android:text="UPDATE"
-                    android:textColor="?attr/colorPrimary"
-                    android:textSize="16sp"
-                    android:textStyle="bold" />
-
-            </RelativeLayout>
+            <TextView
+                android:id="@+id/btn_create_update"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:layout_marginEnd="18dp"
+                android:text="@string/text_update"
+                android:textAllCaps="true"
+                android:textColor="?attr/colorPrimary"
+                android:textSize="16sp"
+                android:textStyle="bold" />
 
         </androidx.appcompat.widget.Toolbar>
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <RelativeLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true">
 
-        <RelativeLayout
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:alpha="0.3"
+            android:background="?attr/colorOnSecondary"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:alpha="0.7"
-            android:background="?attr/colorOnSecondary" />
-
-        <RelativeLayout
-            android:layout_width="390dp"
-            android:layout_height="370dp"
-            android:layout_centerInParent="true"
-            android:layout_marginTop="30dp"
-            android:alpha="0.3"
-            android:background="?attr/colorOnSecondary" />
-
-        <RelativeLayout
-            android:layout_width="390dp"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:layout_marginTop="30dp"
+            android:orientation="vertical"
             android:padding="15dp">
 
             <ImageView
-                android:id="@+id/image_added"
+                android:id="@+id/iv_update_image"
                 android:layout_width="match_parent"
-                android:layout_height="200dp"
-                android:layout_gravity="center"
-                android:scaleType="centerInside" />
+                android:layout_height="250dp" />
 
             <EditText
-                android:id="@+id/subject"
+                android:id="@+id/et_update_content"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/image_added"
                 android:layout_marginTop="15dp"
                 android:background="@color/colorRaisinBlack"
-                android:hint="Subject"
+                android:hint="@string/hint_update_content"
+                android:includeFontPadding="false"
                 android:maxLines="5"
                 android:padding="10dp"
                 android:textColor="?attr/colorOnPrimary"
-                android:textColorHint="#8a8a8a" />
+                android:textColorHint="@color/colorPhilippineGray" />
 
-        </RelativeLayout>
+        </LinearLayout>
 
-    </RelativeLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
-</LinearLayout>
+</RelativeLayout>
