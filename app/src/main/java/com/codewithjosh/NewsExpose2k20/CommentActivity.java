@@ -1,23 +1,21 @@
 package com.codewithjosh.NewsExpose2k20;
 
-import android.content.Intent;
-import android.os.Bundle;
-import android.view.View;
-import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
+import android.os.Bundle;
+import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.Toast;
+
 import com.bumptech.glide.Glide;
 import com.codewithjosh.NewsExpose2k20.adapters.CommentAdapter;
 import com.codewithjosh.NewsExpose2k20.models.CommentModel;
 import com.codewithjosh.NewsExpose2k20.models.UserModel;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -30,72 +28,90 @@ import java.util.List;
 
 public class CommentActivity extends AppCompatActivity {
 
-    EditText add_comment;
-    ImageView image_profile, send, back;
-
-    String updateid;
-    String userid;
-    FirebaseUser firebaseUser;
-    private RecyclerView recyclerView;
     private CommentAdapter commentAdapter;
-    private List<CommentModel> commentList;
+    private List<CommentModel> mComment;
+
+    String s_update_id;
+    String s_user_id;
+
+    EditText et_comment_content;
+    ImageButton btn_back, btn_comment;
+    ImageView iv_user_image;
+    RecyclerView recycler_comments;
+
+    FirebaseDatabase firebaseDatabase;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_comment);
 
-        add_comment = findViewById(R.id.et_comment_content);
-        image_profile = findViewById(R.id.civ_user_image);
-        send = findViewById(R.id.btn_comment);
-        back = findViewById(R.id.btn_back);
-
-        back.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(new Intent(CommentActivity.this, MainActivity.class));
-            }
-        });
-
-        firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-
-        getImage();
-
-        Intent intent = getIntent();
-        updateid = intent.getStringExtra("updateid");
-        userid = intent.getStringExtra("userid");
-
-        send.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (add_comment.getText().toString().equals("")) {
-                    Toast.makeText(CommentActivity.this, "You can't send empty comment", Toast.LENGTH_SHORT).show();
-                } else {
-                    add_comment();
-                }
-            }
-        });
-
-        recyclerView = findViewById(R.id.recycler_comments);
-        recyclerView.setHasFixedSize(true); // false
+        recycler_comments = findViewById(R.id.recycler_comments);
+        recycler_comments.setHasFixedSize(true);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
-        recyclerView.setLayoutManager(linearLayoutManager);
-        commentList = new ArrayList<>();
-        commentAdapter = new CommentAdapter(this, commentList);
-        recyclerView.setAdapter(commentAdapter);
+        linearLayoutManager.setReverseLayout(true);
+        linearLayoutManager.setStackFromEnd(true);
+        recycler_comments.setLayoutManager(linearLayoutManager);
+        mComment = new ArrayList<>();
+        commentAdapter = new CommentAdapter(this, mComment);
+        recycler_comments.setAdapter(commentAdapter);
 
-        readComments();
+        et_comment_content = findViewById(R.id.et_comment_content);
+        btn_back = findViewById(R.id.btn_back);
+        btn_comment = findViewById(R.id.btn_comment);
+        iv_user_image = findViewById(R.id.civ_user_image);
+
+        firebaseDatabase = FirebaseDatabase.getInstance();
+
+        btn_back.setOnClickListener(v -> startActivity(new Intent(this, HomeActivity.class)));
+
+//        TODO: FOUND ISSUE: UPDATE PASS PARAMETERS incl. UpdateAdapter
+        s_update_id = getIntent().getStringExtra("updateid");
+        s_user_id = getIntent().getStringExtra("userid");
+
+        btn_comment.setOnClickListener(v -> {
+
+            if (et_comment_content.getText().toString().isEmpty()) Toast.makeText(this, "You can't send empty comment", Toast.LENGTH_SHORT).show();
+            else onSend();
+
+        });
+
+        getUserImage();
+        getComments();
+    }
+
+    private void onSend() {
+
+        final DatabaseReference updateRef = firebaseDatabase
+                .getReference("Comments")
+                .child(s_update_id);
+
+        HashMap<String, Object> comment = new HashMap<>();
+        comment.put("comment", et_comment_content.getText().toString().trim());
+        comment.put("userid", s_user_id);
+
+        updateRef
+                .push()
+                .setValue(comment)
+                .addOnSuccessListener(runnable -> et_comment_content.setText(""));
 
     }
 
-    private void getImage() {
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users").child(firebaseUser.getUid());
+    private void getUserImage() {
 
-        reference.addValueEventListener(new ValueEventListener() {
+        final DatabaseReference userRef = firebaseDatabase
+                .getReference("Users")
+                .child(s_user_id);
+
+//        TODO: USE GET METHOD ONCE IT IS AVAILABLE
+        userRef.addValueEventListener(new ValueEventListener() {
+
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
                 UserModel userModel = dataSnapshot.getValue(UserModel.class);
-                Glide.with(getApplicationContext()).load(userModel.getImageurl()).into(image_profile);
+                Glide.with(getApplicationContext()).load(userModel.getImageurl()).into(iv_user_image);
+
             }
 
             @Override
@@ -105,30 +121,25 @@ public class CommentActivity extends AppCompatActivity {
         });
     }
 
-    private void add_comment() {
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Comments").child(updateid);
+    private void getComments() {
 
-        HashMap<String, Object> hashMap = new HashMap<>();
-        hashMap.put("comment", add_comment.getText().toString().trim());
-        hashMap.put("userid", firebaseUser.getUid());
+        final DatabaseReference updateRef = firebaseDatabase
+                .getReference("Comments")
+                .child(s_update_id);
 
-        reference.push().setValue(hashMap);
-        add_comment.setText("");
-    }
+//        TODO: USE GET METHOD ONCE IT IS AVAILABLE
+        updateRef.addValueEventListener(new ValueEventListener() {
 
-    private void readComments() {
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Comments").child(updateid);
-
-        reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                commentList.clear();
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    CommentModel commentModel = snapshot.getValue(CommentModel.class);
-                    commentList.add(commentModel);
-                }
 
+                mComment.clear();
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()){
+                    CommentModel commentModel = snapshot.getValue(CommentModel.class);
+                    mComment.add(commentModel);
+                }
                 commentAdapter.notifyDataSetChanged();
+
             }
 
             @Override
@@ -136,6 +147,7 @@ public class CommentActivity extends AppCompatActivity {
 
             }
         });
+
     }
 
 }

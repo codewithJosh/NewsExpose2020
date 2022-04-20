@@ -4,7 +4,6 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -14,8 +13,6 @@ import com.bumptech.glide.Glide;
 import com.codewithjosh.NewsExpose2k20.R;
 import com.codewithjosh.NewsExpose2k20.models.CommentModel;
 import com.codewithjosh.NewsExpose2k20.models.UserModel;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -24,33 +21,40 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.List;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
 public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHolder> {
 
-    private Context mContext;
-    private List<CommentModel> mComment;
+    public Context mContext;
+    public List<CommentModel> mComment;
 
-    private FirebaseUser firebaseUser;
 
     public CommentAdapter(Context mContext, List<CommentModel> mComment) {
         this.mContext = mContext;
         this.mComment = mComment;
     }
 
+    FirebaseDatabase firebaseDatabase;
+
     @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(mContext).inflate(R.layout.item_comment, parent, false);
-        return new CommentAdapter.ViewHolder(view);
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {
+        View view = LayoutInflater.from(mContext).inflate(R.layout.item_comment, viewGroup, false);
+        return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+
         final CommentModel commentModel = mComment.get(position);
 
-        holder.comment.setText(commentModel.getComment());
+        firebaseDatabase = FirebaseDatabase.getInstance();
 
-        getUserInfo(holder.image_profile, holder.username, commentModel.getUserid());
+//        TODO: FOUND ISSUE: UPDATE THE MODELS
+        holder.tv_comment_content.setText(commentModel.getComment());
+
+        getUser(holder.civ_user_image, holder.tv_user_name, commentModel.getUserid());
+
     }
 
     @Override
@@ -58,15 +62,36 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
         return mComment.size();
     }
 
-    private void getUserInfo(final ImageView imageView, final TextView username, String id) {
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("Users").child(id);
+    public static class ViewHolder extends RecyclerView.ViewHolder {
 
-        reference.addValueEventListener(new ValueEventListener() {
+        CircleImageView civ_user_image;
+        TextView tv_user_name, tv_comment_content;
+
+        public ViewHolder(@NonNull View itemView) {
+            super(itemView);
+
+            civ_user_image = itemView.findViewById(R.id.civ_user_image);
+            tv_user_name = itemView.findViewById(R.id.tv_user_name);
+            tv_comment_content = itemView.findViewById(R.id.tv_comment_content);
+        }
+    }
+
+    private void getUser(final CircleImageView civ_user_image, final TextView tv_user_name, final String s_user_id) {
+
+        final DatabaseReference userRef = firebaseDatabase
+                .getReference()
+                .child("Users")
+                .child(s_user_id);
+
+//        TODO: USE GET METHOD ONCE IT IS AVAILABLE
+        userRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
                 UserModel userModel = dataSnapshot.getValue(UserModel.class);
-                Glide.with(mContext).load(userModel.getImageurl()).into(imageView);
-                username.setText(userModel.getUsername());
+                Glide.with(mContext).load(userModel.getImageurl()).into(civ_user_image);
+                tv_user_name.setText(userModel.getUsername());
+
             }
 
             @Override
@@ -74,21 +99,6 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
 
             }
         });
-    }
-
-    public class ViewHolder extends RecyclerView.ViewHolder {
-
-        public ImageView image_profile;
-        public TextView username, comment;
-
-        public ViewHolder(@NonNull View itemView) {
-            super(itemView);
-
-            image_profile = itemView.findViewById(R.id.civ_user_image);
-            username = itemView.findViewById(R.id.tv_user_name);
-            comment = itemView.findViewById(R.id.tv_comment_content);
-
-        }
 
     }
 
