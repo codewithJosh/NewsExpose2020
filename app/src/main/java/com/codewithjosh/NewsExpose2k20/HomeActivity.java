@@ -11,7 +11,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.bumptech.glide.Glide;
 import com.codewithjosh.NewsExpose2k20.fragments.HomeFragment;
 import com.codewithjosh.NewsExpose2k20.fragments.ProfileFragment;
-import com.codewithjosh.NewsExpose2k20.models.User;
+import com.codewithjosh.NewsExpose2k20.models.UserModel;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -66,8 +66,8 @@ public class HomeActivity extends AppCompatActivity {
         reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                User user = dataSnapshot.getValue(User.class);
-                Glide.with(getApplicationContext()).load(user.getImageurl()).into(nav_profile);
+                UserModel userModel = dataSnapshot.getValue(UserModel.class);
+                Glide.with(getApplicationContext()).load(userModel.getImageurl()).into(nav_profile);
 
             }
 

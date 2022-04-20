@@ -16,7 +16,7 @@ import com.bumptech.glide.Glide;
 import com.codewithjosh.NewsExpose2k20.CommentActivity;
 import com.codewithjosh.NewsExpose2k20.R;
 import com.codewithjosh.NewsExpose2k20.models.Update;
-import com.codewithjosh.NewsExpose2k20.models.User;
+import com.codewithjosh.NewsExpose2k20.models.UserModel;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -122,9 +122,9 @@ public class UpdateAdapter extends RecyclerView.Adapter<UpdateAdapter.ViewHolder
         reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                User user = dataSnapshot.getValue(User.class);
-                Glide.with(mContext).load(user.getImageurl()).into(image_profile);
-                username.setText(user.getUsername());
+                UserModel userModel = dataSnapshot.getValue(UserModel.class);
+                Glide.with(mContext).load(userModel.getImageurl()).into(image_profile);
+                username.setText(userModel.getUsername());
             }
 
             @Override

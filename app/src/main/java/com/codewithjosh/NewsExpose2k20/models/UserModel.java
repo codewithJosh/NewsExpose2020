@@ -1,6 +1,6 @@
 package com.codewithjosh.NewsExpose2k20.models;
 
-public class User {
+public class UserModel {
 
     private String id;
     private String username;

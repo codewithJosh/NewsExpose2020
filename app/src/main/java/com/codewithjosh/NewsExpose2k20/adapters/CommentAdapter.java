@@ -13,7 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.codewithjosh.NewsExpose2k20.R;
 import com.codewithjosh.NewsExpose2k20.models.Comment;
-import com.codewithjosh.NewsExpose2k20.models.User;
+import com.codewithjosh.NewsExpose2k20.models.UserModel;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -64,9 +64,9 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
         reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                User user = dataSnapshot.getValue(User.class);
-                Glide.with(mContext).load(user.getImageurl()).into(imageView);
-                username.setText(user.getUsername());
+                UserModel userModel = dataSnapshot.getValue(UserModel.class);
+                Glide.with(mContext).load(userModel.getImageurl()).into(imageView);
+                username.setText(userModel.getUsername());
             }
 
             @Override
