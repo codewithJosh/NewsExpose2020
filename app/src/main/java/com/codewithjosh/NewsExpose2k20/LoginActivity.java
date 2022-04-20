@@ -40,10 +40,10 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        emailEditText = findViewById(R.id.emailEditText);
-        passwordEditText = findViewById(R.id.passwordEditText);
-        login = findViewById(R.id.login);
-        signupTextView = findViewById(R.id.registerTextView);
+        emailEditText = findViewById(R.id.et_email);
+        passwordEditText = findViewById(R.id.et_password);
+        login = findViewById(R.id.btn_login);
+        signupTextView = findViewById(R.id.nav_register);
 
         signupTextView.setOnClickListener(new View.OnClickListener() {
             @Override
