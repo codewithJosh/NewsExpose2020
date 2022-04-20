@@ -208,15 +208,15 @@ public class UpdateAdapter extends RecyclerView.Adapter<UpdateAdapter.ViewHolder
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
 
-            image_profile = itemView.findViewById(R.id.image_profile);
-            username = itemView.findViewById(R.id.username);
-            update_image = itemView.findViewById(R.id.update_image);
-            seens = itemView.findViewById(R.id.seens);
-            comment = itemView.findViewById(R.id.comment);
-            source = itemView.findViewById(R.id.username);
-            seen = itemView.findViewById(R.id.seen);
-            subject = itemView.findViewById(R.id.subject);
-            comments = itemView.findViewById(R.id.comments);
+            image_profile = itemView.findViewById(R.id.civ_user_image);
+            username = itemView.findViewById(R.id.tv_user_name);
+            update_image = itemView.findViewById(R.id.iv_update_image);
+            seens = itemView.findViewById(R.id.tv_seen_count);
+            comment = itemView.findViewById(R.id.nav_comment);
+            source = itemView.findViewById(R.id.tv_user_name);
+            seen = itemView.findViewById(R.id.btn_seen);
+            subject = itemView.findViewById(R.id.tv_update_content);
+            comments = itemView.findViewById(R.id.tv_comment_count);
 
         }
 
