@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.codewithjosh.NewsExpose2k20.R;
-import com.codewithjosh.NewsExpose2k20.models.Comment;
+import com.codewithjosh.NewsExpose2k20.models.CommentModel;
 import com.codewithjosh.NewsExpose2k20.models.UserModel;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -27,11 +27,11 @@ import java.util.List;
 public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHolder> {
 
     private Context mContext;
-    private List<Comment> mComment;
+    private List<CommentModel> mComment;
 
     private FirebaseUser firebaseUser;
 
-    public CommentAdapter(Context mContext, List<Comment> mComment) {
+    public CommentAdapter(Context mContext, List<CommentModel> mComment) {
         this.mContext = mContext;
         this.mComment = mComment;
     }
@@ -46,11 +46,11 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-        final Comment comment = mComment.get(position);
+        final CommentModel commentModel = mComment.get(position);
 
-        holder.comment.setText(comment.getComment());
+        holder.comment.setText(commentModel.getComment());
 
-        getUserInfo(holder.image_profile, holder.username, comment.getUserid());
+        getUserInfo(holder.image_profile, holder.username, commentModel.getUserid());
     }
 
     @Override

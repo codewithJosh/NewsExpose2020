@@ -14,7 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.codewithjosh.NewsExpose2k20.adapters.CommentAdapter;
-import com.codewithjosh.NewsExpose2k20.models.Comment;
+import com.codewithjosh.NewsExpose2k20.models.CommentModel;
 import com.codewithjosh.NewsExpose2k20.models.UserModel;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -38,7 +38,7 @@ public class CommentActivity extends AppCompatActivity {
     FirebaseUser firebaseUser;
     private RecyclerView recyclerView;
     private CommentAdapter commentAdapter;
-    private List<Comment> commentList;
+    private List<CommentModel> commentList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -124,8 +124,8 @@ public class CommentActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 commentList.clear();
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    Comment comment = snapshot.getValue(Comment.class);
-                    commentList.add(comment);
+                    CommentModel commentModel = snapshot.getValue(CommentModel.class);
+                    commentList.add(commentModel);
                 }
 
                 commentAdapter.notifyDataSetChanged();
