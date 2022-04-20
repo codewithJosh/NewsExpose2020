@@ -42,7 +42,7 @@ public class UpdateAdapter extends RecyclerView.Adapter<UpdateAdapter.ViewHolder
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(mContext).inflate(R.layout.update_item, parent, false);
+        View view = LayoutInflater.from(mContext).inflate(R.layout.item_update, parent, false);
         return new ViewHolder(view);
     }
 
