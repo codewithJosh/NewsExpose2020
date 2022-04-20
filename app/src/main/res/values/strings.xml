@@ -2,4 +2,6 @@
     <string name="app_name">News Exposé</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="text_button_login">login</string>
+    <string name="text_button_register">register</string>
 </resources>

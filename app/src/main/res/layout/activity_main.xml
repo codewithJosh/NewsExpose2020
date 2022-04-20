@@ -1,25 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/img_background"
-    android:orientation="vertical"
-    tools:context=".MainActivity">
+    tools:context=".MainActivity"
+    android:background="@drawable/img_background">
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
-        <ImageView
+        <View
             android:layout_width="300dp"
             android:layout_height="300dp"
             android:layout_centerHorizontal="true"
             android:alpha="0.7"
-            android:src="@drawable/create_chinese_black_1_decoration" />
+            android:background="@drawable/create_chinese_black_1_decoration" />
 
         <ImageView
-            android:id="@+id/logo"
+            android:id="@+id/iv_logo"
             android:layout_width="300dp"
             android:layout_height="170dp"
             android:layout_centerHorizontal="true"
@@ -29,19 +32,23 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/logo"
+            android:layout_below="@id/iv_logo"
             android:layout_centerHorizontal="true"
             android:letterSpacing="0.6"
-            android:text="NEWS EXPOSE"
+            android:text="@string/app_name"
+            android:textAllCaps="true"
             android:textColor="?attr/colorPrimary" />
 
     </RelativeLayout>
 
     <RelativeLayout
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
 
-        <RelativeLayout
+        <View
             android:layout_width="match_parent"
             android:layout_height="48dp"
             android:layout_alignParentBottom="true"
@@ -54,25 +61,27 @@
             android:layout_alignParentBottom="true">
 
             <Button
-                android:id="@+id/login"
+                android:id="@+id/btn_login"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.5"
-                android:background="@null"
-                android:text="log in"
+                android:background="@android:color/transparent"
+                android:text="@string/text_button_login"
+                android:textAllCaps="true"
                 android:textColor="?attr/colorOnPrimary" />
 
             <Button
-                android:id="@+id/register"
+                android:id="@+id/btn_register"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.5"
-                android:background="@null"
-                android:text="register"
+                android:background="@android:color/transparent"
+                android:text="@string/text_button_register"
+                android:textAllCaps="true"
                 android:textColor="?attr/colorOnPrimary" />
 
         </LinearLayout>
 
     </RelativeLayout>
 
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
