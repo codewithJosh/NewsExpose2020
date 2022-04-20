@@ -48,10 +48,10 @@ public class CreateUpdateActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_update);
 
-        close = findViewById(R.id.back);
-        image_added = findViewById(R.id.image_added);
-        update = findViewById(R.id.update);
-        subject = findViewById(R.id.subject);
+        close = findViewById(R.id.btn_back);
+        image_added = findViewById(R.id.iv_update_image);
+        update = findViewById(R.id.btn_create_update);
+        subject = findViewById(R.id.et_update_content);
 
         close.setOnClickListener(new View.OnClickListener() {
             @Override
