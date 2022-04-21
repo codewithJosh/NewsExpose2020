@@ -84,4 +84,89 @@
 
     </RelativeLayout>
 
+        <LinearLayout
+            android:id="@+id/is_loading"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:alpha="0.9"
+            android:background="?attr/colorSecondary"
+            android:clickable="true"
+            android:focusable="true"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <com.tuyenmonkey.mkloader.MKLoader
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                app:mk_color="?attr/colorPrimary"
+                app:mk_type="TwinFishesSpinner" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="50dp"
+                android:includeFontPadding="false"
+                android:letterSpacing="0.06"
+                android:text="@string/text_checking_for_updates"
+                android:textAllCaps="true"
+                android:textColor="@color/colorChineseSilver" />
+
+        </LinearLayout>
+
+        <RelativeLayout
+            android:id="@+id/is_unsupported"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clickable="true"
+            android:focusable="true"
+            android:visibility="gone">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:alpha="0.9"
+                android:background="?attr/colorSecondary" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:layout_width="300dp"
+                    android:layout_height="170dp"
+                    android:layout_marginTop="45dp"
+                    android:src="@drawable/ic_logo" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:letterSpacing="0.6"
+                    android:text="@string/app_name"
+                    android:textAllCaps="true"
+                    android:textColor="?attr/colorPrimary" />
+
+                <TextView
+                    android:id="@+id/tv_version_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:letterSpacing="0.6"
+                    android:layout_marginTop="45dp"
+                    android:textColor="?attr/colorPrimary" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="45dp"
+                    android:text="is no longer supported"
+                    android:textAllCaps="true"
+                    android:textColor="?attr/colorPrimary" />
+
+            </LinearLayout>
+
+    </RelativeLayout>
+
 </androidx.constraintlayout.widget.ConstraintLayout>
