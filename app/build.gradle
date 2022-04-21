@@ -60,4 +60,6 @@ dependencies {
 
 //    add dependency on Google Firebase Cloud Firestore
     implementation 'com.google.firebase:firebase-firestore:24.1.1'
+
+    implementation 'com.tuyenmonkey:mkloader:1.4.0'
 }
