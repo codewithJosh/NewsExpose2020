@@ -46,7 +46,10 @@ public class RegisterActivity extends AppCompatActivity {
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseDatabase = FirebaseDatabase.getInstance();
 
-        nav_login.setOnClickListener(v -> startActivity(new Intent(this, LoginActivity.class)));
+        nav_login.setOnClickListener(v -> {
+            startActivity(new Intent(this, LoginActivity.class));
+            finish();
+        });
 
         btn_register.setOnClickListener(v -> {
             pd = new ProgressDialog(this);

@@ -46,7 +46,10 @@ public class LoginActivity extends AppCompatActivity {
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseDatabase = FirebaseDatabase.getInstance();
 
-        nav_register.setOnClickListener(v -> startActivity(new Intent(this, RegisterActivity.class)));
+        nav_register.setOnClickListener(v -> {
+            startActivity(new Intent(this, RegisterActivity.class));
+            finish();
+        });
 
         btn_login.setOnClickListener(v -> {
             pd = new ProgressDialog(this);
