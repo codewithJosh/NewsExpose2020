@@ -93,7 +93,7 @@ public class HomeActivity extends AppCompatActivity {
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         UserModel userModel = dataSnapshot.getValue(UserModel.class);
 //                        TODO: FOUND ISSUE: UPDATE THE CREDENTIALS
-                        Glide.with(getApplicationContext()).load(userModel.getImageurl()).into(nav_profile);
+                        Glide.with(getApplicationContext()).load(userModel.getUser_image()).into(nav_profile);
 
                     }
 

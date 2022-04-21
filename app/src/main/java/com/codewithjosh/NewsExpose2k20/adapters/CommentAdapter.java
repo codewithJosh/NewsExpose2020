@@ -73,8 +73,8 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
                 UserModel userModel = dataSnapshot.getValue(UserModel.class);
-                Glide.with(mContext).load(userModel.getImageurl()).into(civ_user_image);
-                tv_user_name.setText(userModel.getUsername());
+                Glide.with(mContext).load(userModel.getUser_image()).into(civ_user_image);
+                tv_user_name.setText(userModel.getUser_name());
 
             }
 

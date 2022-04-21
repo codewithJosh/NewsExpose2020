@@ -116,8 +116,8 @@ public class UpdateAdapter extends RecyclerView.Adapter<UpdateAdapter.ViewHolder
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
                 UserModel usermodel = dataSnapshot.getValue(UserModel.class);
-                Glide.with(mContext).load(usermodel.getImageurl()).into(civ_user_image);
-                tv_user_name.setText(usermodel.getUsername());
+                Glide.with(mContext).load(usermodel.getUser_image()).into(civ_user_image);
+                tv_user_name.setText(usermodel.getUser_name());
 
             }
 

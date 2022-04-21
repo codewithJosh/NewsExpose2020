@@ -108,7 +108,7 @@ public class CommentActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
                 UserModel userModel = dataSnapshot.getValue(UserModel.class);
-                Glide.with(getApplicationContext()).load(userModel.getImageurl()).into(iv_user_image);
+                Glide.with(getApplicationContext()).load(userModel.getUser_image()).into(iv_user_image);
 
             }
 
