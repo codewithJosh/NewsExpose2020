@@ -58,5 +58,6 @@ dependencies {
 //    add dependency on Google Firebase Cloud Storage
     implementation 'com.google.firebase:firebase-storage:20.0.1'
 
+//    add dependency on Google Firebase Cloud Firestore
     implementation 'com.google.firebase:firebase-firestore:24.1.1'
 }
