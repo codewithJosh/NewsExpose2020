@@ -36,10 +36,15 @@ public class MainActivity extends AppCompatActivity {
         btn_login = findViewById(R.id.btn_login);
         btn_register = findViewById(R.id.btn_register);
 
-//        TODO: FOUND ISSUE: DISABLE BACK BUTTON
-        btn_login.setOnClickListener(v -> startActivity(new Intent(this, LoginActivity.class)));
+        btn_login.setOnClickListener(v -> {
+            startActivity(new Intent(this, LoginActivity.class));
+            finish();
+        });
 
-        btn_register.setOnClickListener(v -> startActivity(new Intent(this, RegisterActivity.class)));
+        btn_register.setOnClickListener(v -> {
+            startActivity(new Intent(this, RegisterActivity.class));
+            finish();
+        });
 
     }
 
