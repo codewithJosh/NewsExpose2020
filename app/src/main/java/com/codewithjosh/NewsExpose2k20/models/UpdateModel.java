@@ -2,41 +2,61 @@ package com.codewithjosh.NewsExpose2k20.models;
 
 public class UpdateModel {
 
-    private String updateid;
-    private String updateimage;
-    private String subject;
-    private String source;
+    private String update_id;
+    private String update_image;
+    private String update_content;
+    private String user_id;
+    private int user_version_code;
 
-    public String getUpdateid() {
-        return updateid;
+    public UpdateModel() {
     }
 
-    public void setUpdateid(String updateid) {
-        this.updateid = updateid;
+    public UpdateModel(String update_id, String update_image, String update_content, String user_id, int user_version_code) {
+        this.update_id = update_id;
+        this.update_image = update_image;
+        this.update_content = update_content;
+        this.user_id = user_id;
+        this.user_version_code = user_version_code;
     }
 
-    public String getUpdateimage() {
-        return updateimage;
+    public String getUpdate_id() {
+        return update_id;
     }
 
-    public void setUpdateimage(String updateimage) {
-        this.updateimage = updateimage;
+    public void setUpdate_id(String update_id) {
+        this.update_id = update_id;
     }
 
-    public String getSubject() {
-        return subject;
+    public String getUpdate_image() {
+        return update_image;
     }
 
-    public void setSubject(String subject) {
-        this.subject = subject;
+    public void setUpdate_image(String update_image) {
+        this.update_image = update_image;
     }
 
-    public String getSource() {
-        return source;
+    public String getUpdate_content() {
+        return update_content;
     }
 
-    public void setSource(String source) {
-        this.source = source;
+    public void setUpdate_content(String update_content) {
+        this.update_content = update_content;
+    }
+
+    public String getUser_id() {
+        return user_id;
+    }
+
+    public void setUser_id(String user_id) {
+        this.user_id = user_id;
+    }
+
+    public int getUser_version_code() {
+        return user_version_code;
+    }
+
+    public void setUser_version_code(int user_version_code) {
+        this.user_version_code = user_version_code;
     }
 
 }

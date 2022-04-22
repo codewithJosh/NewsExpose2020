@@ -30,8 +30,8 @@
 
                 <de.hdodenhof.circleimageview.CircleImageView
                     android:id="@+id/nav_profile"
-                    android:layout_width="75dp"
-                    android:layout_height="75dp"
+                    android:layout_width="55dp"
+                    android:layout_height="55dp"
                     android:layout_gravity="end"
                     android:layout_marginEnd="18dp" />
 
@@ -53,7 +53,7 @@
         android:layout_marginEnd="15dp"
         android:layout_marginBottom="20dp"
         android:background="@drawable/ic_create_update"
-        android:visibility="visible"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 

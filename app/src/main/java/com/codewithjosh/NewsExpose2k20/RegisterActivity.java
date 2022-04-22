@@ -8,13 +8,15 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.codewithjosh.NewsExpose2k20.models.UserModel;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
-
-import java.util.HashMap;
+import com.google.firebase.database.ValueEventListener;
 
 public class RegisterActivity extends AppCompatActivity {
 
@@ -22,12 +24,8 @@ public class RegisterActivity extends AppCompatActivity {
     EditText et_user_name, et_email, et_password, et_re_password;
     TextView nav_login;
 
-    String s_user_name, s_email, s_password, s_re_password;
-
     FirebaseAuth firebaseAuth;
     FirebaseDatabase firebaseDatabase;
-
-    DatabaseReference databaseRef;
 
     ProgressDialog pd;
 
@@ -46,17 +44,20 @@ public class RegisterActivity extends AppCompatActivity {
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseDatabase = FirebaseDatabase.getInstance();
 
-        nav_login.setOnClickListener(v -> startActivity(new Intent(this, LoginActivity.class)));
+        nav_login.setOnClickListener(v -> {
+            startActivity(new Intent(this, LoginActivity.class));
+            finish();
+        });
 
         btn_register.setOnClickListener(v -> {
             pd = new ProgressDialog(this);
             pd.setMessage("Signing up");
             pd.show();
 
-            s_user_name = et_user_name.getText().toString();
-            s_email = et_email.getText().toString();
-            s_password = et_password.getText().toString();
-            s_re_password = et_re_password.getText().toString();
+            final String s_user_name = et_user_name.getText().toString();
+            final String s_email = et_email.getText().toString();
+            final String s_password = et_password.getText().toString();
+            final String s_re_password = et_re_password.getText().toString();
 
             if (s_user_name.isEmpty() || s_email.isEmpty()
                     || s_password.isEmpty() || s_re_password.isEmpty()) {
@@ -69,44 +70,76 @@ public class RegisterActivity extends AppCompatActivity {
                 pd.dismiss();
                 Toast.makeText(this, "Password doesn't match!", Toast.LENGTH_SHORT).show();
             } else onRegister(s_user_name, s_email, s_password);
+
         });
 
     }
 
     private void onRegister(final String s_user_name, final String s_email, final String s_password) {
 
-        firebaseAuth
-                .createUserWithEmailAndPassword(s_email, s_password)
-                .addOnSuccessListener(authResult -> {
+        firebaseDatabase
+                .getReference("Users")
+                .orderByChild("user_name")
+                .equalTo(s_user_name)
+                .addListenerForSingleValueEvent(new ValueEventListener() {
 
-                    final String s_user_id = authResult.getUser().getUid();
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
 
-                    databaseRef = firebaseDatabase
-                            .getReference()
-                            .child("Users")
-                            .child(s_user_id);
+                        if (!snapshot.exists()) {
 
-//                    TODO: FOUND ISSUE: UPDATE THE CREDENTIALS
-                    HashMap<String, Object> user = new HashMap<>();
-                    user.put("id", s_user_id);
-                    user.put("username", s_user_name);
-                    user.put("bio", "");
-                    user.put("imageurl", "https://firebasestorage.googleapis.com/v0/b/news-expose-2k20.appspot.com/o/20220410_Res%2FDefaultUserImage.png?alt=media&token=20");
-                    user.put("admin", false);
+                            firebaseAuth
+                                    .createUserWithEmailAndPassword(s_email, s_password)
+                                    .addOnSuccessListener(authResult -> {
 
-                    databaseRef
-                            .setValue(user)
-                            .addOnSuccessListener(runnable -> {
+                                        final String s_user_bio = "";
+                                        final String s_user_id = authResult.getUser().getUid();
+                                        final String s_user_image = "https://firebasestorage.googleapis.com/v0/b/news-expose-2k20.appspot.com/o/20220410_Res%2FDefaultUserImage.png?alt=media&token=20";
+                                        final boolean user_is_admin = false;
+                                        final int i_version_code = BuildConfig.VERSION_CODE;
+
+                                        final UserModel user = new UserModel(
+                                                s_user_bio,
+                                                s_email,
+                                                s_user_id,
+                                                s_user_image,
+                                                user_is_admin,
+                                                s_user_name,
+                                                i_version_code
+                                        );
+
+                                        firebaseDatabase
+                                                .getReference("Users")
+                                                .child(s_user_id)
+                                                .setValue(user)
+                                                .addOnSuccessListener(runnable -> {
+
+                                                    pd.dismiss();
+                                                    Toast.makeText(RegisterActivity.this, "You're Successfully Added!", Toast.LENGTH_SHORT).show();
+                                                    startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
+                                                    finish();
+                                                });
+
+                                    }).addOnFailureListener(e -> {
+
                                 pd.dismiss();
-                                Toast.makeText(this, "You're Successfully Added!", Toast.LENGTH_SHORT).show();
-                                startActivity(new Intent(this, LoginActivity.class));
-                                finish();
+                                Toast.makeText(RegisterActivity.this, "Incorrect Email Address", Toast.LENGTH_SHORT).show();
                             });
 
-                }).addOnFailureListener(e -> {
-            pd.dismiss();
-            Toast.makeText(this, "Incorrect Email Address", Toast.LENGTH_SHORT).show();
-        });
+                        } else {
+
+                            pd.dismiss();
+                            Toast.makeText(RegisterActivity.this, "Username is Already Exist!", Toast.LENGTH_SHORT).show();
+                        }
+
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+                        pd.dismiss();
+
+                    }
+                });
 
     }
 

@@ -38,13 +38,13 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
 
 //    add dependency on Google Firebase Authentication
-    implementation 'com.google.firebase:firebase-auth:16.0.5'
+    implementation 'com.google.firebase:firebase-auth:21.0.3'
 
 //    add dependency on Google Firebase Realtime Database
-    implementation 'com.google.firebase:firebase-database:16.0.4'
+    implementation 'com.google.firebase:firebase-database:20.0.4'
 
 //    add dependency on H. Dodenhof CircleImageView
-    implementation 'de.hdodenhof:circleimageview:2.2.0'
+    implementation 'de.hdodenhof:circleimageview:3.1.0'
 
 //    add dependency on Bumptech Glide
     implementation 'com.github.bumptech.glide:glide:4.12.0'
@@ -53,8 +53,14 @@ dependencies {
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
 
 //    add dependency on A. Teplitzki, Edmodo AndroidImageCropper
-    implementation 'com.theartofdev.edmodo:android-image-cropper:2.7.+'
+    implementation 'com.theartofdev.edmodo:android-image-cropper:2.8.0'
 
 //    add dependency on Google Firebase Cloud Storage
-    implementation 'com.google.firebase:firebase-storage:16.0.4'
+    implementation 'com.google.firebase:firebase-storage:20.0.1'
+
+//    add dependency on Google Firebase Cloud Firestore
+    implementation 'com.google.firebase:firebase-firestore:24.1.1'
+
+//    add dependency on T. Monkey MKLoader
+    implementation 'com.tuyenmonkey:mkloader:1.4.0'
 }
