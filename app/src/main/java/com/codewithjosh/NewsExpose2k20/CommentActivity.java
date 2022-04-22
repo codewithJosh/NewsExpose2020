@@ -58,7 +58,7 @@ public class CommentActivity extends AppCompatActivity {
 
         firebaseDatabase = FirebaseDatabase.getInstance();
 
-        btn_back.setOnClickListener(v -> startActivity(new Intent(this, HomeActivity.class)));
+        btn_back.setOnClickListener(v -> onBackPressed());
 
         getUserImage();
 

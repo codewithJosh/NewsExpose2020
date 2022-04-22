@@ -63,10 +63,7 @@ public class CreateUpdateActivity extends AppCompatActivity {
         databaseRef = firebaseDatabase.getReference("Updates");
         storageRef = firebaseStorage.getReference("Updates");
 
-        btn_back.setOnClickListener(v -> {
-            startActivity(new Intent(this, HomeActivity.class));
-            finish();
-        });
+        btn_back.setOnClickListener(v -> onBackPressed());
 
         btn_create_update.setOnClickListener(v -> onUpdate());
 
@@ -117,8 +114,7 @@ public class CreateUpdateActivity extends AppCompatActivity {
                             .addOnSuccessListener(runnable -> {
 
                                 pd.dismiss();
-                                startActivity(new Intent(this, HomeActivity.class));
-                                finish();
+                                onBackPressed();
                             });
 
             });
@@ -148,8 +144,7 @@ public class CreateUpdateActivity extends AppCompatActivity {
         else {
 
             Toast.makeText(this, "Something gone wrong!", Toast.LENGTH_SHORT).show();
-            startActivity(new Intent(this, HomeActivity.class));
-            finish();
+            onBackPressed();
         }
 
     }
