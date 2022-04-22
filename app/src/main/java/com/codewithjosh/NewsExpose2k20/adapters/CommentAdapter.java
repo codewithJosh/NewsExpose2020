@@ -49,9 +49,9 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
         firebaseDatabase = FirebaseDatabase.getInstance();
 
 //        TODO: FOUND ISSUE: UPDATE THE MODELS
-        holder.tv_comment_content.setText(commentModel.getComment());
+        holder.tv_comment_content.setText(commentModel.getComment_content());
 
-        getUser(holder.civ_user_image, holder.tv_user_name, commentModel.getUserid());
+        getUser(holder.civ_user_image, holder.tv_user_name, commentModel.getUser_id());
 
     }
 
