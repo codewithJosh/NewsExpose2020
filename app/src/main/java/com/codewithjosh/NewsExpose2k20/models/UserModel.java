@@ -10,7 +10,8 @@ public class UserModel {
     private String user_name;
     private int user_version_code;
 
-    public UserModel() { }
+    public UserModel() {
+    }
 
     public UserModel(String user_bio, String user_email, String user_id, String user_image, boolean user_is_admin, String user_name, int user_version_code) {
         this.user_bio = user_bio;

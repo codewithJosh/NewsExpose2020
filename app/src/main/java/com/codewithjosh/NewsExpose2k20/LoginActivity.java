@@ -8,20 +8,12 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.codewithjosh.NewsExpose2k20.models.UserModel;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -69,8 +61,7 @@ public class LoginActivity extends AppCompatActivity {
             if (s_email.isEmpty() || s_password.isEmpty()) {
                 pd.dismiss();
                 Toast.makeText(this, "All fields are required!", Toast.LENGTH_SHORT).show();
-            }
-            else {
+            } else {
 
                 firebaseAuth
                         .signInWithEmailAndPassword(s_email, s_password)
@@ -95,15 +86,13 @@ public class LoginActivity extends AppCompatActivity {
                                             pd.dismiss();
                                             startActivity(new Intent(this, HomeActivity.class));
                                             finish();
-                                        }
-                                        else if (i_user_version_code > i_version_code) {
+                                        } else if (i_user_version_code > i_version_code) {
 
                                             firebaseAuth.signOut();
                                             Toast.makeText(this, "Your account is incompatible to this version!", Toast.LENGTH_LONG).show();
                                             startActivity(new Intent(this, MainActivity.class));
                                             finish();
-                                        }
-                                        else {
+                                        } else {
 
                                             final UserModel setUser = onMigrate(getUser, i_user_version_code);
 
@@ -122,9 +111,9 @@ public class LoginActivity extends AppCompatActivity {
 
                         }).addOnFailureListener(e -> {
 
-                            pd.dismiss();
-                            Toast.makeText(this, "Incorrect Email or Password", Toast.LENGTH_SHORT).show();
-                        });
+                    pd.dismiss();
+                    Toast.makeText(this, "Incorrect Email or Password", Toast.LENGTH_SHORT).show();
+                });
             }
         });
 
@@ -145,7 +134,8 @@ public class LoginActivity extends AppCompatActivity {
                     getUser.getUser_name(),
                     i_version_code
             );
-        } return user;
+        }
+        return user;
 
     }
 

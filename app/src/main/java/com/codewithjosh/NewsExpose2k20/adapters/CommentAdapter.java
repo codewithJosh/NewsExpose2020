@@ -15,7 +15,6 @@ import com.codewithjosh.NewsExpose2k20.models.CommentModel;
 import com.codewithjosh.NewsExpose2k20.models.UserModel;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
@@ -27,13 +26,12 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
 
     public Context context;
     public List<CommentModel> commentList;
+    FirebaseDatabase firebaseDatabase;
 
     public CommentAdapter(Context context, List<CommentModel> commentList) {
         this.context = context;
         this.commentList = commentList;
     }
-
-    FirebaseDatabase firebaseDatabase;
 
     @NonNull
     @Override

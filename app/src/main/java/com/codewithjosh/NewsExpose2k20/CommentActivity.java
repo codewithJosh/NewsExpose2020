@@ -1,6 +1,5 @@
 package com.codewithjosh.NewsExpose2k20;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -18,28 +17,23 @@ import com.codewithjosh.NewsExpose2k20.models.CommentModel;
 import com.codewithjosh.NewsExpose2k20.models.UserModel;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 public class CommentActivity extends AppCompatActivity {
-
-    private CommentAdapter commentAdapter;
-    private List<CommentModel> commentList;
 
     EditText et_comment_content;
     ImageButton btn_back, btn_comment;
     ImageView iv_user_image;
     RecyclerView recycler_comments;
-
     int i_version_code;
     String s_update_id, s_user_id;
-
     FirebaseDatabase firebaseDatabase;
+    private CommentAdapter commentAdapter;
+    private List<CommentModel> commentList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,7 +60,8 @@ public class CommentActivity extends AppCompatActivity {
 
             final String s_comment_content = et_comment_content.getText().toString().trim();
 
-            if (s_comment_content.isEmpty()) Toast.makeText(this, "You can't send empty comment", Toast.LENGTH_SHORT).show();
+            if (s_comment_content.isEmpty())
+                Toast.makeText(this, "You can't send empty comment", Toast.LENGTH_SHORT).show();
             else onSend(s_comment_content);
 
         });
@@ -141,7 +136,8 @@ public class CommentActivity extends AppCompatActivity {
 
                             CommentModel commentModel = snapshot.getValue(CommentModel.class);
                             commentList.add(commentModel);
-                        } commentAdapter.notifyDataSetChanged();
+                        }
+                        commentAdapter.notifyDataSetChanged();
 
                     }
 

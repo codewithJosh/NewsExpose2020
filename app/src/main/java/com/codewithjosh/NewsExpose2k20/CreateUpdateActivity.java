@@ -1,11 +1,9 @@
 package com.codewithjosh.NewsExpose2k20;
 
 import android.app.ProgressDialog;
-import android.content.ContentResolver;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.webkit.MimeTypeMap;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -23,8 +21,6 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.theartofdev.edmodo.cropper.CropImage;
-
-import java.util.HashMap;
 
 public class CreateUpdateActivity extends AppCompatActivity {
 
@@ -140,8 +136,7 @@ public class CreateUpdateActivity extends AppCompatActivity {
             CropImage.ActivityResult result = CropImage.getActivityResult(data);
             uri = result.getUri();
             iv_update_image.setImageURI(uri);
-        }
-        else {
+        } else {
 
             Toast.makeText(this, "Something gone wrong!", Toast.LENGTH_SHORT).show();
             onBackPressed();

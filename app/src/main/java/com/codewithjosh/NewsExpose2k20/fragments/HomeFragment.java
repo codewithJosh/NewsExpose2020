@@ -16,7 +16,6 @@ import com.codewithjosh.NewsExpose2k20.adapters.UpdateAdapter;
 import com.codewithjosh.NewsExpose2k20.models.UpdateModel;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
@@ -25,12 +24,10 @@ import java.util.List;
 
 public class HomeFragment extends Fragment {
 
+    RecyclerView recycler_updates;
+    FirebaseDatabase firebaseDatabase;
     private UpdateAdapter updateAdapter;
     private List<UpdateModel> updateList;
-
-    RecyclerView recycler_updates;
-
-    FirebaseDatabase firebaseDatabase;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -74,7 +71,8 @@ public class HomeFragment extends Fragment {
 
                             UpdateModel updateModel = snapshot.getValue(UpdateModel.class);
                             updateList.add(updateModel);
-                        } updateAdapter.notifyDataSetChanged();
+                        }
+                        updateAdapter.notifyDataSetChanged();
 
                     }
 

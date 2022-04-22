@@ -6,7 +6,8 @@ public class CommentModel {
     private String user_id;
     private int user_version_code;
 
-    public CommentModel() { }
+    public CommentModel() {
+    }
 
     public CommentModel(String comment_content, String user_id, int user_version_code) {
         this.comment_content = comment_content;

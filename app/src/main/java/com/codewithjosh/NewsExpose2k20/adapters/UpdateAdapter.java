@@ -33,14 +33,12 @@ public class UpdateAdapter extends RecyclerView.Adapter<UpdateAdapter.ViewHolder
 
     public Context context;
     public List<UpdateModel> updateList;
-
+    FirebaseAuth firebaseAuth;
+    FirebaseDatabase firebaseDatabase;
     public UpdateAdapter(Context context, List<UpdateModel> updateList) {
         this.context = context;
         this.updateList = updateList;
     }
-
-    FirebaseAuth firebaseAuth;
-    FirebaseDatabase firebaseDatabase;
 
     @NonNull
     @Override
@@ -70,8 +68,7 @@ public class UpdateAdapter extends RecyclerView.Adapter<UpdateAdapter.ViewHolder
         if (update.getUser_id().isEmpty()) {
             holder.tv_user_name.setVisibility(View.VISIBLE);
             holder.tv_user_name.setText(context.getResources().getString(R.string.def_user_name));
-        }
-        else {
+        } else {
             holder.tv_user_name.setVisibility(View.VISIBLE);
             holder.tv_user_name.setText(update.getUser_id());
         }
@@ -148,8 +145,7 @@ public class UpdateAdapter extends RecyclerView.Adapter<UpdateAdapter.ViewHolder
 
                             btn_seen.setImageResource(R.drawable.ic_seened);
                             btn_seen.setTag("seened");
-                        }
-                        else {
+                        } else {
 
                             btn_seen.setImageResource(R.drawable.ic_seen);
                             btn_seen.setTag("seen");
@@ -177,8 +173,10 @@ public class UpdateAdapter extends RecyclerView.Adapter<UpdateAdapter.ViewHolder
 
                         tv_seen_count.setText(String.valueOf(dataSnapshot.getChildrenCount()));
 
-                        if (dataSnapshot.child(s_user_id).exists()) tv_seen_count.setTextColor(context.getResources().getColor(R.color.colorKUCrimson));
-                        else tv_seen_count.setTextColor(context.getResources().getColor(R.color.colorLightGray));
+                        if (dataSnapshot.child(s_user_id).exists())
+                            tv_seen_count.setTextColor(context.getResources().getColor(R.color.colorKUCrimson));
+                        else
+                            tv_seen_count.setTextColor(context.getResources().getColor(R.color.colorLightGray));
 
                     }
 

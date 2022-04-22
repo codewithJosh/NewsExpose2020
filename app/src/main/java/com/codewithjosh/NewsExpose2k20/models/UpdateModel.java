@@ -8,7 +8,8 @@ public class UpdateModel {
     private String user_id;
     private int user_version_code;
 
-    public UpdateModel() { }
+    public UpdateModel() {
+    }
 
     public UpdateModel(String update_id, String update_image, String update_content, String user_id, int user_version_code) {
         this.update_id = update_id;

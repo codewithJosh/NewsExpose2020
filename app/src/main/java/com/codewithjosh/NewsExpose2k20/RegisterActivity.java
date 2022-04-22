@@ -15,13 +15,8 @@ import com.codewithjosh.NewsExpose2k20.models.UserModel;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 
 public class RegisterActivity extends AppCompatActivity {
 
@@ -68,16 +63,13 @@ public class RegisterActivity extends AppCompatActivity {
                     || s_password.isEmpty() || s_re_password.isEmpty()) {
                 pd.dismiss();
                 Toast.makeText(this, "All fields are required!", Toast.LENGTH_SHORT).show();
-            }
-            else if (s_password.length() < 6) {
+            } else if (s_password.length() < 6) {
                 pd.dismiss();
                 Toast.makeText(this, "Password must at least 6 characters", Toast.LENGTH_SHORT).show();
-            }
-            else if (!s_password.equals(s_re_password)) {
+            } else if (!s_password.equals(s_re_password)) {
                 pd.dismiss();
                 Toast.makeText(this, "Password doesn't match!", Toast.LENGTH_SHORT).show();
-            }
-            else onRegister(s_user_name, s_email, s_password);
+            } else onRegister(s_user_name, s_email, s_password);
 
         });
 
@@ -130,12 +122,11 @@ public class RegisterActivity extends AppCompatActivity {
 
                                     }).addOnFailureListener(e -> {
 
-                                        pd.dismiss();
-                                        Toast.makeText(RegisterActivity.this, "Incorrect Email Address", Toast.LENGTH_SHORT).show();
-                                    });
+                                pd.dismiss();
+                                Toast.makeText(RegisterActivity.this, "Incorrect Email Address", Toast.LENGTH_SHORT).show();
+                            });
 
-                        }
-                        else {
+                        } else {
 
                             pd.dismiss();
                             Toast.makeText(RegisterActivity.this, "Username is Already Exist!", Toast.LENGTH_SHORT).show();
