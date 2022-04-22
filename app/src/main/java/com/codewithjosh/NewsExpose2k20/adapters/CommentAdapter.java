@@ -25,30 +25,30 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHolder> {
 
-    public Context mContext;
-    public List<CommentModel> mComment;
-    FirebaseDatabase firebaseDatabase;
+    public Context context;
+    public List<CommentModel> commentList;
 
-    public CommentAdapter(Context mContext, List<CommentModel> mComment) {
-        this.mContext = mContext;
-        this.mComment = mComment;
+    public CommentAdapter(Context context, List<CommentModel> commentList) {
+        this.context = context;
+        this.commentList = commentList;
     }
+
+    FirebaseDatabase firebaseDatabase;
 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {
-        View view = LayoutInflater.from(mContext).inflate(R.layout.item_comment, viewGroup, false);
+        View view = LayoutInflater.from(context).inflate(R.layout.item_comment, viewGroup, false);
         return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
 
-        final CommentModel commentModel = mComment.get(position);
+        final CommentModel commentModel = commentList.get(position);
 
         firebaseDatabase = FirebaseDatabase.getInstance();
 
-//        TODO: FOUND ISSUE: UPDATE THE MODELS
         holder.tv_comment_content.setText(commentModel.getComment_content());
 
         getUser(holder.civ_user_image, holder.tv_user_name, commentModel.getUser_id());
@@ -57,32 +57,32 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
 
     @Override
     public int getItemCount() {
-        return mComment.size();
+        return commentList.size();
     }
 
     private void getUser(final CircleImageView civ_user_image, final TextView tv_user_name, final String s_user_id) {
 
-        final DatabaseReference userRef = firebaseDatabase
+        firebaseDatabase
                 .getReference()
                 .child("Users")
-                .child(s_user_id);
+                .child(s_user_id)
+                .addValueEventListener(new ValueEventListener() {
 
-//        TODO: USE GET METHOD ONCE IT IS AVAILABLE
-        userRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
-                UserModel userModel = dataSnapshot.getValue(UserModel.class);
-                Glide.with(mContext).load(userModel.getUser_image()).into(civ_user_image);
-                tv_user_name.setText(userModel.getUser_name());
+                        final UserModel user = dataSnapshot.getValue(UserModel.class);
 
-            }
+                        Glide.with(context).load(user.getUser_image()).into(civ_user_image);
+                        tv_user_name.setText(user.getUser_name());
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
+                    }
 
-            }
-        });
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
 
     }
 
@@ -98,6 +98,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
             tv_user_name = itemView.findViewById(R.id.tv_user_name);
             tv_comment_content = itemView.findViewById(R.id.tv_comment_content);
         }
+
     }
 
 }
