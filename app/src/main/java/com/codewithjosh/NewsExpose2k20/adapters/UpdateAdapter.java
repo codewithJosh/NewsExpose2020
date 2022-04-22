@@ -57,32 +57,32 @@ public class UpdateAdapter extends RecyclerView.Adapter<UpdateAdapter.ViewHolder
         final String s_user_id = firebaseAuth.getCurrentUser().getUid();
 
 //        TODO: FOUND ISSUE: UPDATE MODELS
-        Glide.with(mContext).load(updateModel.getUpdateimage()).into(holder.iv_update_image);
+        Glide.with(mContext).load(updateModel.getUpdate_image()).into(holder.iv_update_image);
 
-        if (updateModel.getSubject().isEmpty()) holder.tv_update_content.setVisibility(View.GONE);
+        if (updateModel.getUpdate_content().isEmpty()) holder.tv_update_content.setVisibility(View.GONE);
         else {
             holder.tv_update_content.setVisibility(View.VISIBLE);
-            holder.tv_update_content.setText(updateModel.getSubject());
+            holder.tv_update_content.setText(updateModel.getUpdate_content());
         }
 
-        if (updateModel.getSource().isEmpty()) {
+        if (updateModel.getUser_id().isEmpty()) {
             holder.tv_user_name.setVisibility(View.VISIBLE);
             holder.tv_user_name.setText(mContext.getResources().getString(R.string.def_user_name));
         } else {
             holder.tv_user_name.setVisibility(View.VISIBLE);
-            holder.tv_user_name.setText(updateModel.getSource());
+            holder.tv_user_name.setText(updateModel.getUser_id());
         }
 
-        isSeen(updateModel.getUpdateid(), s_user_id, holder.btn_seen);
-        seenCount(holder.tv_seen_count, s_user_id, updateModel.getUpdateid());
-        commentCount(updateModel.getUpdateid(), holder.tv_comment_count);
+        isSeen(updateModel.getUpdate_id(), s_user_id, holder.btn_seen);
+        seenCount(holder.tv_seen_count, s_user_id, updateModel.getUpdate_id());
+        commentCount(updateModel.getUpdate_id(), holder.tv_comment_count);
 
         holder.btn_seen.setOnClickListener(v -> {
 
             final DatabaseReference seenRef = firebaseDatabase
                     .getReference()
                     .child("Seen")
-                    .child(updateModel.getUpdateid())
+                    .child(updateModel.getUpdate_id())
                     .child(s_user_id);
 
             if (holder.btn_seen.getTag().equals("seen")) seenRef.setValue(true);
@@ -92,12 +92,12 @@ public class UpdateAdapter extends RecyclerView.Adapter<UpdateAdapter.ViewHolder
 
         holder.nav_comment.setOnClickListener(v -> {
             Intent intent = new Intent(mContext, CommentActivity.class);
-            intent.putExtra("updateid", updateModel.getUpdateid());
-            intent.putExtra("userid", updateModel.getSource());
+            intent.putExtra("updateid", updateModel.getUpdate_id());
+            intent.putExtra("userid", updateModel.getUser_id());
             mContext.startActivity(intent);
         });
 
-        getSource(holder.civ_user_image, holder.tv_user_name, updateModel.getSource());
+        getSource(holder.civ_user_image, holder.tv_user_name, updateModel.getUser_id());
     }
 
     @Override
