@@ -15,6 +15,7 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.codewithjosh.NewsExpose2k20.models.UpdateModel;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -40,6 +41,7 @@ public class CreateUpdateActivity extends AppCompatActivity {
     FirebaseDatabase firebaseDatabase;
     FirebaseStorage firebaseStorage;
 
+    DatabaseReference databaseRef;
     StorageReference storageRef;
 
     ProgressDialog pd;
@@ -58,6 +60,7 @@ public class CreateUpdateActivity extends AppCompatActivity {
         firebaseDatabase = FirebaseDatabase.getInstance();
         firebaseStorage = FirebaseStorage.getInstance();
 
+        databaseRef = firebaseDatabase.getReference("Updates");
         storageRef = firebaseStorage.getReference("Updates");
 
         btn_back.setOnClickListener(v -> {
@@ -70,13 +73,7 @@ public class CreateUpdateActivity extends AppCompatActivity {
         CropImage.activity()
                 .setAspectRatio(1, 1)
                 .start(this);
-    }
 
-    //    TODO: FOUND ISSUE: BUG
-    private String getFileExtension(Uri uri) {
-        ContentResolver contentResolver = getContentResolver();
-        MimeTypeMap mime = MimeTypeMap.getSingleton();
-        return mime.getExtensionFromMimeType(contentResolver.getType(uri));
     }
 
     private void onUpdate() {
@@ -85,11 +82,13 @@ public class CreateUpdateActivity extends AppCompatActivity {
         pd.show();
 
         if (uri != null) {
+
             final StorageReference _storageRef = storageRef.child(System.currentTimeMillis()
                     + "." + getFileExtension(uri));
 
             uTask = _storageRef.putFile(uri);
             uTask.continueWithTask(task -> {
+
                 if (!task.isSuccessful()) throw task.getException();
                 return _storageRef.getDownloadUrl();
 
@@ -97,18 +96,18 @@ public class CreateUpdateActivity extends AppCompatActivity {
 
                 if (uri != null) s_update_image = uri.toString();
 
-                DatabaseReference databaseRef = firebaseDatabase.getReference("Updates");
-
-                final String s_user_id = firebaseAuth.getCurrentUser().getUid();
                 final String s_update_id = databaseRef.push().getKey();
                 final String s_update_content = et_update_content.getText().toString();
+                final String s_user_id = firebaseAuth.getCurrentUser().getUid();
+                final int i_version_code = BuildConfig.VERSION_CODE;
 
-//                    TODO: FOUND ISSUE: UPDATE THE DETAILS
-                HashMap<String, Object> update = new HashMap<>();
-                update.put("updateid", s_update_id);
-                update.put("updateimage", s_update_image);
-                update.put("subject", s_update_content);
-                update.put("source", s_user_id);
+                final UpdateModel update = new UpdateModel(
+                        s_update_id,
+                        s_update_image,
+                        s_update_content,
+                        s_user_id,
+                        i_version_code
+                );
 
                 if (s_update_id != null)
 
@@ -116,6 +115,7 @@ public class CreateUpdateActivity extends AppCompatActivity {
                             .child(s_update_id)
                             .setValue(update)
                             .addOnSuccessListener(runnable -> {
+
                                 pd.dismiss();
                                 startActivity(new Intent(this, HomeActivity.class));
                                 finish();
@@ -126,18 +126,32 @@ public class CreateUpdateActivity extends AppCompatActivity {
 
     }
 
+    private String getFileExtension(Uri uri) {
+
+        final String result = uri.getPath();
+        int cut = result.lastIndexOf('/');
+        if (cut != -1) return result.substring(cut + 1);
+        return null;
+
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE && resultCode == RESULT_OK) {
+
             CropImage.ActivityResult result = CropImage.getActivityResult(data);
             uri = result.getUri();
             iv_update_image.setImageURI(uri);
-        } else {
+        }
+        else {
+
             Toast.makeText(this, "Something gone wrong!", Toast.LENGTH_SHORT).show();
             startActivity(new Intent(this, HomeActivity.class));
             finish();
         }
+
     }
+
 }
