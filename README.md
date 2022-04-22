@@ -10,12 +10,12 @@
 
 - Login and Register
 - Create an Update (Admin only)
-- React and Comment on Update
+- Realtime React and Comment on Update
 - User Profile (Coming Soon)
 
 ## TOUR:eyes:
 
-> _Coming Soon_
+<p align="center"><img alt="Main Activity" src="https://github.com/codewithJosh/NewsExpose2k20/blob/main/TOUR/news-expose-2k20-v0.5.0/01.jpg" width="300"/> <img alt="Login Activity" src="https://github.com/codewithJosh/NewsExpose2k20/blob/main/TOUR/news-expose-2k20-v0.5.0/02.jpg" width="300"/> <img alt="Register Activity" src="https://github.com/codewithJosh/NewsExpose2k20/blob/main/TOUR/news-expose-2k20-v0.5.0/03.jpg" width="300"/> <img alt="Home Activity" src="https://github.com/codewithJosh/NewsExpose2k20/blob/main/TOUR/news-expose-2k20-v0.5.0/04.jpg" width="300"/> <img alt="Comment Activity" src="https://github.com/codewithJosh/NewsExpose2k20/blob/main/TOUR/news-expose-2k20-v0.5.0/05.jpg" width="300"/> <img alt="Create Update Activity" src="https://github.com/codewithJosh/NewsExpose2k20/blob/main/TOUR/news-expose-2k20-v0.5.0/06.jpg" width="300"/></p>
 
 ## CREDITS:tada:
 
@@ -25,6 +25,7 @@ We would like to give THANKS to the following:
 - H. Dodenhof [CircleImageView][2]
 - Bumptech [Glide][3]
 - A. Teplitzki, Edmodo [AndroidImageCropper][4]
+- T. Monkey [MKLoader][5]
 
 ## LICENSE:memo:
 
@@ -57,3 +58,5 @@ We would like to give THANKS to the following:
 [3]: https://github.com/bumptech/glide
 
 [4]: https://github.com/ArthurHub/Android-Image-Cropper
+
+[5]: https://github.com/nntuyen/mkloader
