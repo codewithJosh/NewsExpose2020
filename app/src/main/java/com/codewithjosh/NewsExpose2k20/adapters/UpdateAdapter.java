@@ -35,6 +35,7 @@ public class UpdateAdapter extends RecyclerView.Adapter<UpdateAdapter.ViewHolder
     public List<UpdateModel> updateList;
     FirebaseAuth firebaseAuth;
     FirebaseDatabase firebaseDatabase;
+
     public UpdateAdapter(Context context, List<UpdateModel> updateList) {
         this.context = context;
         this.updateList = updateList;
