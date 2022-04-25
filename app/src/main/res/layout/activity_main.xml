@@ -4,85 +4,129 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/img_background"
-    tools:context=".MainActivity">
+    tools:context=".MainActivity"
+    android:background="@drawable/img_background">
 
-    <RelativeLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        android:layout_height="match_parent">
 
         <View
-            android:layout_width="300dp"
-            android:layout_height="300dp"
-            android:layout_centerHorizontal="true"
-            android:alpha="0.7"
-            android:background="@drawable/create_chinese_black_1_decoration" />
+            android:id="@+id/v_secondary_decoration"
+            android:layout_width="275dp"
+            android:layout_height="275dp"
+            android:alpha="0.90"
+            android:background="@drawable/create_secondary_decoration"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
             android:id="@+id/iv_logo"
-            android:layout_width="300dp"
-            android:layout_height="170dp"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="45dp"
-            android:src="@drawable/ic_logo" />
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="55dp"
+            android:src="@drawable/ic_logo"
+            app:layout_constraintEnd_toEndOf="@id/v_secondary_decoration"
+            app:layout_constraintStart_toStartOf="@id/v_secondary_decoration"
+            app:layout_constraintTop_toTopOf="@id/v_secondary_decoration" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/iv_logo"
             android:layout_centerHorizontal="true"
+            android:layout_marginTop="35dp"
             android:letterSpacing="0.6"
+            android:fontFamily="@font/tahoma_regular"
             android:text="@string/app_name"
             android:textAllCaps="true"
-            android:textColor="?attr/colorPrimary" />
-
-    </RelativeLayout>
-
-    <RelativeLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
+            android:textColor="@color/colorWillpowerOrange"
+            android:textSize="6pt"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/iv_logo" />
 
         <View
+            android:id="@+id/v_secondary_decoration_1"
             android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:layout_alignParentBottom="true"
-            android:alpha="0.5"
-            android:background="?attr/colorSecondary" />
+            android:layout_height="300dp"
+            android:alpha="0.70"
+            android:background="@drawable/create_secondary_decoration_1"
+            app:layout_constraintBottom_toTopOf="@id/linear_bottom"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <ImageView
+            android:id="@+id/iv_line"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:src="@drawable/ic_line"
+            app:layout_constraintBottom_toBottomOf="@+id/v_secondary_decoration_1"
+            app:layout_constraintStart_toStartOf="@id/v_secondary_decoration_1"
+            app:layout_constraintTop_toTopOf="@id/v_secondary_decoration_1" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:fontFamily="@font/tahoma_regular"
+            android:text="YOUR DAILY"
+            android:textColor="@color/colorWhite_FF"
+            android:textSize="19pt"
+            app:layout_constraintStart_toEndOf="@id/iv_line"
+            app:layout_constraintTop_toTopOf="@id/iv_line" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:fontFamily="@font/tahoma_regular"
+            android:text="NEWS UPDATE"
+            android:textColor="?attr/colorPrimary"
+            android:textSize="19pt"
+            android:textStyle="bold"
+            app:layout_constraintStart_toEndOf="@id/iv_line"
+            app:layout_constraintBottom_toBottomOf="@id/iv_line" />
 
         <LinearLayout
+            android:id="@+id/linear_bottom"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true">
+            android:layout_height="50dp"
+            android:orientation="horizontal"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
 
             <Button
-                android:id="@+id/btn_login"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:id="@+id/nav_login"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:layout_weight="0.5"
-                android:background="@android:color/transparent"
+                android:background="@drawable/create_linear_button"
+                android:fontFamily="@font/calibri_regular"
+                android:gravity="center"
                 android:text="@string/text_button_login"
                 android:textAllCaps="true"
-                android:textColor="?attr/colorOnPrimary" />
+                android:textColor="@color/colorWhite_FF"
+                android:textSize="9pt" />
 
             <Button
-                android:id="@+id/btn_register"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:id="@+id/nav_register"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:layout_weight="0.5"
-                android:background="@android:color/transparent"
+                android:background="?attr/colorSecondary"
+                android:fontFamily="@font/calibri_regular"
+                android:gravity="center"
                 android:text="@string/text_button_register"
                 android:textAllCaps="true"
-                android:textColor="?attr/colorOnPrimary" />
+                android:textColor="@color/colorWhite_FF"
+                android:textSize="9pt" />
 
         </LinearLayout>
 
-    </RelativeLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <LinearLayout
         android:id="@+id/is_loading"
@@ -136,14 +180,16 @@
             android:orientation="vertical">
 
             <ImageView
-                android:layout_width="300dp"
-                android:layout_height="170dp"
+                android:layout_width="match_parent"
+                android:layout_height="150dp"
                 android:layout_marginTop="45dp"
+                android:paddingTop="20dp"
                 android:src="@drawable/ic_logo" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
                 android:letterSpacing="0.6"
                 android:text="@string/app_name"
                 android:textAllCaps="true"

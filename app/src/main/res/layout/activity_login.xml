@@ -99,7 +99,7 @@
                     android:textColorHint="@color/colorPhilippineGray" />
 
                 <Button
-                    android:id="@+id/btn_login"
+                    android:id="@+id/nav_login"
                     android:layout_width="225dp"
                     android:layout_height="40dp"
                     android:layout_gravity="center"

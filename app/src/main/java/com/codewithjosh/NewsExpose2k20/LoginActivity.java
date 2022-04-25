@@ -35,7 +35,7 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        btn_login = findViewById(R.id.btn_login);
+        btn_login = findViewById(R.id.nav_login);
         et_email = findViewById(R.id.et_email);
         et_password = findViewById(R.id.et_password);
         nav_register = findViewById(R.id.nav_register);

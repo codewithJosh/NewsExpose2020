@@ -67,8 +67,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        btn_login = findViewById(R.id.btn_login);
-        btn_register = findViewById(R.id.btn_register);
+        btn_login = findViewById(R.id.nav_login);
+        btn_register = findViewById(R.id.nav_register);
         is_loading = findViewById(R.id.is_loading);
         is_unsupported = findViewById(R.id.is_unsupported);
         tv_version_name = findViewById(R.id.tv_version_name);
