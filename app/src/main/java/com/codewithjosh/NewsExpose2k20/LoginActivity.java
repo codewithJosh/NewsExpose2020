@@ -1,35 +1,47 @@
 package com.codewithjosh.NewsExpose2k20;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.codewithjosh.NewsExpose2k20.models.UserModel;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.auth.User;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class LoginActivity extends AppCompatActivity {
 
     Button btn_login;
-    EditText et_email, et_password;
-    LinearLayout nav_register;
+    EditText et_user_name, et_password;
+    LinearLayout nav_register, is_loading;
 
     int i_version_code;
 
     FirebaseAuth firebaseAuth;
     FirebaseDatabase firebaseDatabase;
-
-    DatabaseReference databaseRef;
-
-    ProgressDialog pd;
+    FirebaseFirestore firebaseFirestore;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,14 +49,16 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
 
         btn_login = findViewById(R.id.btn_login);
-        et_email = findViewById(R.id.et_user_name);
+        et_user_name = findViewById(R.id.et_user_name);
         et_password = findViewById(R.id.et_password);
         nav_register = findViewById(R.id.nav_register);
+        is_loading = findViewById(R.id.is_loading);
 
         i_version_code = BuildConfig.VERSION_CODE;
 
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseDatabase = FirebaseDatabase.getInstance();
+        firebaseFirestore = FirebaseFirestore.getInstance();
 
         nav_register.setOnClickListener(v -> {
             startActivity(new Intent(this, RegisterActivity.class));
@@ -52,91 +66,162 @@ public class LoginActivity extends AppCompatActivity {
         });
 
         btn_login.setOnClickListener(v -> {
-            pd = new ProgressDialog(this);
-            pd.setMessage("Logging in");
-            pd.show();
 
-            final String s_email = et_email.getText().toString();
+            is_loading.setVisibility(View.VISIBLE);
+            InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(CommentActivity.INPUT_METHOD_SERVICE);
+            inputMethodManager.hideSoftInputFromWindow(v.getWindowToken(), 0);
+            if (getCurrentFocus() != null) getCurrentFocus().clearFocus();
+
+            final String s_user_name = et_user_name.getText().toString().toLowerCase();
             final String s_password = et_password.getText().toString();
 
-            if (s_email.isEmpty() || s_password.isEmpty()) {
-                pd.dismiss();
-                Toast.makeText(this, "All fields are required!", Toast.LENGTH_SHORT).show();
-            } else {
+            if (!isConnected()) {
+                is_loading.setVisibility(View.GONE);
+                Toast.makeText(LoginActivity.this, "No Internet Connection!", Toast.LENGTH_SHORT).show();
+            }
+            else if (s_user_name.isEmpty() || s_password.isEmpty()) {
+                is_loading.setVisibility(View.GONE);
+                Toast.makeText(LoginActivity.this, "All fields are required!", Toast.LENGTH_SHORT).show();
+            }
+            else if (s_password.length() < 6) {
+                is_loading.setVisibility(View.GONE);
+                Toast.makeText(LoginActivity.this, "Password Must be at least 6 characters", Toast.LENGTH_SHORT).show();
+            }
+            else {
 
-                firebaseAuth
-                        .signInWithEmailAndPassword(s_email, s_password)
-                        .addOnSuccessListener(authResult -> {
+                firebaseFirestore
+                        .collection("Users")
+                        .whereEqualTo("user_name", s_user_name)
+                        .get()
+                        .addOnSuccessListener(queryDocumentSnapshots -> {
 
-                            final String s_user_id = authResult.getUser().getUid();
+                            if (!queryDocumentSnapshots.isEmpty()) {
 
-                            databaseRef = firebaseDatabase
-                                    .getReference("Users")
-                                    .child(s_user_id);
+                                for (QueryDocumentSnapshot snapshot : queryDocumentSnapshots) {
 
-                            databaseRef
-                                    .get()
-                                    .addOnSuccessListener(dataSnapshot -> {
+                                    final UserModel user = snapshot.toObject(UserModel.class);
+                                    onLogin(user, s_password);
+                                }
+                            }
+                            else {
 
-                                        final UserModel getUser = dataSnapshot.getValue(UserModel.class);
+                                firebaseDatabase
+                                        .getReference("Users")
+                                        .orderByChild("user_name")
+                                        .equalTo(s_user_name)
+                                        .addListenerForSingleValueEvent(new ValueEventListener() {
 
-                                        final int i_user_version_code = getUser.getUser_version_code();
+                                            @Override
+                                            public void onDataChange(@NonNull DataSnapshot snapshot) {
 
-                                        if (i_user_version_code == i_version_code) {
+                                                if (snapshot.exists()) {
 
-                                            pd.dismiss();
-                                            startActivity(new Intent(this, HomeActivity.class));
-                                            finish();
-                                        } else if (i_user_version_code > i_version_code) {
+                                                    for (DataSnapshot _snapshot : snapshot.getChildren()) {
 
-                                            firebaseAuth.signOut();
-                                            Toast.makeText(this, "Your account is incompatible to this version!", Toast.LENGTH_LONG).show();
-                                            startActivity(new Intent(this, MainActivity.class));
-                                            finish();
-                                        } else {
+                                                        final String s_user_bio = String.valueOf(_snapshot.child("user_bio").getValue());
+                                                        final String s_user_email = String.valueOf(_snapshot.child("user_email").getValue());
+                                                        final String s_user_id = String.valueOf(_snapshot.child("user_id").getValue());
+                                                        final String s_user_image = String.valueOf(_snapshot.child("user_image").getValue());
+                                                        final boolean user_is_admin = Boolean.getBoolean(String.valueOf(_snapshot.child("user_is_admin").getValue()));
+                                                        final int i_user_version_code = Integer.parseInt(String.valueOf(_snapshot.child("user_version_code").getValue()));
 
-                                            final UserModel setUser = onMigrate(getUser, i_user_version_code);
+                                                        final UserModel user = new UserModel(
+                                                                s_user_bio,
+                                                                s_user_email,
+                                                                s_user_id,
+                                                                s_user_image,
+                                                                user_is_admin,
+                                                                s_user_name,
+                                                                i_user_version_code
+                                                        );
 
-                                            databaseRef
-                                                    .setValue(setUser)
-                                                    .addOnSuccessListener(runnable -> {
+                                                        onLogin(user, s_password);
+                                                    }
+                                                }
+                                                else {
+                                                    is_loading.setVisibility(View.GONE);
+                                                    Toast.makeText(LoginActivity.this, "User Doesn't Exist!", Toast.LENGTH_SHORT).show();
+                                                }
 
-                                                        pd.dismiss();
-                                                        startActivity(new Intent(this, HomeActivity.class));
-                                                        finish();
-                                                    });
-                                        }
+                                            }
 
-                                    }).addOnFailureListener(e -> pd.dismiss());
+                                            @Override
+                                            public void onCancelled(@NonNull DatabaseError error) {
 
-
-                        }).addOnFailureListener(e -> {
-
-                    pd.dismiss();
-                    Toast.makeText(this, "Incorrect Email or Password", Toast.LENGTH_SHORT).show();
-                });
+                                            }
+                                        });
+                            }
+                        });
             }
         });
 
     }
 
-    private UserModel onMigrate(final UserModel getUser, final int i_user_version_code) {
+    private void onLogin(final UserModel user, final String s_password) {
 
-        UserModel user = new UserModel();
+        final String s_email = user.getUser_email();
 
-        if (i_user_version_code < 5) {
+        if (s_email != null)
 
-            user = new UserModel(
-                    getUser.getUser_bio(),
-                    getUser.getUser_email(),
-                    getUser.getUser_id(),
-                    getUser.getUser_image(),
-                    getUser.isUser_is_admin(),
-                    getUser.getUser_name(),
-                    i_version_code
-            );
-        }
-        return user;
+            firebaseAuth
+                    .signInWithEmailAndPassword(s_email, s_password)
+                    .addOnSuccessListener(authResult -> {
+
+                        final int i_user_version_code = user.getUser_version_code();
+                        final String s_user_id = authResult.getUser().getUid();
+
+                        if (i_user_version_code == i_version_code) {
+
+                            is_loading.setVisibility(View.GONE);
+                            Toast.makeText(this, "Welcome, You've Successfully Login!", Toast.LENGTH_LONG).show();
+                            startActivity(new Intent(this, HomeActivity.class));
+                            finish();
+                        } else if (i_user_version_code > i_version_code) {
+
+                            is_loading.setVisibility(View.GONE);
+                            firebaseAuth.signOut();
+                            Toast.makeText(this, "Your account is incompatible to this version!", Toast.LENGTH_LONG).show();
+                            startActivity(new Intent(this, MainActivity.class));
+                            finish();
+                        } else {
+
+
+                            firebaseFirestore
+                                    .collection("Users")
+                                    .document(s_user_id)
+                                    .set(user)
+                                    .addOnSuccessListener(runnable -> {
+
+                                        is_loading.setVisibility(View.GONE);
+                                        Toast.makeText(this, "Welcome, You've Successfully Login!", Toast.LENGTH_LONG).show();
+                                        startActivity(new Intent(this, HomeActivity.class));
+                                        finish();
+                                    });
+                        }
+
+                    }).addOnFailureListener(e -> {
+
+                        if (e.toString().contains("The password is invalid or the user does not have a password")) {
+                            is_loading.setVisibility(View.GONE);;
+                            Toast.makeText(LoginActivity.this, "Incorrect Password!", Toast.LENGTH_SHORT).show();
+                        }
+                        else if (e.toString().contains("A network error (such as timeout, interrupted connection or unreachable host) has occurred")) {
+                            is_loading.setVisibility(View.GONE);
+                            Toast.makeText(LoginActivity.this, "No Internet Connection!", Toast.LENGTH_SHORT).show();
+                        }
+                        else {
+                            is_loading.setVisibility(View.GONE);
+                            Toast.makeText(LoginActivity.this, "Please Contact Your Service Provider", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+
+    }
+
+    private boolean isConnected() {
+
+        ConnectivityManager connectivityManager = (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+        return networkInfo != null && networkInfo.isConnectedOrConnecting();
 
     }
 
