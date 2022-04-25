@@ -1,12 +1,16 @@
 package com.codewithjosh.NewsExpose2k20;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -16,19 +20,28 @@ import com.codewithjosh.NewsExpose2k20.models.UserModel;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.auth.User;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class RegisterActivity extends AppCompatActivity {
 
     Button btn_register;
     EditText et_user_name, et_email, et_password, et_re_password;
-    LinearLayout nav_login;
+    LinearLayout nav_login, is_loading;
 
     FirebaseAuth firebaseAuth;
     FirebaseDatabase firebaseDatabase;
+    FirebaseFirestore firebaseFirestore;
 
-    ProgressDialog pd;
+    DatabaseReference databaseRef;
+    DocumentReference documentRef;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,9 +54,11 @@ public class RegisterActivity extends AppCompatActivity {
         et_password = findViewById(R.id.et_password);
         et_re_password = findViewById(R.id.et_re_password);
         nav_login = findViewById(R.id.nav_login);
+        is_loading = findViewById(R.id.is_loading);
 
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseDatabase = FirebaseDatabase.getInstance();
+        firebaseFirestore = FirebaseFirestore.getInstance();
 
         nav_login.setOnClickListener(v -> {
             startActivity(new Intent(this, LoginActivity.class));
@@ -51,26 +66,51 @@ public class RegisterActivity extends AppCompatActivity {
         });
 
         btn_register.setOnClickListener(v -> {
-            pd = new ProgressDialog(this);
-            pd.setMessage("Signing up");
-            pd.show();
 
-            final String s_user_name = et_user_name.getText().toString();
-            final String s_email = et_email.getText().toString();
+            is_loading.setVisibility(View.VISIBLE);
+            InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(CommentActivity.INPUT_METHOD_SERVICE);
+            inputMethodManager.hideSoftInputFromWindow(v.getWindowToken(), 0);
+            if (getCurrentFocus() != null) getCurrentFocus().clearFocus();
+
+            final String s_user_name = et_user_name.getText().toString().toLowerCase();
+            final String s_email = et_email.getText().toString().toLowerCase();
             final String s_password = et_password.getText().toString();
             final String s_re_password = et_re_password.getText().toString();
 
-            if (s_user_name.isEmpty() || s_email.isEmpty()
+            if (!isConnected()) {
+                is_loading.setVisibility(View.GONE);
+                Toast.makeText(RegisterActivity.this, "No Internet Connection!", Toast.LENGTH_SHORT).show();
+            }
+            else if (s_user_name.isEmpty() || s_email.isEmpty()
                     || s_password.isEmpty() || s_re_password.isEmpty()) {
-                pd.dismiss();
-                Toast.makeText(this, "All fields are required!", Toast.LENGTH_SHORT).show();
-            } else if (s_password.length() < 6) {
-                pd.dismiss();
-                Toast.makeText(this, "Password must at least 6 characters", Toast.LENGTH_SHORT).show();
-            } else if (!s_password.equals(s_re_password)) {
-                pd.dismiss();
-                Toast.makeText(this, "Password doesn't match!", Toast.LENGTH_SHORT).show();
-            } else onRegister(s_user_name, s_email, s_password);
+                is_loading.setVisibility(View.GONE);
+                Toast.makeText(RegisterActivity.this, "All fields are required!", Toast.LENGTH_SHORT).show();
+            }
+            else if (!s_user_name.startsWith("@ne.")) {
+                is_loading.setVisibility(View.GONE);
+                Toast.makeText(RegisterActivity.this, "Username must starts with @ne.", Toast.LENGTH_SHORT).show();
+            }
+            else if (s_user_name.length() < 5) {
+                is_loading.setVisibility(View.GONE);
+                Toast.makeText(RegisterActivity.this, "Provide a valid Username", Toast.LENGTH_SHORT).show();
+            }
+            else if (!s_email.endsWith("@ne.xpose")) {
+                is_loading.setVisibility(View.GONE);
+                Toast.makeText(RegisterActivity.this, "Email must end with @ne.xpose", Toast.LENGTH_SHORT).show();
+            }
+            else if (s_email.length() < 10) {
+                is_loading.setVisibility(View.GONE);
+                Toast.makeText(RegisterActivity.this, "Provide a valid Email Address", Toast.LENGTH_SHORT).show();
+            }
+            else if (s_password.length() < 6) {
+                is_loading.setVisibility(View.GONE);
+                Toast.makeText(RegisterActivity.this, "Password must be at least 6 characters", Toast.LENGTH_SHORT).show();
+            }
+            else if (!s_password.equals(s_re_password)) {
+                is_loading.setVisibility(View.GONE);
+                Toast.makeText(RegisterActivity.this, "Password doesn't match", Toast.LENGTH_SHORT).show();
+            }
+            else onRegister(s_user_name, s_email, s_password);
 
         });
 
@@ -78,69 +118,109 @@ public class RegisterActivity extends AppCompatActivity {
 
     private void onRegister(final String s_user_name, final String s_email, final String s_password) {
 
-        firebaseDatabase
-                .getReference("Users")
-                .orderByChild("user_name")
-                .equalTo(s_user_name)
-                .addListenerForSingleValueEvent(new ValueEventListener() {
+        firebaseFirestore
+                .collection("Users")
+                .whereEqualTo("user_name", s_user_name)
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
 
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    if (queryDocumentSnapshots.isEmpty()) {
 
-                        if (!snapshot.exists()) {
+                        firebaseAuth
+                                .createUserWithEmailAndPassword(s_email, s_password)
+                                .addOnSuccessListener(authResult -> {
 
-                            firebaseAuth
-                                    .createUserWithEmailAndPassword(s_email, s_password)
-                                    .addOnSuccessListener(authResult -> {
+                                    final String s_user_bio = "";
+                                    final String s_user_id = authResult.getUser().getUid();
+                                    final String s_user_image = "https://firebasestorage.googleapis.com/v0/b/news-expose-2k20.appspot.com/o/20220415_Res%2FDefaultUserImage.png?alt=media&token=4cdbad29-194b-410e-80fa-feb641a06998";
+                                    final boolean user_is_admin = false;
+                                    final int i_version_code = BuildConfig.VERSION_CODE;
 
-                                        final String s_user_bio = "";
-                                        final String s_user_id = authResult.getUser().getUid();
-                                        final String s_user_image = "https://firebasestorage.googleapis.com/v0/b/news-expose-2k20.appspot.com/o/20220410_Res%2FDefaultUserImage.png?alt=media&token=20";
-                                        final boolean user_is_admin = false;
-                                        final int i_version_code = BuildConfig.VERSION_CODE;
+                                    final UserModel user = new UserModel(
+                                            s_user_bio,
+                                            s_email,
+                                            s_user_id,
+                                            s_user_image,
+                                            user_is_admin,
+                                            s_user_name,
+                                            i_version_code
+                                    );
 
-                                        final UserModel user = new UserModel(
-                                                s_user_bio,
-                                                s_email,
-                                                s_user_id,
-                                                s_user_image,
-                                                user_is_admin,
-                                                s_user_name,
-                                                i_version_code
-                                        );
+                                    documentRef = firebaseFirestore
+                                            .collection("Users")
+                                            .document(s_user_id);
 
-                                        firebaseDatabase
-                                                .getReference("Users")
-                                                .child(s_user_id)
-                                                .setValue(user)
-                                                .addOnSuccessListener(runnable -> {
+                                    documentRef
+                                            .get()
+                                            .addOnSuccessListener(documentSnapshot -> {
 
-                                                    pd.dismiss();
-                                                    Toast.makeText(RegisterActivity.this, "You're Successfully Added!", Toast.LENGTH_SHORT).show();
-                                                    startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
-                                                    finish();
-                                                });
+                                                if (documentSnapshot != null)
 
-                                    }).addOnFailureListener(e -> {
+                                                    if (!documentSnapshot.exists()) {
 
-                                pd.dismiss();
-                                Toast.makeText(RegisterActivity.this, "Incorrect Email Address", Toast.LENGTH_SHORT).show();
-                            });
+                                                        documentRef
+                                                                .set(user)
+                                                                .addOnSuccessListener(unused -> {
 
-                        } else {
+                                                                    HashMap<String, Object> support = new HashMap<>();
+                                                                    support.put("user_email", s_email);
+                                                                    support.put("user_name", s_user_name);
+                                                                    support.put("user_version_code", i_version_code);
 
-                            pd.dismiss();
-                            Toast.makeText(RegisterActivity.this, "Username is Already Exist!", Toast.LENGTH_SHORT).show();
-                        }
+                                                                    databaseRef = firebaseDatabase
+                                                                            .getReference("Users")
+                                                                            .child(s_user_id);
 
-                    }
+                                                                    databaseRef
+                                                                            .get()
+                                                                            .addOnSuccessListener(dataSnapshot -> {
 
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-                        pd.dismiss();
+                                                                                if (!dataSnapshot.exists()) {
 
+                                                                                    databaseRef
+                                                                                            .setValue(support)
+                                                                                            .addOnSuccessListener(_unused -> {
+
+                                                                                                is_loading.setVisibility(View.GONE);
+
+                                                                                                Toast.makeText(this, "You're Successfully Added!", Toast.LENGTH_LONG).show();
+                                                                                                startActivity(new Intent(this, LoginActivity.class));
+                                                                                                finish();
+                                                                                            });
+                                                                                }
+                                                                            });
+
+
+                                                                });
+                                                    }
+                                            });
+
+                                }).addOnFailureListener(e -> {
+
+                                    if (e.toString().contains("The email address is already in use by another account")) {
+                                        is_loading.setVisibility(View.GONE);
+                                        Toast.makeText(this, "Email is Already Exist!", Toast.LENGTH_SHORT).show();
+                                    } else if (e.toString().contains("A network error (such as timeout, interrupted connection or unreachable host) has occurred")) {
+                                        is_loading.setVisibility(View.GONE);
+                                        Toast.makeText(this, "No Internet Connection!", Toast.LENGTH_SHORT).show();
+                                    } else {
+                                        is_loading.setVisibility(View.GONE);
+                                        Toast.makeText(this, "Please Contact Your Service Provider", Toast.LENGTH_SHORT).show();
+                                    }
+                                });
+                    } else {
+                        is_loading.setVisibility(View.GONE);
+                        Toast.makeText(this, "Username is Already Taken!", Toast.LENGTH_SHORT).show();
                     }
                 });
+
+    }
+
+    private boolean isConnected() {
+
+        ConnectivityManager connectivityManager = (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+        return networkInfo != null && networkInfo.isConnectedOrConnecting();
 
     }
 
