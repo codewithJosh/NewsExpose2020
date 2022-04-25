@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -19,7 +20,7 @@ public class LoginActivity extends AppCompatActivity {
 
     Button btn_login;
     EditText et_email, et_password;
-    TextView nav_register;
+    LinearLayout nav_register;
 
     int i_version_code;
 
@@ -35,8 +36,8 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        btn_login = findViewById(R.id.nav_login);
-        et_email = findViewById(R.id.et_email);
+        btn_login = findViewById(R.id.btn_login);
+        et_email = findViewById(R.id.et_user_name);
         et_password = findViewById(R.id.et_password);
         nav_register = findViewById(R.id.nav_register);
 
