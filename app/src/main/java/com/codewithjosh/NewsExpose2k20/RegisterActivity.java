@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -22,7 +23,7 @@ public class RegisterActivity extends AppCompatActivity {
 
     Button btn_register;
     EditText et_user_name, et_email, et_password, et_re_password;
-    TextView nav_login;
+    LinearLayout nav_login;
 
     FirebaseAuth firebaseAuth;
     FirebaseDatabase firebaseDatabase;
@@ -34,7 +35,7 @@ public class RegisterActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
-        btn_register = findViewById(R.id.nav_register);
+        btn_register = findViewById(R.id.btn_register);
         et_user_name = findViewById(R.id.et_user_name);
         et_email = findViewById(R.id.et_email);
         et_password = findViewById(R.id.et_password);
