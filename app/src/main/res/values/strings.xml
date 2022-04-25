@@ -16,4 +16,10 @@
     <string name="text_comments">Comments</string>
     <string name="hint_comment_content">Add a comment…</string>
     <string name="text_checking_for_updates">checking for updates</string>
+    <string name="digits_1">abcdefghijklmnopqrstuvwxyz1234567890@._</string>
+    <string name="digits_2">0123456789</string>
+    <string name="hint_contact">Phone Number</string>
+    <string name="digits_3">abcdefghijklmnopqrstuvwxyz1234567890!@#$%^*-=_+:;,.?</string>
+    <string name="text_checkbox_recaptcha">I\'m not a robot</string>
+    <string name="text_signing_up">signing up</string>
 </resources>
