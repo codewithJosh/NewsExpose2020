@@ -1,6 +1,5 @@
 package com.codewithjosh.NewsExpose2k20;
 
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
@@ -13,22 +12,16 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.codewithjosh.NewsExpose2k20.models.UserModel;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.auth.User;
 
 import java.util.HashMap;
-import java.util.Map;
 
 public class RegisterActivity extends AppCompatActivity {
 
@@ -80,37 +73,29 @@ public class RegisterActivity extends AppCompatActivity {
             if (!isConnected()) {
                 is_loading.setVisibility(View.GONE);
                 Toast.makeText(RegisterActivity.this, "No Internet Connection!", Toast.LENGTH_SHORT).show();
-            }
-            else if (s_user_name.isEmpty() || s_email.isEmpty()
+            } else if (s_user_name.isEmpty() || s_email.isEmpty()
                     || s_password.isEmpty() || s_re_password.isEmpty()) {
                 is_loading.setVisibility(View.GONE);
                 Toast.makeText(RegisterActivity.this, "All fields are required!", Toast.LENGTH_SHORT).show();
-            }
-            else if (!s_user_name.startsWith("@ne.")) {
+            } else if (!s_user_name.startsWith("@ne.")) {
                 is_loading.setVisibility(View.GONE);
                 Toast.makeText(RegisterActivity.this, "Username must starts with @ne.", Toast.LENGTH_SHORT).show();
-            }
-            else if (s_user_name.length() < 5) {
+            } else if (s_user_name.length() < 5) {
                 is_loading.setVisibility(View.GONE);
                 Toast.makeText(RegisterActivity.this, "Provide a valid Username", Toast.LENGTH_SHORT).show();
-            }
-            else if (!s_email.endsWith("@ne.xpose")) {
+            } else if (!s_email.endsWith("@ne.xpose")) {
                 is_loading.setVisibility(View.GONE);
                 Toast.makeText(RegisterActivity.this, "Email must end with @ne.xpose", Toast.LENGTH_SHORT).show();
-            }
-            else if (s_email.length() < 10) {
+            } else if (s_email.length() < 10) {
                 is_loading.setVisibility(View.GONE);
                 Toast.makeText(RegisterActivity.this, "Provide a valid Email Address", Toast.LENGTH_SHORT).show();
-            }
-            else if (s_password.length() < 6) {
+            } else if (s_password.length() < 6) {
                 is_loading.setVisibility(View.GONE);
                 Toast.makeText(RegisterActivity.this, "Password must be at least 6 characters", Toast.LENGTH_SHORT).show();
-            }
-            else if (!s_password.equals(s_re_password)) {
+            } else if (!s_password.equals(s_re_password)) {
                 is_loading.setVisibility(View.GONE);
                 Toast.makeText(RegisterActivity.this, "Password doesn't match", Toast.LENGTH_SHORT).show();
-            }
-            else onRegister(s_user_name, s_email, s_password);
+            } else onRegister(s_user_name, s_email, s_password);
 
         });
 
@@ -197,17 +182,17 @@ public class RegisterActivity extends AppCompatActivity {
 
                                 }).addOnFailureListener(e -> {
 
-                                    if (e.toString().contains("The email address is already in use by another account")) {
-                                        is_loading.setVisibility(View.GONE);
-                                        Toast.makeText(this, "Email is Already Exist!", Toast.LENGTH_SHORT).show();
-                                    } else if (e.toString().contains("A network error (such as timeout, interrupted connection or unreachable host) has occurred")) {
-                                        is_loading.setVisibility(View.GONE);
-                                        Toast.makeText(this, "No Internet Connection!", Toast.LENGTH_SHORT).show();
-                                    } else {
-                                        is_loading.setVisibility(View.GONE);
-                                        Toast.makeText(this, "Please Contact Your Service Provider", Toast.LENGTH_SHORT).show();
-                                    }
-                                });
+                            if (e.toString().contains("The email address is already in use by another account")) {
+                                is_loading.setVisibility(View.GONE);
+                                Toast.makeText(this, "Email is Already Exist!", Toast.LENGTH_SHORT).show();
+                            } else if (e.toString().contains("A network error (such as timeout, interrupted connection or unreachable host) has occurred")) {
+                                is_loading.setVisibility(View.GONE);
+                                Toast.makeText(this, "No Internet Connection!", Toast.LENGTH_SHORT).show();
+                            } else {
+                                is_loading.setVisibility(View.GONE);
+                                Toast.makeText(this, "Please Contact Your Service Provider", Toast.LENGTH_SHORT).show();
+                            }
+                        });
                     } else {
                         is_loading.setVisibility(View.GONE);
                         Toast.makeText(this, "Username is Already Taken!", Toast.LENGTH_SHORT).show();
