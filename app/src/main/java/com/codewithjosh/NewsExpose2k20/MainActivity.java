@@ -20,7 +20,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 public class MainActivity extends AppCompatActivity {
 
-    Button btn_login, btn_register;
+    Button nav_login, nav_register;
     LinearLayout is_loading;
     RelativeLayout is_unsupported;
     TextView tv_version_name;
@@ -67,18 +67,18 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        btn_login = findViewById(R.id.btn_login);
-        btn_register = findViewById(R.id.btn_register);
+        nav_login = findViewById(R.id.nav_login);
+        nav_register = findViewById(R.id.nav_register);
         is_loading = findViewById(R.id.is_loading);
         is_unsupported = findViewById(R.id.is_unsupported);
         tv_version_name = findViewById(R.id.tv_version_name);
 
-        btn_login.setOnClickListener(v -> {
+        nav_login.setOnClickListener(v -> {
             startActivity(new Intent(this, LoginActivity.class));
             finish();
         });
 
-        btn_register.setOnClickListener(v -> {
+        nav_register.setOnClickListener(v -> {
             startActivity(new Intent(this, RegisterActivity.class));
             finish();
         });

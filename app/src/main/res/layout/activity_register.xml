@@ -128,7 +128,7 @@
                     android:textColorHint="@color/colorPhilippineGray" />
 
                 <Button
-                    android:id="@+id/btn_register"
+                    android:id="@+id/nav_register"
                     android:layout_width="225dp"
                     android:layout_height="40dp"
                     android:layout_gravity="center"
