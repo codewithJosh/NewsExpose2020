@@ -1,6 +1,5 @@
 package com.codewithjosh.NewsExpose2k20;
 
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
@@ -20,16 +19,10 @@ import com.codewithjosh.NewsExpose2k20.models.UserModel;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.auth.User;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -78,16 +71,13 @@ public class LoginActivity extends AppCompatActivity {
             if (!isConnected()) {
                 is_loading.setVisibility(View.GONE);
                 Toast.makeText(LoginActivity.this, "No Internet Connection!", Toast.LENGTH_SHORT).show();
-            }
-            else if (s_user_name.isEmpty() || s_password.isEmpty()) {
+            } else if (s_user_name.isEmpty() || s_password.isEmpty()) {
                 is_loading.setVisibility(View.GONE);
                 Toast.makeText(LoginActivity.this, "All fields are required!", Toast.LENGTH_SHORT).show();
-            }
-            else if (s_password.length() < 6) {
+            } else if (s_password.length() < 6) {
                 is_loading.setVisibility(View.GONE);
                 Toast.makeText(LoginActivity.this, "Password Must be at least 6 characters", Toast.LENGTH_SHORT).show();
-            }
-            else {
+            } else {
 
                 firebaseFirestore
                         .collection("Users")
@@ -102,8 +92,7 @@ public class LoginActivity extends AppCompatActivity {
                                     final UserModel user = snapshot.toObject(UserModel.class);
                                     onLogin(user, s_password);
                                 }
-                            }
-                            else {
+                            } else {
 
                                 firebaseDatabase
                                         .getReference("Users")
@@ -137,8 +126,7 @@ public class LoginActivity extends AppCompatActivity {
 
                                                         onLogin(user, s_password);
                                                     }
-                                                }
-                                                else {
+                                                } else {
                                                     is_loading.setVisibility(View.GONE);
                                                     Toast.makeText(LoginActivity.this, "User Doesn't Exist!", Toast.LENGTH_SHORT).show();
                                                 }
@@ -201,19 +189,18 @@ public class LoginActivity extends AppCompatActivity {
 
                     }).addOnFailureListener(e -> {
 
-                        if (e.toString().contains("The password is invalid or the user does not have a password")) {
-                            is_loading.setVisibility(View.GONE);;
-                            Toast.makeText(LoginActivity.this, "Incorrect Password!", Toast.LENGTH_SHORT).show();
-                        }
-                        else if (e.toString().contains("A network error (such as timeout, interrupted connection or unreachable host) has occurred")) {
-                            is_loading.setVisibility(View.GONE);
-                            Toast.makeText(LoginActivity.this, "No Internet Connection!", Toast.LENGTH_SHORT).show();
-                        }
-                        else {
-                            is_loading.setVisibility(View.GONE);
-                            Toast.makeText(LoginActivity.this, "Please Contact Your Service Provider", Toast.LENGTH_SHORT).show();
-                        }
-                    });
+                if (e.toString().contains("The password is invalid or the user does not have a password")) {
+                    is_loading.setVisibility(View.GONE);
+                    ;
+                    Toast.makeText(LoginActivity.this, "Incorrect Password!", Toast.LENGTH_SHORT).show();
+                } else if (e.toString().contains("A network error (such as timeout, interrupted connection or unreachable host) has occurred")) {
+                    is_loading.setVisibility(View.GONE);
+                    Toast.makeText(LoginActivity.this, "No Internet Connection!", Toast.LENGTH_SHORT).show();
+                } else {
+                    is_loading.setVisibility(View.GONE);
+                    Toast.makeText(LoginActivity.this, "Please Contact Your Service Provider", Toast.LENGTH_SHORT).show();
+                }
+            });
 
     }
 
