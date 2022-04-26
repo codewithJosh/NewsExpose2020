@@ -160,10 +160,7 @@ public class LoginActivity extends AppCompatActivity {
 
                         if (i_user_version_code == i_version_code) {
 
-                            is_loading.setVisibility(View.GONE);
-                            Toast.makeText(this, "Welcome, You've Successfully Login!", Toast.LENGTH_LONG).show();
-                            startActivity(new Intent(this, HomeActivity.class));
-                            finish();
+                            checkCurrentUserVerified(user, s_user_id);
                         } else if (i_user_version_code > i_version_code) {
 
                             is_loading.setVisibility(View.GONE);
@@ -173,18 +170,11 @@ public class LoginActivity extends AppCompatActivity {
                             finish();
                         } else {
 
-
                             firebaseFirestore
                                     .collection("Users")
                                     .document(s_user_id)
                                     .set(user)
-                                    .addOnSuccessListener(runnable -> {
-
-                                        is_loading.setVisibility(View.GONE);
-                                        Toast.makeText(this, "Welcome, You've Successfully Login!", Toast.LENGTH_LONG).show();
-                                        startActivity(new Intent(this, HomeActivity.class));
-                                        finish();
-                                    });
+                                    .addOnSuccessListener(runnable -> checkCurrentUserVerified(user, s_user_id));
                         }
 
                     }).addOnFailureListener(e -> {
@@ -209,6 +199,27 @@ public class LoginActivity extends AppCompatActivity {
         ConnectivityManager connectivityManager = (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
         return networkInfo != null && networkInfo.isConnectedOrConnecting();
+
+    }
+
+    private void checkCurrentUserVerified(final UserModel user, final String s_user_id) {
+
+        final String s_user_contact = user.getUser_contact();
+        final boolean user_is_verified = user.isUser_is_verified();
+
+        if (user_is_verified) {
+
+            is_loading.setVisibility(View.GONE);
+            Toast.makeText(this, "Welcome, You've Successfully Login!", Toast.LENGTH_LONG).show();
+            startActivity(new Intent(this, HomeActivity.class));
+        } else {
+
+            Intent intent = new Intent(this, PhoneNumberActivity.class);
+            intent.putExtra("s_user_id", s_user_id);
+            intent.putExtra("s_user_contact", s_user_contact);
+            startActivity(intent);
+        }
+        finish();
 
     }
 
