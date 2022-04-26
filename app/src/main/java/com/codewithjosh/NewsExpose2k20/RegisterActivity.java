@@ -94,16 +94,13 @@ public class RegisterActivity extends AppCompatActivity {
             } else if (s_email.length() < 10) {
                 is_loading.setVisibility(View.GONE);
                 Toast.makeText(RegisterActivity.this, "Provide a valid Email Address", Toast.LENGTH_SHORT).show();
-            }
-            else if (!s_contact.startsWith("09")) {
+            } else if (!s_contact.startsWith("09")) {
                 is_loading.setVisibility(View.GONE);
                 Toast.makeText(RegisterActivity.this, "Provide a valid Phone Number", Toast.LENGTH_SHORT).show();
-            }
-            else if (s_contact.length() < 11) {
+            } else if (s_contact.length() < 11) {
                 is_loading.setVisibility(View.GONE);
                 Toast.makeText(RegisterActivity.this, "Phone Number must be at least 11 digits", Toast.LENGTH_SHORT).show();
-            }
-            else if (s_password.length() < 6) {
+            } else if (s_password.length() < 6) {
                 is_loading.setVisibility(View.GONE);
                 Toast.makeText(RegisterActivity.this, "Password must be at least 6 characters", Toast.LENGTH_SHORT).show();
             } else if (!s_password.equals(s_re_password)) {

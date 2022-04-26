@@ -4,8 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".VerificationActivity"
-    android:background="@drawable/img_background_1">
+    android:background="@drawable/img_background_1"
+    tools:context=".VerificationActivity">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -112,7 +112,7 @@
                     android:textColor="@color/colorSpanishGray"
                     android:textSize="6pt"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/et_otp"/>
+                    app:layout_constraintTop_toBottomOf="@id/et_otp" />
 
                 <Button
                     android:id="@+id/btn_submit"
@@ -120,8 +120,8 @@
                     android:layout_height="50dp"
                     android:layout_marginTop="20dp"
                     android:layout_weight="0.5"
-                    android:fontFamily="@font/poppins_medium"
                     android:background="@drawable/create_linear_button_round"
+                    android:fontFamily="@font/poppins_medium"
                     android:gravity="center"
                     android:includeFontPadding="false"
                     android:text="@string/text_button_submit"

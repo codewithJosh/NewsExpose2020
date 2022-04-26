@@ -135,11 +135,11 @@
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:gravity="center"
+                        app:ccpDialog_background="@drawable/img_background_2"
+                        app:ccpDialog_textColor="?attr/colorOnPrimary"
                         app:ccp_autoDetectCountry="true"
                         app:ccp_contentColor="?attr/colorPrimary"
-                        app:ccp_showPhoneCode="false"
-                        app:ccpDialog_background="@drawable/img_background_2"
-                        app:ccpDialog_textColor="?attr/colorOnPrimary" />
+                        app:ccp_showPhoneCode="false" />
 
                     <EditText
                         android:id="@+id/et_contact"

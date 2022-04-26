@@ -1,8 +1,5 @@
 package com.codewithjosh.NewsExpose2k20;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
@@ -16,6 +13,9 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.firebase.FirebaseException;
 import com.google.firebase.auth.FirebaseAuth;
@@ -78,16 +78,13 @@ public class VerificationActivity extends AppCompatActivity {
             if (!isConnected()) {
                 is_loading.setVisibility(View.GONE);
                 Toast.makeText(this, "No Internet Connection!", Toast.LENGTH_SHORT).show();
-            }
-            else if (s_otp.isEmpty()) {
+            } else if (s_otp.isEmpty()) {
                 is_loading.setVisibility(View.GONE);
                 Toast.makeText(this, "OTP is required!", Toast.LENGTH_SHORT).show();
-            }
-            else if (s_otp.length() != 6) {
+            } else if (s_otp.length() != 6) {
                 is_loading.setVisibility(View.GONE);
                 Toast.makeText(this, "OTP must be at least 6 characters", Toast.LENGTH_SHORT).show();
-            }
-            else {
+            } else {
 
                 final PhoneAuthCredential credential = PhoneAuthProvider.getCredential(s_verification_id, s_otp);
                 firebaseUser = firebaseAuth.getCurrentUser();
@@ -119,12 +116,10 @@ public class VerificationActivity extends AppCompatActivity {
                         if (_e.contains("expired")) {
                             is_loading.setVisibility(View.GONE);
                             Toast.makeText(VerificationActivity.this, "OTP has expired", Toast.LENGTH_SHORT).show();
-                        }
-                        else if (_e.contains("invalid")) {
+                        } else if (_e.contains("invalid")) {
                             is_loading.setVisibility(View.GONE);
                             Toast.makeText(VerificationActivity.this, "OTP doesn't match", Toast.LENGTH_SHORT).show();
-                        }
-                        else {
+                        } else {
                             is_loading.setVisibility(View.GONE);
                             Toast.makeText(VerificationActivity.this, "Please Contact Your Service Provider", Toast.LENGTH_SHORT).show();
                         }
@@ -144,15 +139,14 @@ public class VerificationActivity extends AppCompatActivity {
 
             is_loading.setVisibility(View.GONE);
             Toast.makeText(this, "No Internet Connection!", Toast.LENGTH_SHORT).show();
-        }
-        else {
+        } else {
 
             new CountDownTimer(60000, 1000) {
 
                 @Override
                 public void onTick(long millisUntilFinished) {
 
-                    tv_resend.setText(String.valueOf(millisUntilFinished/1000));
+                    tv_resend.setText(String.valueOf(millisUntilFinished / 1000));
                     btn_resend.setEnabled(false);
 
                 }
@@ -168,35 +162,35 @@ public class VerificationActivity extends AppCompatActivity {
             }.start();
 
             PhoneAuthOptions options = PhoneAuthOptions
-                            .newBuilder(firebaseAuth)
-                            .setPhoneNumber(s_user_contact)
-                            .setTimeout(60L, TimeUnit.SECONDS)
-                            .setActivity(this)
-                            .setCallbacks(new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
+                    .newBuilder(firebaseAuth)
+                    .setPhoneNumber(s_user_contact)
+                    .setTimeout(60L, TimeUnit.SECONDS)
+                    .setActivity(this)
+                    .setCallbacks(new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
 
-                                @Override
-                                public void onVerificationCompleted(@NonNull PhoneAuthCredential phoneAuthCredential) {
+                        @Override
+                        public void onVerificationCompleted(@NonNull PhoneAuthCredential phoneAuthCredential) {
 
-                                }
+                        }
 
-                                @Override
-                                public void onVerificationFailed(@NonNull FirebaseException e) {
+                        @Override
+                        public void onVerificationFailed(@NonNull FirebaseException e) {
 
-                                    is_loading.setVisibility(View.GONE);
-                                    System.out.println(e);
-                                    Toast.makeText(VerificationActivity.this, "Verification Failed!", Toast.LENGTH_SHORT).show();
+                            is_loading.setVisibility(View.GONE);
+                            System.out.println(e);
+                            Toast.makeText(VerificationActivity.this, "Verification Failed!", Toast.LENGTH_SHORT).show();
 
-                                }
+                        }
 
-                                @Override
-                                public void onCodeSent(@NonNull String s, @NonNull PhoneAuthProvider.ForceResendingToken forceResendingToken) {
+                        @Override
+                        public void onCodeSent(@NonNull String s, @NonNull PhoneAuthProvider.ForceResendingToken forceResendingToken) {
 
-                                    is_loading.setVisibility(View.GONE);
-                                    Toast.makeText(VerificationActivity.this, "You'll receive your OTP shortly", Toast.LENGTH_SHORT).show();
-                                    VerificationActivity.this.s_verification_id = s;
+                            is_loading.setVisibility(View.GONE);
+                            Toast.makeText(VerificationActivity.this, "You'll receive your OTP shortly", Toast.LENGTH_SHORT).show();
+                            VerificationActivity.this.s_verification_id = s;
 
-                                }
-                            }).build();
+                        }
+                    }).build();
 
             PhoneAuthProvider.verifyPhoneNumber(options);
         }
