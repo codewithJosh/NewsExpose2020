@@ -14,6 +14,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.codewithjosh.NewsExpose2k20.models.UserModel;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -47,7 +48,7 @@ public class MainActivity extends AppCompatActivity {
 
                         if (value != null) {
 
-                            if (value.exists()) onCheckCurrentAuthState();
+                            if (value.exists()) checkCurrentAuthState();
                             else {
 
                                 final String s_version_name = BuildConfig.VERSION_NAME;
@@ -85,7 +86,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private void onCheckCurrentAuthState() {
+    private void checkCurrentAuthState() {
 
         is_loading.setVisibility(View.GONE);
         is_unsupported.setVisibility(View.GONE);
@@ -93,8 +94,33 @@ public class MainActivity extends AppCompatActivity {
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
 
         if (firebaseUser != null) {
-            startActivity(new Intent(this, HomeActivity.class));
-            finish();
+
+            final String s_user_id = firebaseUser.getUid();
+
+            firebaseFirestore
+                    .collection("Users")
+                    .document(s_user_id)
+                    .get()
+                    .addOnSuccessListener(documentSnapshot -> {
+
+                        final UserModel user = documentSnapshot.toObject(UserModel.class);
+
+                        final String s_user_contact = user.getUser_contact();
+                        final boolean user_is_verified = user.isUser_is_verified();
+
+                        if (user_is_verified) {
+
+                            startActivity(new Intent(this, HomeActivity.class));
+                        }
+                        else {
+
+                            Intent intent = new Intent(this, PhoneNumberActivity.class);
+                            intent.putExtra("s_user_id", s_user_id);
+                            intent.putExtra("s_user_contact", s_user_contact);
+                            startActivity(intent);
+                        }
+                        finish();
+                    });
         }
 
     }
