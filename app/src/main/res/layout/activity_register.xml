@@ -121,6 +121,47 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/et_user_name" />
 
+                <LinearLayout
+                    android:id="@+id/linear_contact"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:layout_marginTop="20dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/et_email">
+
+                    <com.hbb20.CountryCodePicker
+                        android:id="@+id/ccp_country"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        app:ccp_autoDetectCountry="true"
+                        app:ccp_contentColor="?attr/colorPrimary"
+                        app:ccp_showPhoneCode="false"
+                        app:ccpDialog_background="@drawable/img_background_2"
+                        app:ccpDialog_textColor="?attr/colorOnPrimary" />
+
+                    <EditText
+                        android:id="@+id/et_contact"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:autofillHints="no"
+                        android:background="@drawable/create_input_decoration"
+                        android:digits="@string/digits_2"
+                        android:hint="@string/hint_contact"
+                        android:imeOptions="actionNext"
+                        android:includeFontPadding="false"
+                        android:inputType="phone"
+                        android:maxLength="11"
+                        android:padding="10dp"
+                        android:singleLine="true"
+                        android:textColor="?attr/colorPrimary"
+                        android:textColorHint="@color/colorChineseSilver1"
+                        android:textSize="8pt" />
+
+                </LinearLayout>
+
                 <EditText
                     android:id="@+id/et_password"
                     android:layout_width="match_parent"
@@ -141,7 +182,7 @@
                     android:textSize="8pt"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/et_email" />
+                    app:layout_constraintTop_toBottomOf="@id/linear_contact" />
 
                 <EditText
                     android:id="@+id/et_re_password"
