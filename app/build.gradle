@@ -69,4 +69,6 @@ dependencies {
 
 //    add dependency on H. Bhakta CountryCodePicker
     implementation 'com.hbb20:ccp:2.5.0'
+
+    implementation 'com.android.volley:volley:1.2.1'
 }
