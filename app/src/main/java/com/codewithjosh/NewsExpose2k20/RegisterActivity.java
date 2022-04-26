@@ -150,91 +150,105 @@ public class RegisterActivity extends AppCompatActivity {
 
                     if (queryDocumentSnapshots.isEmpty()) {
 
-                        firebaseAuth
-                                .createUserWithEmailAndPassword(s_email, s_password)
-                                .addOnSuccessListener(authResult -> {
+                        firebaseFirestore
+                                .collection("Users")
+                                .whereEqualTo("user_contact", s_contact)
+                                .get()
+                                .addOnSuccessListener(_queryDocumentSnapshots -> {
 
-                                    final String s_user_bio = "";
-                                    final String s_user_id = authResult.getUser().getUid();
-                                    final String s_user_image = "https://firebasestorage.googleapis.com/v0/b/news-expose-2k20.appspot.com/o/20220415_Res%2FDefaultUserImage.png?alt=media&token=4cdbad29-194b-410e-80fa-feb641a06998";
-                                    final boolean user_is_admin = false;
-                                    final boolean user_is_verified = false;
-                                    final int i_version_code = BuildConfig.VERSION_CODE;
+                                    if (_queryDocumentSnapshots.isEmpty()) {
 
-                                    final UserModel user = new UserModel(
-                                            s_user_bio,
-                                            s_contact,
-                                            s_email,
-                                            s_user_id,
-                                            s_user_image,
-                                            user_is_admin,
-                                            user_is_verified,
-                                            s_user_name,
-                                            i_version_code
-                                    );
+                                        firebaseAuth
+                                                .createUserWithEmailAndPassword(s_email, s_password)
+                                                .addOnSuccessListener(authResult -> {
 
-                                    documentRef = firebaseFirestore
-                                            .collection("Users")
-                                            .document(s_user_id);
+                                                    final String s_user_bio = "";
+                                                    final String s_user_id = authResult.getUser().getUid();
+                                                    final String s_user_image = "https://firebasestorage.googleapis.com/v0/b/news-expose-2k20.appspot.com/o/20220415_Res%2FDefaultUserImage.png?alt=media&token=4cdbad29-194b-410e-80fa-feb641a06998";
+                                                    final boolean user_is_admin = false;
+                                                    final boolean user_is_verified = false;
+                                                    final int i_version_code = BuildConfig.VERSION_CODE;
 
-                                    documentRef
-                                            .get()
-                                            .addOnSuccessListener(documentSnapshot -> {
+                                                    final UserModel user = new UserModel(
+                                                            s_user_bio,
+                                                            s_contact,
+                                                            s_email,
+                                                            s_user_id,
+                                                            s_user_image,
+                                                            user_is_admin,
+                                                            user_is_verified,
+                                                            s_user_name,
+                                                            i_version_code
+                                                    );
 
-                                                if (documentSnapshot != null)
+                                                    documentRef = firebaseFirestore
+                                                            .collection("Users")
+                                                            .document(s_user_id);
 
-                                                    if (!documentSnapshot.exists()) {
+                                                    documentRef
+                                                            .get()
+                                                            .addOnSuccessListener(documentSnapshot -> {
 
-                                                        documentRef
-                                                                .set(user)
-                                                                .addOnSuccessListener(unused -> {
+                                                                if (documentSnapshot != null)
 
-                                                                    HashMap<String, Object> support = new HashMap<>();
-                                                                    support.put("user_email", s_email);
-                                                                    support.put("user_name", s_user_name);
-                                                                    support.put("user_version_code", i_version_code);
+                                                                    if (!documentSnapshot.exists()) {
 
-                                                                    databaseRef = firebaseDatabase
-                                                                            .getReference("Users")
-                                                                            .child(s_user_id);
+                                                                        documentRef
+                                                                                .set(user)
+                                                                                .addOnSuccessListener(unused -> {
 
-                                                                    databaseRef
-                                                                            .get()
-                                                                            .addOnSuccessListener(dataSnapshot -> {
+                                                                                    HashMap<String, Object> support = new HashMap<>();
+                                                                                    support.put("user_email", s_email);
+                                                                                    support.put("user_name", s_user_name);
+                                                                                    support.put("user_version_code", i_version_code);
 
-                                                                                if (!dataSnapshot.exists()) {
+                                                                                    databaseRef = firebaseDatabase
+                                                                                            .getReference("Users")
+                                                                                            .child(s_user_id);
 
                                                                                     databaseRef
-                                                                                            .setValue(support)
-                                                                                            .addOnSuccessListener(_unused -> {
+                                                                                            .get()
+                                                                                            .addOnSuccessListener(dataSnapshot -> {
 
-                                                                                                is_loading.setVisibility(View.GONE);
+                                                                                                if (!dataSnapshot.exists()) {
 
-                                                                                                Intent intent = new Intent(this, VerificationActivity.class);
-                                                                                                intent.putExtra("s_user_contact", ccp_country.getFullNumberWithPlus());
-                                                                                                startActivity(intent);
+                                                                                                    databaseRef
+                                                                                                            .setValue(support)
+                                                                                                            .addOnSuccessListener(_unused -> {
+
+                                                                                                                is_loading.setVisibility(View.GONE);
+
+                                                                                                                Intent intent = new Intent(this, VerificationActivity.class);
+                                                                                                                intent.putExtra("s_user_contact", ccp_country.getFullNumberWithPlus());
+                                                                                                                startActivity(intent);
+                                                                                                                finish();
+                                                                                                            });
+                                                                                                }
                                                                                             });
-                                                                                }
-                                                                            });
 
 
-                                                                });
-                                                    }
-                                            });
+                                                                                });
+                                                                    }
+                                                            });
 
-                                }).addOnFailureListener(e -> {
+                                                }).addOnFailureListener(e -> {
 
-                            if (e.toString().contains("The email address is already in use by another account")) {
-                                is_loading.setVisibility(View.GONE);
-                                Toast.makeText(this, "Email is Already Exist!", Toast.LENGTH_SHORT).show();
-                            } else if (e.toString().contains("A network error (such as timeout, interrupted connection or unreachable host) has occurred")) {
-                                is_loading.setVisibility(View.GONE);
-                                Toast.makeText(this, "No Internet Connection!", Toast.LENGTH_SHORT).show();
-                            } else {
-                                is_loading.setVisibility(View.GONE);
-                                Toast.makeText(this, "Please Contact Your Service Provider", Toast.LENGTH_SHORT).show();
-                            }
-                        });
+                                            if (e.toString().contains("The email address is already in use by another account")) {
+                                                is_loading.setVisibility(View.GONE);
+                                                Toast.makeText(this, "Email is Already Exist!", Toast.LENGTH_SHORT).show();
+                                            } else if (e.toString().contains("A network error (such as timeout, interrupted connection or unreachable host) has occurred")) {
+                                                is_loading.setVisibility(View.GONE);
+                                                Toast.makeText(this, "No Internet Connection!", Toast.LENGTH_SHORT).show();
+                                            } else {
+                                                is_loading.setVisibility(View.GONE);
+                                                Toast.makeText(this, "Please Contact Your Service Provider", Toast.LENGTH_SHORT).show();
+                                            }
+                                        });
+                                    } else {
+                                        is_loading.setVisibility(View.GONE);
+                                        Toast.makeText(this, "Phone Number is Unavailable!", Toast.LENGTH_SHORT).show();
+                                    }
+                                });
                     } else {
                         is_loading.setVisibility(View.GONE);
                         Toast.makeText(this, "Username is Already Taken!", Toast.LENGTH_SHORT).show();
