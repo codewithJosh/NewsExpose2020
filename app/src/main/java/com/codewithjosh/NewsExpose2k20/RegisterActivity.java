@@ -20,13 +20,15 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.hbb20.CountryCodePicker;
 
 import java.util.HashMap;
 
 public class RegisterActivity extends AppCompatActivity {
 
     Button btn_register;
-    EditText et_user_name, et_email, et_password, et_re_password;
+    CountryCodePicker ccp_country;
+    EditText et_user_name, et_email, et_contact, et_password, et_re_password;
     LinearLayout nav_login, is_loading;
 
     FirebaseAuth firebaseAuth;
@@ -42,8 +44,10 @@ public class RegisterActivity extends AppCompatActivity {
         setContentView(R.layout.activity_register);
 
         btn_register = findViewById(R.id.btn_register);
+        ccp_country = findViewById(R.id.ccp_country);
         et_user_name = findViewById(R.id.et_user_name);
         et_email = findViewById(R.id.et_email);
+        et_contact = findViewById(R.id.et_contact);
         et_password = findViewById(R.id.et_password);
         et_re_password = findViewById(R.id.et_re_password);
         nav_login = findViewById(R.id.nav_login);
@@ -67,6 +71,7 @@ public class RegisterActivity extends AppCompatActivity {
 
             final String s_user_name = et_user_name.getText().toString().toLowerCase();
             final String s_email = et_email.getText().toString().toLowerCase();
+            final String s_contact = et_contact.getText().toString();
             final String s_password = et_password.getText().toString();
             final String s_re_password = et_re_password.getText().toString();
 
@@ -89,19 +94,30 @@ public class RegisterActivity extends AppCompatActivity {
             } else if (s_email.length() < 10) {
                 is_loading.setVisibility(View.GONE);
                 Toast.makeText(RegisterActivity.this, "Provide a valid Email Address", Toast.LENGTH_SHORT).show();
-            } else if (s_password.length() < 6) {
+            }
+            else if (!s_contact.startsWith("09")) {
+                is_loading.setVisibility(View.GONE);
+                Toast.makeText(RegisterActivity.this, "Provide a valid Phone Number", Toast.LENGTH_SHORT).show();
+            }
+            else if (s_contact.length() < 11) {
+                is_loading.setVisibility(View.GONE);
+                Toast.makeText(RegisterActivity.this, "Phone Number must be at least 11 digits", Toast.LENGTH_SHORT).show();
+            }
+            else if (s_password.length() < 6) {
                 is_loading.setVisibility(View.GONE);
                 Toast.makeText(RegisterActivity.this, "Password must be at least 6 characters", Toast.LENGTH_SHORT).show();
             } else if (!s_password.equals(s_re_password)) {
                 is_loading.setVisibility(View.GONE);
                 Toast.makeText(RegisterActivity.this, "Password doesn't match", Toast.LENGTH_SHORT).show();
-            } else onRegister(s_user_name, s_email, s_password);
+            } else onRegister(s_user_name, s_email, s_contact, s_password);
 
         });
 
+        ccp_country.registerCarrierNumberEditText(et_contact);
+
     }
 
-    private void onRegister(final String s_user_name, final String s_email, final String s_password) {
+    private void onRegister(final String s_user_name, final String s_email, final String s_contact, final String s_password) {
 
         firebaseFirestore
                 .collection("Users")
@@ -119,14 +135,17 @@ public class RegisterActivity extends AppCompatActivity {
                                     final String s_user_id = authResult.getUser().getUid();
                                     final String s_user_image = "https://firebasestorage.googleapis.com/v0/b/news-expose-2k20.appspot.com/o/20220415_Res%2FDefaultUserImage.png?alt=media&token=4cdbad29-194b-410e-80fa-feb641a06998";
                                     final boolean user_is_admin = false;
+                                    final boolean user_is_verified = false;
                                     final int i_version_code = BuildConfig.VERSION_CODE;
 
                                     final UserModel user = new UserModel(
                                             s_user_bio,
+                                            s_contact,
                                             s_email,
                                             s_user_id,
                                             s_user_image,
                                             user_is_admin,
+                                            user_is_verified,
                                             s_user_name,
                                             i_version_code
                                     );
@@ -168,9 +187,9 @@ public class RegisterActivity extends AppCompatActivity {
 
                                                                                                 is_loading.setVisibility(View.GONE);
 
-                                                                                                Toast.makeText(this, "You're Successfully Added!", Toast.LENGTH_LONG).show();
-                                                                                                startActivity(new Intent(this, LoginActivity.class));
-                                                                                                finish();
+                                                                                                Intent intent = new Intent(this, VerificationActivity.class);
+                                                                                                intent.putExtra("s_user_contact", ccp_country.getFullNumberWithPlus());
+                                                                                                startActivity(intent);
                                                                                             });
                                                                                 }
                                                                             });
