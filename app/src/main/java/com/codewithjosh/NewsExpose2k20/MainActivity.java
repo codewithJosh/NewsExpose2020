@@ -111,8 +111,7 @@ public class MainActivity extends AppCompatActivity {
                         if (user_is_verified) {
 
                             startActivity(new Intent(this, HomeActivity.class));
-                        }
-                        else {
+                        } else {
 
                             Intent intent = new Intent(this, PhoneNumberActivity.class);
                             intent.putExtra("s_user_id", s_user_id);

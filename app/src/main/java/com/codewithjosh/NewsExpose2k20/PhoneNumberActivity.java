@@ -1,7 +1,5 @@
 package com.codewithjosh.NewsExpose2k20;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
@@ -14,6 +12,8 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.hbb20.CountryCodePicker;
@@ -55,16 +55,16 @@ public class PhoneNumberActivity extends AppCompatActivity {
             if (isConnected())
 
                 firebaseFirestore
-                    .collection("Users")
-                    .document(s_user_id)
-                    .update("user_contact", "", "user_is_verified", true)
-                    .addOnSuccessListener(unused -> {
+                        .collection("Users")
+                        .document(s_user_id)
+                        .update("user_contact", "", "user_is_verified", true)
+                        .addOnSuccessListener(unused -> {
 
-                        is_loading.setVisibility(View.GONE);
-                        Toast.makeText(this, "Welcome, You've Successfully Login!", Toast.LENGTH_LONG).show();
-                        startActivity(new Intent(this, HomeActivity.class));
-                        finish();
-                    });
+                            is_loading.setVisibility(View.GONE);
+                            Toast.makeText(this, "Welcome, You've Successfully Login!", Toast.LENGTH_LONG).show();
+                            startActivity(new Intent(this, HomeActivity.class));
+                            finish();
+                        });
             else {
                 is_loading.setVisibility(View.GONE);
                 Toast.makeText(this, "No Internet Connection!", Toast.LENGTH_SHORT).show();
@@ -86,20 +86,16 @@ public class PhoneNumberActivity extends AppCompatActivity {
             if (!isConnected()) {
                 is_loading.setVisibility(View.GONE);
                 Toast.makeText(this, "No Internet Connection!", Toast.LENGTH_SHORT).show();
-            }
-            else if (s_contact.isEmpty()) {
+            } else if (s_contact.isEmpty()) {
                 is_loading.setVisibility(View.GONE);
                 Toast.makeText(this, "Phone Number is required!", Toast.LENGTH_SHORT).show();
-            }
-            else if (!s_contact.startsWith("09")) {
+            } else if (!s_contact.startsWith("09")) {
                 is_loading.setVisibility(View.GONE);
                 Toast.makeText(this, "Provide a valid Phone Number", Toast.LENGTH_SHORT).show();
-            }
-            else if (s_contact.length() < 11) {
+            } else if (s_contact.length() < 11) {
                 is_loading.setVisibility(View.GONE);
                 Toast.makeText(this, "Phone Number must be at least 11 digits", Toast.LENGTH_SHORT).show();
-            }
-            else {
+            } else {
 
                 firebaseFirestore
                         .collection("Users")

@@ -4,8 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".PhoneNumberActivity"
-    android:background="@drawable/img_background_1">
+    android:background="@drawable/img_background_1"
+    tools:context=".PhoneNumberActivity">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -164,7 +164,7 @@
                     android:textStyle="italic"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/btn_next"/>
+                    app:layout_constraintTop_toBottomOf="@id/btn_next" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 

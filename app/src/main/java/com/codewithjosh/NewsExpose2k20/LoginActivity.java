@@ -212,8 +212,7 @@ public class LoginActivity extends AppCompatActivity {
             is_loading.setVisibility(View.GONE);
             Toast.makeText(this, "Welcome, You've Successfully Login!", Toast.LENGTH_LONG).show();
             startActivity(new Intent(this, HomeActivity.class));
-        }
-        else {
+        } else {
 
             Intent intent = new Intent(this, PhoneNumberActivity.class);
             intent.putExtra("s_user_id", s_user_id);
