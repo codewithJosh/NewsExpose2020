@@ -122,16 +122,30 @@ public class PhoneNumberActivity extends AppCompatActivity {
 
                 firebaseFirestore
                         .collection("Users")
-                        .document(s_user_id)
-                        .update("user_contact", s_contact)
-                        .addOnSuccessListener(runnable -> {
+                        .whereEqualTo("user_contact", s_contact)
+                        .get()
+                        .addOnSuccessListener(queryDocumentSnapshots -> {
 
-                            is_loading.setVisibility(View.GONE);
+                            if (queryDocumentSnapshots.isEmpty()) {
 
-                            Intent intent = new Intent(this, VerificationActivity.class);
-                            intent.putExtra("s_user_contact", ccp_country.getFullNumberWithPlus());
-                            startActivity(intent);
-                            finish();
+                                firebaseFirestore
+                                        .collection("Users")
+                                        .document(s_user_id)
+                                        .update("user_contact", s_contact)
+                                        .addOnSuccessListener(runnable -> {
+
+                                            is_loading.setVisibility(View.GONE);
+
+                                            Intent intent = new Intent(this, VerificationActivity.class);
+                                            intent.putExtra("s_user_contact", ccp_country.getFullNumberWithPlus());
+                                            startActivity(intent);
+                                            finish();
+                                        });
+                            }
+                            else {
+                                is_loading.setVisibility(View.GONE);
+                                Toast.makeText(this, "Phone Number is Unavailable!", Toast.LENGTH_SHORT).show();
+                            }
                         });
             }
         });
