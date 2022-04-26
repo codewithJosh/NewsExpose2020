@@ -5,16 +5,26 @@ import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.android.volley.DefaultRetryPolicy;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.codewithjosh.NewsExpose2k20.models.UserModel;
+import com.google.android.gms.common.api.ApiException;
+import com.google.android.gms.common.api.CommonStatusCodes;
+import com.google.android.gms.safetynet.SafetyNet;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -22,15 +32,21 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.hbb20.CountryCodePicker;
 
+import org.json.JSONObject;
+
 import java.util.HashMap;
+import java.util.Map;
 
 public class RegisterActivity extends AppCompatActivity {
 
+    final String s_tag = RegisterActivity.class.getSimpleName();
+    final String s_site = "6LdmXHcfAAAAAAGqu4EGoI8Ihrk8IB78NdM2cKFJ";
+    final String s_secret = "6LdmXHcfAAAAAHMLaAuerAsSOZDkNJYA-gJ8Fma3";
     Button btn_register;
+    CheckBox cb_recaptcha;
     CountryCodePicker ccp_country;
     EditText et_user_name, et_email, et_contact, et_password, et_re_password;
     LinearLayout nav_login, is_loading;
-
     FirebaseAuth firebaseAuth;
     FirebaseDatabase firebaseDatabase;
     FirebaseFirestore firebaseFirestore;
@@ -38,12 +54,15 @@ public class RegisterActivity extends AppCompatActivity {
     DatabaseReference databaseRef;
     DocumentReference documentRef;
 
+    RequestQueue req;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
         btn_register = findViewById(R.id.btn_register);
+        cb_recaptcha = findViewById(R.id.cb_recaptcha);
         ccp_country = findViewById(R.id.ccp_country);
         et_user_name = findViewById(R.id.et_user_name);
         et_email = findViewById(R.id.et_email);
@@ -106,11 +125,18 @@ public class RegisterActivity extends AppCompatActivity {
             } else if (!s_password.equals(s_re_password)) {
                 is_loading.setVisibility(View.GONE);
                 Toast.makeText(RegisterActivity.this, "Password doesn't match", Toast.LENGTH_SHORT).show();
+            } else if (!cb_recaptcha.isChecked()) {
+                is_loading.setVisibility(View.GONE);
+                onRecaptcha();
             } else onRegister(s_user_name, s_email, s_contact, s_password);
 
         });
 
         ccp_country.registerCarrierNumberEditText(et_contact);
+
+        req = Volley.newRequestQueue(getApplicationContext());
+
+        cb_recaptcha.setOnClickListener(v -> onRecaptcha());
 
     }
 
@@ -222,6 +248,80 @@ public class RegisterActivity extends AppCompatActivity {
         ConnectivityManager connectivityManager = (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
         return networkInfo != null && networkInfo.isConnectedOrConnecting();
+
+    }
+
+    private void onRecaptcha() {
+
+        cb_recaptcha.setChecked(false);
+
+        SafetyNet
+                .getClient(this)
+                .verifyWithRecaptcha(s_site)
+                .addOnSuccessListener(recaptchaTokenResponse -> {
+
+                    if (recaptchaTokenResponse.getTokenResult() != null
+                            && !recaptchaTokenResponse.getTokenResult().isEmpty()) {
+
+                        handleSiteVerify(recaptchaTokenResponse.getTokenResult());
+                    }
+
+                }).addOnFailureListener(e -> {
+
+            if (e instanceof ApiException) {
+
+                ApiException apiException = (ApiException) e;
+                Log.d(s_tag, "Error message: " + CommonStatusCodes.getStatusCodeString(apiException.getStatusCode()));
+            } else Log.d(s_tag, "Unknown type of error: " + e.getMessage());
+
+        });
+
+    }
+
+    protected void handleSiteVerify(final String s_tokenResult) {
+
+        final String s_url = "https://www.google.com/recaptcha/api/siteverify";
+
+        StringRequest sr_req = new StringRequest(Request.Method.POST, s_url,
+                response -> {
+
+                    try {
+
+                        JSONObject jsonObject = new JSONObject(response);
+
+                        if (jsonObject.getBoolean("success")) {
+
+                            cb_recaptcha.setTextColor(getResources().getColor(R.color.colorFulvous));
+                            cb_recaptcha.setChecked(true);
+                            cb_recaptcha.setClickable(false);
+                        } else
+                            Toast.makeText(getApplicationContext(), jsonObject.getString("error-codes"), Toast.LENGTH_LONG).show();
+
+                    } catch (Exception ex) {
+
+                        Log.d(s_tag, "JSON exception: " + ex.getMessage());
+                    }
+                },
+                error -> Log.d(s_tag, "Error message: " + error.getMessage())) {
+
+            @Override
+            protected Map<String, String> getParams() {
+
+                Map<String, String> params = new HashMap<>();
+                params.put("secret", s_secret);
+                params.put("response", s_tokenResult);
+                return params;
+
+            }
+        };
+
+        sr_req.setRetryPolicy(new DefaultRetryPolicy(
+                50000,
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT
+        ));
+
+        req.add(sr_req);
 
     }
 
