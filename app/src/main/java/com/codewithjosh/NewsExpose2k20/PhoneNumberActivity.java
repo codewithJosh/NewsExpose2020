@@ -35,18 +35,16 @@ import java.util.Map;
 
 public class PhoneNumberActivity extends AppCompatActivity {
 
+    final String s_tag = RegisterActivity.class.getSimpleName();
+    final String s_site = "6LdmXHcfAAAAAAGqu4EGoI8Ihrk8IB78NdM2cKFJ";
+    final String s_secret = "6LdmXHcfAAAAAHMLaAuerAsSOZDkNJYA-gJ8Fma3";
     Button btn_next;
     CheckBox cb_recaptcha;
     CountryCodePicker ccp_country;
     EditText et_contact;
     LinearLayout is_loading;
     TextView btn_skip;
-
     String s_user_id, s_user_contact;
-    final String s_tag = RegisterActivity.class.getSimpleName();
-    final String s_site = "6LdmXHcfAAAAAAGqu4EGoI8Ihrk8IB78NdM2cKFJ";
-    final String s_secret = "6LdmXHcfAAAAAHMLaAuerAsSOZDkNJYA-gJ8Fma3";
-
     FirebaseFirestore firebaseFirestore;
 
     RequestQueue req;
@@ -117,12 +115,10 @@ public class PhoneNumberActivity extends AppCompatActivity {
             } else if (s_contact.length() < 11) {
                 is_loading.setVisibility(View.GONE);
                 Toast.makeText(this, "Phone Number must be at least 11 digits", Toast.LENGTH_SHORT).show();
-            }
-            else if (!cb_recaptcha.isChecked()) {
+            } else if (!cb_recaptcha.isChecked()) {
                 is_loading.setVisibility(View.GONE);
                 onRecaptcha();
-            }
-            else {
+            } else {
 
                 firebaseFirestore
                         .collection("Users")
@@ -175,8 +171,7 @@ public class PhoneNumberActivity extends AppCompatActivity {
 
                 ApiException apiException = (ApiException) e;
                 Log.d(s_tag, "Error message: " + CommonStatusCodes.getStatusCodeString(apiException.getStatusCode()));
-            }
-            else Log.d(s_tag, "Unknown type of error: " + e.getMessage());
+            } else Log.d(s_tag, "Unknown type of error: " + e.getMessage());
 
         });
 
@@ -193,16 +188,15 @@ public class PhoneNumberActivity extends AppCompatActivity {
 
                         JSONObject jsonObject = new JSONObject(response);
 
-                        if(jsonObject.getBoolean("success")){
+                        if (jsonObject.getBoolean("success")) {
 
                             cb_recaptcha.setTextColor(getResources().getColor(R.color.colorFulvous));
                             cb_recaptcha.setChecked(true);
                             cb_recaptcha.setClickable(false);
-                        }
-                        else Toast.makeText(getApplicationContext(), jsonObject.getString("error-codes"), Toast.LENGTH_LONG).show();
+                        } else
+                            Toast.makeText(getApplicationContext(), jsonObject.getString("error-codes"), Toast.LENGTH_LONG).show();
 
-                    }
-                    catch (Exception ex) {
+                    } catch (Exception ex) {
 
                         Log.d(s_tag, "JSON exception: " + ex.getMessage());
                     }

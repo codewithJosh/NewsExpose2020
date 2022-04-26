@@ -129,7 +129,7 @@
                     android:textColor="@color/colorChineseSilver1"
                     android:textSize="7pt"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/linear_contact"/>
+                    app:layout_constraintTop_toBottomOf="@id/linear_contact" />
 
                 <TextView
                     android:id="@+id/tv_agreement"

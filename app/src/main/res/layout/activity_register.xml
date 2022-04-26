@@ -217,7 +217,7 @@
                     android:textColor="@color/colorChineseSilver1"
                     android:textSize="7pt"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/et_re_password"/>
+                    app:layout_constraintTop_toBottomOf="@id/et_re_password" />
 
                 <TextView
                     android:id="@+id/tv_agreement"

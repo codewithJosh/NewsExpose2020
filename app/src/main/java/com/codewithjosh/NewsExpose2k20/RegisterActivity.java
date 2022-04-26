@@ -39,16 +39,14 @@ import java.util.Map;
 
 public class RegisterActivity extends AppCompatActivity {
 
+    final String s_tag = RegisterActivity.class.getSimpleName();
+    final String s_site = "6LdmXHcfAAAAAAGqu4EGoI8Ihrk8IB78NdM2cKFJ";
+    final String s_secret = "6LdmXHcfAAAAAHMLaAuerAsSOZDkNJYA-gJ8Fma3";
     Button btn_register;
     CheckBox cb_recaptcha;
     CountryCodePicker ccp_country;
     EditText et_user_name, et_email, et_contact, et_password, et_re_password;
     LinearLayout nav_login, is_loading;
-
-    final String s_tag = RegisterActivity.class.getSimpleName();
-    final String s_site = "6LdmXHcfAAAAAAGqu4EGoI8Ihrk8IB78NdM2cKFJ";
-    final String s_secret = "6LdmXHcfAAAAAHMLaAuerAsSOZDkNJYA-gJ8Fma3";
-
     FirebaseAuth firebaseAuth;
     FirebaseDatabase firebaseDatabase;
     FirebaseFirestore firebaseFirestore;
@@ -127,12 +125,10 @@ public class RegisterActivity extends AppCompatActivity {
             } else if (!s_password.equals(s_re_password)) {
                 is_loading.setVisibility(View.GONE);
                 Toast.makeText(RegisterActivity.this, "Password doesn't match", Toast.LENGTH_SHORT).show();
-            }
-            else if (!cb_recaptcha.isChecked()) {
+            } else if (!cb_recaptcha.isChecked()) {
                 is_loading.setVisibility(View.GONE);
                 onRecaptcha();
-            }
-            else onRegister(s_user_name, s_email, s_contact, s_password);
+            } else onRegister(s_user_name, s_email, s_contact, s_password);
 
         });
 
@@ -276,8 +272,7 @@ public class RegisterActivity extends AppCompatActivity {
 
                 ApiException apiException = (ApiException) e;
                 Log.d(s_tag, "Error message: " + CommonStatusCodes.getStatusCodeString(apiException.getStatusCode()));
-            }
-            else Log.d(s_tag, "Unknown type of error: " + e.getMessage());
+            } else Log.d(s_tag, "Unknown type of error: " + e.getMessage());
 
         });
 
@@ -294,16 +289,15 @@ public class RegisterActivity extends AppCompatActivity {
 
                         JSONObject jsonObject = new JSONObject(response);
 
-                        if(jsonObject.getBoolean("success")){
+                        if (jsonObject.getBoolean("success")) {
 
                             cb_recaptcha.setTextColor(getResources().getColor(R.color.colorFulvous));
                             cb_recaptcha.setChecked(true);
                             cb_recaptcha.setClickable(false);
-                        }
-                        else Toast.makeText(getApplicationContext(), jsonObject.getString("error-codes"), Toast.LENGTH_LONG).show();
+                        } else
+                            Toast.makeText(getApplicationContext(), jsonObject.getString("error-codes"), Toast.LENGTH_LONG).show();
 
-                    }
-                    catch (Exception ex) {
+                    } catch (Exception ex) {
 
                         Log.d(s_tag, "JSON exception: " + ex.getMessage());
                     }
