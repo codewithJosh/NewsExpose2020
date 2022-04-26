@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -18,9 +19,11 @@ import android.widget.Toast;
 
 import com.google.firebase.FirebaseException;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthOptions;
 import com.google.firebase.auth.PhoneAuthProvider;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.concurrent.TimeUnit;
 
@@ -34,6 +37,8 @@ public class VerificationActivity extends AppCompatActivity {
     String s_user_contact, s_verification_id;
 
     FirebaseAuth firebaseAuth;
+    FirebaseFirestore firebaseFirestore;
+    FirebaseUser firebaseUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +54,7 @@ public class VerificationActivity extends AppCompatActivity {
         s_user_contact = getIntent().getStringExtra("s_user_contact");
 
         firebaseAuth = FirebaseAuth.getInstance();
+        firebaseFirestore = FirebaseFirestore.getInstance();
 
         sendVerificationCode();
 
@@ -58,6 +64,73 @@ public class VerificationActivity extends AppCompatActivity {
             inputMethodManager.hideSoftInputFromWindow(v.getWindowToken(), 0);
             if (getCurrentFocus() != null) getCurrentFocus().clearFocus();
             sendVerificationCode();
+        });
+
+        btn_submit.setOnClickListener(v -> {
+
+            is_loading.setVisibility(View.VISIBLE);
+            InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(CommentActivity.INPUT_METHOD_SERVICE);
+            inputMethodManager.hideSoftInputFromWindow(v.getWindowToken(), 0);
+            if (getCurrentFocus() != null) getCurrentFocus().clearFocus();
+
+            final String s_otp = et_otp.getText().toString();
+
+            if (!isConnected()) {
+                is_loading.setVisibility(View.GONE);
+                Toast.makeText(this, "No Internet Connection!", Toast.LENGTH_SHORT).show();
+            }
+            else if (s_otp.isEmpty()) {
+                is_loading.setVisibility(View.GONE);
+                Toast.makeText(this, "OTP is required!", Toast.LENGTH_SHORT).show();
+            }
+            else if (s_otp.length() != 6) {
+                is_loading.setVisibility(View.GONE);
+                Toast.makeText(this, "OTP must be at least 6 characters", Toast.LENGTH_SHORT).show();
+            }
+            else {
+
+                final PhoneAuthCredential credential = PhoneAuthProvider.getCredential(s_verification_id, s_otp);
+                firebaseUser = firebaseAuth.getCurrentUser();
+
+                if (firebaseUser != null) {
+
+                    firebaseUser
+                            .linkWithCredential(credential)
+                            .addOnSuccessListener(authResult -> {
+
+                                final String s_user_id = firebaseUser.getUid();
+
+                                firebaseFirestore
+                                        .collection("Users")
+                                        .document(s_user_id)
+                                        .update("user_is_verified", true)
+                                        .addOnSuccessListener(unused -> {
+
+                                            is_loading.setVisibility(View.GONE);
+                                            Toast.makeText(this, "You're Successfully Added!", Toast.LENGTH_LONG).show();
+                                            startActivity(new Intent(this, LoginActivity.class));
+                                            finish();
+                                        });
+
+                            }).addOnFailureListener(e -> {
+
+                        final String _e = e.toString().toLowerCase();
+
+                        if (_e.contains("expired")) {
+                            is_loading.setVisibility(View.GONE);
+                            Toast.makeText(VerificationActivity.this, "OTP has expired", Toast.LENGTH_SHORT).show();
+                        }
+                        else if (_e.contains("invalid")) {
+                            is_loading.setVisibility(View.GONE);
+                            Toast.makeText(VerificationActivity.this, "OTP doesn't match", Toast.LENGTH_SHORT).show();
+                        }
+                        else {
+                            is_loading.setVisibility(View.GONE);
+                            Toast.makeText(VerificationActivity.this, "Please Contact Your Service Provider", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                }
+            }
         });
 
     }
@@ -110,6 +183,7 @@ public class VerificationActivity extends AppCompatActivity {
                                 public void onVerificationFailed(@NonNull FirebaseException e) {
 
                                     is_loading.setVisibility(View.GONE);
+                                    System.out.println(e);
                                     Toast.makeText(VerificationActivity.this, "Verification Failed!", Toast.LENGTH_SHORT).show();
 
                                 }
