@@ -2,12 +2,19 @@ package com.codewithjosh.NewsExpose2k20;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
+import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.hbb20.CountryCodePicker;
 
 public class PhoneNumberActivity extends AppCompatActivity {
@@ -19,6 +26,8 @@ public class PhoneNumberActivity extends AppCompatActivity {
     TextView btn_skip;
 
     String s_user_id, s_user_contact;
+
+    FirebaseFirestore firebaseFirestore;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,7 +43,41 @@ public class PhoneNumberActivity extends AppCompatActivity {
         s_user_id = getIntent().getStringExtra("s_user_id");
         s_user_contact = getIntent().getStringExtra("s_user_contact");
 
+        firebaseFirestore = FirebaseFirestore.getInstance();
+
         et_contact.setText(s_user_contact);
+
+        btn_skip.setOnClickListener(v -> {
+
+            is_loading.setVisibility(View.VISIBLE);
+
+            if (isConnected())
+
+                firebaseFirestore
+                    .collection("Users")
+                    .document(s_user_id)
+                    .update("user_contact", "", "user_is_verified", true)
+                    .addOnSuccessListener(unused -> {
+
+                        is_loading.setVisibility(View.GONE);
+                        Toast.makeText(this, "Welcome, You've Successfully Login!", Toast.LENGTH_LONG).show();
+                        startActivity(new Intent(this, HomeActivity.class));
+                        finish();
+                    });
+            else {
+                is_loading.setVisibility(View.GONE);
+                Toast.makeText(this, "No Internet Connection!", Toast.LENGTH_SHORT).show();
+            }
+
+        });
+
+    }
+
+    private boolean isConnected() {
+
+        ConnectivityManager connectivityManager = (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+        return networkInfo != null && networkInfo.isConnectedOrConnecting();
 
     }
 
