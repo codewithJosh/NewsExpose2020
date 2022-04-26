@@ -244,8 +244,7 @@ public class RegisterActivity extends AppCompatActivity {
                                                 Toast.makeText(this, "Please Contact Your Service Provider", Toast.LENGTH_SHORT).show();
                                             }
                                         });
-                                    }
-                                    else {
+                                    } else {
                                         is_loading.setVisibility(View.GONE);
                                         Toast.makeText(this, "Phone Number is Unavailable!", Toast.LENGTH_SHORT).show();
                                     }

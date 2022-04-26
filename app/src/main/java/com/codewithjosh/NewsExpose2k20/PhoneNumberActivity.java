@@ -141,8 +141,7 @@ public class PhoneNumberActivity extends AppCompatActivity {
                                             startActivity(intent);
                                             finish();
                                         });
-                            }
-                            else {
+                            } else {
                                 is_loading.setVisibility(View.GONE);
                                 Toast.makeText(this, "Phone Number is Unavailable!", Toast.LENGTH_SHORT).show();
                             }
