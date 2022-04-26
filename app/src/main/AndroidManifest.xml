@@ -13,6 +13,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.NewsExposé">
         <activity
+            android:name=".VerificationActivity"
+            android:exported="false" />
+        <activity
             android:name=".CommentActivity"
             android:exported="false" />
         <activity
