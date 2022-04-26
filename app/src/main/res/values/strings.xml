@@ -20,7 +20,6 @@
     <string name="digits_2">0123456789</string>
     <string name="hint_contact">Phone Number</string>
     <string name="digits_3">abcdefghijklmnopqrstuvwxyz1234567890!@#$%^*-=_+:;,.?</string>
-    <string name="text_checkbox_recaptcha">I\'m not a robot</string>
     <string name="text_signing_up">signing up</string>
     <string name="text_verification">Verification</string>
     <string name="hint_otp">Enter OTP</string>
@@ -28,4 +27,5 @@
     <string name="text_verifying">verifying</string>
     <string name="text_resend">Resend</string>
     <string name="text_button_next">next</string>
+    <string name="text_checkbox_recaptcha">I\'m not a robot</string>
 </resources>

@@ -206,6 +206,19 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/et_password" />
 
+                <CheckBox
+                    android:id="@+id/cb_recaptcha"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:button="@drawable/create_check_circle"
+                    android:padding="5dp"
+                    android:text="@string/text_checkbox_recaptcha"
+                    android:textColor="@color/colorChineseSilver1"
+                    android:textSize="7pt"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/et_re_password"/>
+
                 <TextView
                     android:id="@+id/tv_agreement"
                     android:layout_width="match_parent"
@@ -218,7 +231,7 @@
                     android:textColor="@color/colorSpanishGray"
                     android:textSize="6pt"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/et_re_password" />
+                    app:layout_constraintTop_toBottomOf="@id/cb_recaptcha" />
 
                 <Button
                     android:id="@+id/btn_register"
