@@ -164,15 +164,17 @@ public class LoginActivity extends AppCompatActivity {
                             else if (i_user_version_code > i_version_code) {
 
                                 firebaseAuth.signOut();
-                                Toast.makeText(LoginActivity.this, "Your account is incompatible to this version!", Toast.LENGTH_LONG).show();
-                                startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                                Toast.makeText(this, "Your account is incompatible to this version!", Toast.LENGTH_LONG).show();
+                                startActivity(new Intent(this, MainActivity.class));
                                 finish();
                             } else {
+
+                                user.setUser_version_code(i_version_code);
 
                                 firebaseFirestore
                                         .collection("Users")
                                         .document(s_user_id)
-                                        .set(onMigrate(user))
+                                        .set(user)
                                         .addOnSuccessListener(runnable -> checkCurrentUserVerified(user));
                             }
                         }
@@ -269,20 +271,6 @@ public class LoginActivity extends AppCompatActivity {
             startActivity(new Intent(this, PhoneNumberActivity.class));
         }
         finish();
-
-    }
-
-    private UserModel onMigrate(final UserModel user) {
-
-        return new UserModel(
-                user.getUser_bio(),
-                user.getUser_email(),
-                user.getUser_id(),
-                user.getUser_image(),
-                user.isUser_is_admin(),
-                user.getUser_name(),
-                i_version_code
-        );
 
     }
 
