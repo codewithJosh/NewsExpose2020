@@ -38,8 +38,6 @@ import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 public class RegisterActivity extends AppCompatActivity {
 
@@ -150,26 +148,36 @@ public class RegisterActivity extends AppCompatActivity {
         inputMethodManager.hideSoftInputFromWindow(v.getWindowToken(), 0);
         if (getCurrentFocus() != null) getCurrentFocus().clearFocus();
 
-        if (!isConnected()) Toast.makeText(this, "No Internet Connection!", Toast.LENGTH_SHORT).show();
+        if (!isConnected())
+            Toast.makeText(this, "No Internet Connection!", Toast.LENGTH_SHORT).show();
 
         else if (s_user_name.isEmpty() || s_email.isEmpty()
-                || s_password.isEmpty() || s_re_password.isEmpty()) Toast.makeText(this, "All fields are required!", Toast.LENGTH_SHORT).show();
+                || s_password.isEmpty() || s_re_password.isEmpty())
+            Toast.makeText(this, "All fields are required!", Toast.LENGTH_SHORT).show();
 
-        else if (!s_user_name.startsWith("@ne.")) Toast.makeText(this, "Username must starts with @ne.", Toast.LENGTH_SHORT).show();
+        else if (!s_user_name.startsWith("@ne."))
+            Toast.makeText(this, "Username must starts with @ne.", Toast.LENGTH_SHORT).show();
 
-        else if (s_user_name.length() < 5) Toast.makeText(this, "Provide a valid Username", Toast.LENGTH_SHORT).show();
+        else if (s_user_name.length() < 5)
+            Toast.makeText(this, "Provide a valid Username", Toast.LENGTH_SHORT).show();
 
-        else if (!s_email.endsWith("@ne.xpose")) Toast.makeText(this, "Email must end with @ne.xpose", Toast.LENGTH_SHORT).show();
+        else if (!s_email.endsWith("@ne.xpose"))
+            Toast.makeText(this, "Email must end with @ne.xpose", Toast.LENGTH_SHORT).show();
 
-        else if (s_email.length() < 10) Toast.makeText(this, "Provide a valid Email Address", Toast.LENGTH_SHORT).show();
+        else if (s_email.length() < 10)
+            Toast.makeText(this, "Provide a valid Email Address", Toast.LENGTH_SHORT).show();
 
-        else if (!s_contact.startsWith("09")) Toast.makeText(this, "Provide a valid Phone Number", Toast.LENGTH_SHORT).show();
+        else if (!s_contact.startsWith("09"))
+            Toast.makeText(this, "Provide a valid Phone Number", Toast.LENGTH_SHORT).show();
 
-        else if (s_contact.length() < 11) Toast.makeText(this, "Phone Number must be at least 11 digits", Toast.LENGTH_SHORT).show();
+        else if (s_contact.length() < 11)
+            Toast.makeText(this, "Phone Number must be at least 11 digits", Toast.LENGTH_SHORT).show();
 
-        else if (s_password.length() < 6) Toast.makeText(this, "Password must be at least 6 characters", Toast.LENGTH_SHORT).show();
+        else if (s_password.length() < 6)
+            Toast.makeText(this, "Password must be at least 6 characters", Toast.LENGTH_SHORT).show();
 
-        else if (!s_password.equals(s_re_password)) Toast.makeText(this, "Password doesn't match", Toast.LENGTH_SHORT).show();
+        else if (!s_password.equals(s_re_password))
+            Toast.makeText(this, "Password doesn't match", Toast.LENGTH_SHORT).show();
 
         else if (!cb_recaptcha.isChecked()) onRecaptcha();
 
@@ -338,11 +346,14 @@ public class RegisterActivity extends AppCompatActivity {
 
             final String s_e = e.toString().toLowerCase();
 
-            if (s_e.contains("the email address is already in use by another account")) Toast.makeText(this, "Email is Already Exist!", Toast.LENGTH_SHORT).show();
+            if (s_e.contains("the email address is already in use by another account"))
+                Toast.makeText(this, "Email is Already Exist!", Toast.LENGTH_SHORT).show();
 
-            else if (s_e.contains("a network error (such as timeout, interrupted connection or unreachable host) has occurred")) Toast.makeText(this, "No Internet Connection!", Toast.LENGTH_SHORT).show();
+            else if (s_e.contains("a network error (such as timeout, interrupted connection or unreachable host) has occurred"))
+                Toast.makeText(this, "No Internet Connection!", Toast.LENGTH_SHORT).show();
 
-            else Toast.makeText(this, "Please Contact Your Service Provider", Toast.LENGTH_SHORT).show();
+            else
+                Toast.makeText(this, "Please Contact Your Service Provider", Toast.LENGTH_SHORT).show();
 
         });
 

@@ -25,7 +25,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.auth.User;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -116,11 +115,14 @@ public class LoginActivity extends AppCompatActivity {
         inputMethodManager.hideSoftInputFromWindow(v.getWindowToken(), 0);
         if (getCurrentFocus() != null) getCurrentFocus().clearFocus();
 
-        if (!isConnected()) Toast.makeText(this, "No Internet Connection!", Toast.LENGTH_SHORT).show();
+        if (!isConnected())
+            Toast.makeText(this, "No Internet Connection!", Toast.LENGTH_SHORT).show();
 
-        else if (s_user_name.isEmpty() || s_password.isEmpty()) Toast.makeText(this, "All fields are required!", Toast.LENGTH_SHORT).show();
+        else if (s_user_name.isEmpty() || s_password.isEmpty())
+            Toast.makeText(this, "All fields are required!", Toast.LENGTH_SHORT).show();
 
-        else if (s_password.length() < 6) Toast.makeText(this, "Password Must be at least 6 characters", Toast.LENGTH_SHORT).show();
+        else if (s_password.length() < 6)
+            Toast.makeText(this, "Password Must be at least 6 characters", Toast.LENGTH_SHORT).show();
 
         else return true;
 
@@ -156,7 +158,8 @@ public class LoginActivity extends AppCompatActivity {
                             editor.putString("s_user_id", s_user_id);
                             editor.apply();
 
-                            if (i_user_version_code == i_version_code) checkCurrentUserVerified(user);
+                            if (i_user_version_code == i_version_code)
+                                checkCurrentUserVerified(user);
 
                             else if (i_user_version_code > i_version_code) {
 
@@ -180,11 +183,14 @@ public class LoginActivity extends AppCompatActivity {
 
                 final String s_e = e.toString().toLowerCase();
 
-                if (s_e.contains("the password is invalid or the user does not have a password")) Toast.makeText(this, "Incorrect Password!", Toast.LENGTH_SHORT).show();
+                if (s_e.contains("the password is invalid or the user does not have a password"))
+                    Toast.makeText(this, "Incorrect Password!", Toast.LENGTH_SHORT).show();
 
-                else if (s_e.contains("a network error (such as timeout, interrupted connection or unreachable host) has occurred")) Toast.makeText(this, "No Internet Connection!", Toast.LENGTH_SHORT).show();
+                else if (s_e.contains("a network error (such as timeout, interrupted connection or unreachable host) has occurred"))
+                    Toast.makeText(this, "No Internet Connection!", Toast.LENGTH_SHORT).show();
 
-                else Toast.makeText(this, "Please Contact Your Service Provider", Toast.LENGTH_SHORT).show();
+                else
+                    Toast.makeText(this, "Please Contact Your Service Provider", Toast.LENGTH_SHORT).show();
 
             });
 
@@ -207,7 +213,7 @@ public class LoginActivity extends AppCompatActivity {
                                 final UserModel user = snapshot.toObject(UserModel.class);
                                 onLogin(user);
                             }
-                    else checkUserNameRealtime();
+                        else checkUserNameRealtime();
 
                 });
 

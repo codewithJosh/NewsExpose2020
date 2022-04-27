@@ -28,10 +28,8 @@ import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.common.api.CommonStatusCodes;
 import com.google.android.gms.safetynet.SafetyNet;
 import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.auth.User;
 import com.hbb20.CountryCodePicker;
 
 import org.json.JSONObject;
@@ -122,8 +120,7 @@ public class PhoneNumberActivity extends AppCompatActivity {
                 user.put("user_is_verified", user_is_verified);
 
                 updateUser(user);
-            }
-            else {
+            } else {
                 is_loading.setVisibility(View.GONE);
                 Toast.makeText(this, "No Internet Connection!", Toast.LENGTH_SHORT).show();
             }
@@ -187,13 +184,17 @@ public class PhoneNumberActivity extends AppCompatActivity {
         inputMethodManager.hideSoftInputFromWindow(v.getWindowToken(), 0);
         if (getCurrentFocus() != null) getCurrentFocus().clearFocus();
 
-        if (!isConnected()) Toast.makeText(this, "No Internet Connection!", Toast.LENGTH_SHORT).show();
+        if (!isConnected())
+            Toast.makeText(this, "No Internet Connection!", Toast.LENGTH_SHORT).show();
 
-        else if (s_contact.isEmpty()) Toast.makeText(this, "Phone Number is required!", Toast.LENGTH_SHORT).show();
+        else if (s_contact.isEmpty())
+            Toast.makeText(this, "Phone Number is required!", Toast.LENGTH_SHORT).show();
 
-        else if (!s_contact.startsWith("09")) Toast.makeText(this, "Provide a valid Phone Number", Toast.LENGTH_SHORT).show();
+        else if (!s_contact.startsWith("09"))
+            Toast.makeText(this, "Provide a valid Phone Number", Toast.LENGTH_SHORT).show();
 
-        else if (s_contact.length() < 11) Toast.makeText(this, "Phone Number must be at least 11 digits", Toast.LENGTH_SHORT).show();
+        else if (s_contact.length() < 11)
+            Toast.makeText(this, "Phone Number must be at least 11 digits", Toast.LENGTH_SHORT).show();
 
         else if (!cb_recaptcha.isChecked()) onRecaptcha();
 

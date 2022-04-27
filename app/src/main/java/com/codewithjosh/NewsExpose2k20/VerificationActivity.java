@@ -187,11 +187,14 @@ public class VerificationActivity extends AppCompatActivity {
         inputMethodManager.hideSoftInputFromWindow(v.getWindowToken(), 0);
         if (getCurrentFocus() != null) getCurrentFocus().clearFocus();
 
-        if (!isConnected()) Toast.makeText(this, "No Internet Connection!", Toast.LENGTH_SHORT).show();
+        if (!isConnected())
+            Toast.makeText(this, "No Internet Connection!", Toast.LENGTH_SHORT).show();
 
-        else if (s_otp.isEmpty()) Toast.makeText(this, "OTP is required!", Toast.LENGTH_SHORT).show();
+        else if (s_otp.isEmpty())
+            Toast.makeText(this, "OTP is required!", Toast.LENGTH_SHORT).show();
 
-        else if (s_otp.length() != 6) Toast.makeText(this, "OTP must be at least 6 characters", Toast.LENGTH_SHORT).show();
+        else if (s_otp.length() != 6)
+            Toast.makeText(this, "OTP must be at least 6 characters", Toast.LENGTH_SHORT).show();
 
         else return true;
 
@@ -224,11 +227,14 @@ public class VerificationActivity extends AppCompatActivity {
 
                 final String _e = e.toString().toLowerCase();
 
-                if (_e.contains("expired")) Toast.makeText(this, "OTP has expired", Toast.LENGTH_SHORT).show();
+                if (_e.contains("expired"))
+                    Toast.makeText(this, "OTP has expired", Toast.LENGTH_SHORT).show();
 
-                else if (_e.contains("invalid")) Toast.makeText(this, "OTP doesn't match", Toast.LENGTH_SHORT).show();
+                else if (_e.contains("invalid"))
+                    Toast.makeText(this, "OTP doesn't match", Toast.LENGTH_SHORT).show();
 
-                else Toast.makeText(this, "Please Contact Your Service Provider", Toast.LENGTH_SHORT).show();
+                else
+                    Toast.makeText(this, "Please Contact Your Service Provider", Toast.LENGTH_SHORT).show();
 
             });
         }
