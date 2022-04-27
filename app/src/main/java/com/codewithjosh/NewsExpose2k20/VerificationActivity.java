@@ -216,7 +216,7 @@ public class VerificationActivity extends AppCompatActivity {
                         final String s_user_id = firebaseUser.getUid();
                         final boolean user_is_verified = true;
 
-                        final HashMap<String, Object> user = new HashMap<>();
+                        HashMap<String, Object> user = new HashMap<>();
                         user.put("user_is_verified", user_is_verified);
 
                         updateUser(user, s_user_id);
@@ -225,12 +225,12 @@ public class VerificationActivity extends AppCompatActivity {
 
                 is_loading.setVisibility(View.GONE);
 
-                final String _e = e.toString().toLowerCase();
+                final String s_e = e.toString().toLowerCase();
 
-                if (_e.contains("expired"))
+                if (s_e.contains("expired"))
                     Toast.makeText(this, "OTP has expired", Toast.LENGTH_SHORT).show();
 
-                else if (_e.contains("invalid"))
+                else if (s_e.contains("invalid"))
                     Toast.makeText(this, "OTP doesn't match", Toast.LENGTH_SHORT).show();
 
                 else
@@ -241,7 +241,7 @@ public class VerificationActivity extends AppCompatActivity {
 
     }
 
-    private void updateUser(HashMap<String, Object> user, String s_user_id) {
+    private void updateUser(final HashMap<String, Object> user, final String s_user_id) {
 
         documentRef = firebaseFirestore
                 .collection("Users")
