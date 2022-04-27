@@ -377,10 +377,10 @@ public class RegisterActivity extends AppCompatActivity {
                                     .set(user)
                                     .addOnSuccessListener(unused -> {
 
-                                        final HashMap<String, Object> _user = new HashMap<>();
-                                        _user.put("user_email", s_email);
-                                        _user.put("user_name", s_user_name);
-                                        _user.put("user_version_code", i_version_code);
+                                        final UserModel _user = new UserModel();
+                                        _user.setUser_email(s_email);
+                                        _user.setUser_name(s_user_name);
+                                        _user.setUser_version_code(i_version_code);
 
                                         setUserRealtime(s_user_id, _user);
                                     })
@@ -394,7 +394,7 @@ public class RegisterActivity extends AppCompatActivity {
 
     }
 
-    private void setUserRealtime(final String s_user_id, final HashMap<String, Object> user) {
+    private void setUserRealtime(final String s_user_id, final UserModel user) {
 
         databaseRef = firebaseDatabase
                 .getReference("Users")
