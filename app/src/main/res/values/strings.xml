@@ -21,6 +21,7 @@
     <string name="hint_contact">Phone Number</string>
     <string name="digits_3">abcdefghijklmnopqrstuvwxyz1234567890!@#$%^*-=_+:;,.?</string>
     <string name="text_signing_up">signing up</string>
+    <string name="text_logging_in">logging in</string>
     <string name="text_verification">Verification</string>
     <string name="hint_otp">Enter OTP</string>
     <string name="text_button_submit">submit</string>

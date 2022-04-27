@@ -203,7 +203,7 @@
             android:layout_marginTop="50dp"
             android:includeFontPadding="false"
             android:letterSpacing="0.06"
-            android:text="logging in"
+            android:text="@string/text_logging_in"
             android:textAllCaps="true"
             android:textColor="@color/colorChineseSilver" />
 

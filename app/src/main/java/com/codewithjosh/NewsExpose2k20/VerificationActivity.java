@@ -2,6 +2,7 @@ package com.codewithjosh.NewsExpose2k20;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -23,8 +24,10 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthOptions;
 import com.google.firebase.auth.PhoneAuthProvider;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
 
 public class VerificationActivity extends AppCompatActivity {
@@ -34,16 +37,30 @@ public class VerificationActivity extends AppCompatActivity {
     LinearLayout btn_resend, is_loading;
     TextView tv_resend;
 
-    String s_user_contact, s_verification_id;
+    String s_user_contact, s_otp, s_verification_id;
 
     FirebaseAuth firebaseAuth;
     FirebaseFirestore firebaseFirestore;
     FirebaseUser firebaseUser;
 
+    DocumentReference documentRef;
+
+    SharedPreferences sharedPref;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_verification);
+
+        initViews();
+        initInstance();
+        load();
+        sendVerificationCode();
+        buildButton();
+
+    }
+
+    private void initViews() {
 
         btn_submit = findViewById(R.id.btn_submit);
         et_otp = findViewById(R.id.et_otp);
@@ -51,82 +68,19 @@ public class VerificationActivity extends AppCompatActivity {
         is_loading = findViewById(R.id.is_loading);
         tv_resend = findViewById(R.id.tv_resend);
 
-        s_user_contact = getIntent().getStringExtra("s_user_contact");
+    }
+
+    private void initInstance() {
 
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseFirestore = FirebaseFirestore.getInstance();
 
-        sendVerificationCode();
+    }
 
-        btn_resend.setOnClickListener(v -> {
+    private void load() {
 
-            InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(CommentActivity.INPUT_METHOD_SERVICE);
-            inputMethodManager.hideSoftInputFromWindow(v.getWindowToken(), 0);
-            if (getCurrentFocus() != null) getCurrentFocus().clearFocus();
-            sendVerificationCode();
-        });
-
-        btn_submit.setOnClickListener(v -> {
-
-            is_loading.setVisibility(View.VISIBLE);
-            InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(CommentActivity.INPUT_METHOD_SERVICE);
-            inputMethodManager.hideSoftInputFromWindow(v.getWindowToken(), 0);
-            if (getCurrentFocus() != null) getCurrentFocus().clearFocus();
-
-            final String s_otp = et_otp.getText().toString();
-
-            if (!isConnected()) {
-                is_loading.setVisibility(View.GONE);
-                Toast.makeText(this, "No Internet Connection!", Toast.LENGTH_SHORT).show();
-            } else if (s_otp.isEmpty()) {
-                is_loading.setVisibility(View.GONE);
-                Toast.makeText(this, "OTP is required!", Toast.LENGTH_SHORT).show();
-            } else if (s_otp.length() != 6) {
-                is_loading.setVisibility(View.GONE);
-                Toast.makeText(this, "OTP must be at least 6 characters", Toast.LENGTH_SHORT).show();
-            } else {
-
-                final PhoneAuthCredential credential = PhoneAuthProvider.getCredential(s_verification_id, s_otp);
-                firebaseUser = firebaseAuth.getCurrentUser();
-
-                if (firebaseUser != null) {
-
-                    firebaseUser
-                            .linkWithCredential(credential)
-                            .addOnSuccessListener(authResult -> {
-
-                                final String s_user_id = firebaseUser.getUid();
-
-                                firebaseFirestore
-                                        .collection("Users")
-                                        .document(s_user_id)
-                                        .update("user_is_verified", true)
-                                        .addOnSuccessListener(unused -> {
-
-                                            is_loading.setVisibility(View.GONE);
-                                            Toast.makeText(this, "You're Successfully Added!", Toast.LENGTH_LONG).show();
-                                            startActivity(new Intent(this, LoginActivity.class));
-                                            finish();
-                                        });
-
-                            }).addOnFailureListener(e -> {
-
-                        final String _e = e.toString().toLowerCase();
-
-                        if (_e.contains("expired")) {
-                            is_loading.setVisibility(View.GONE);
-                            Toast.makeText(VerificationActivity.this, "OTP has expired", Toast.LENGTH_SHORT).show();
-                        } else if (_e.contains("invalid")) {
-                            is_loading.setVisibility(View.GONE);
-                            Toast.makeText(VerificationActivity.this, "OTP doesn't match", Toast.LENGTH_SHORT).show();
-                        } else {
-                            is_loading.setVisibility(View.GONE);
-                            Toast.makeText(VerificationActivity.this, "Please Contact Your Service Provider", Toast.LENGTH_SHORT).show();
-                        }
-                    });
-                }
-            }
-        });
+        sharedPref = getSharedPreferences("user", MODE_PRIVATE);
+        s_user_contact = sharedPref.getString("s_user_contact", String.valueOf(MODE_PRIVATE));
 
     }
 
@@ -177,7 +131,6 @@ public class VerificationActivity extends AppCompatActivity {
                         public void onVerificationFailed(@NonNull FirebaseException e) {
 
                             is_loading.setVisibility(View.GONE);
-                            System.out.println(e);
                             Toast.makeText(VerificationActivity.this, "Verification Failed!", Toast.LENGTH_SHORT).show();
 
                         }
@@ -202,6 +155,117 @@ public class VerificationActivity extends AppCompatActivity {
         ConnectivityManager connectivityManager = (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
         return networkInfo != null && networkInfo.isConnectedOrConnecting();
+
+    }
+
+    private void buildButton() {
+
+        btn_resend.setOnClickListener(v -> {
+
+            InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(CommentActivity.INPUT_METHOD_SERVICE);
+            inputMethodManager.hideSoftInputFromWindow(v.getWindowToken(), 0);
+            if (getCurrentFocus() != null) getCurrentFocus().clearFocus();
+            sendVerificationCode();
+        });
+
+        btn_submit.setOnClickListener(v -> {
+
+            s_otp = et_otp.getText().toString();
+
+            if (validate(v)) onSubmit();
+
+            else is_loading.setVisibility(View.GONE);
+
+        });
+
+    }
+
+    private boolean validate(final View v) {
+
+        is_loading.setVisibility(View.VISIBLE);
+        InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(CommentActivity.INPUT_METHOD_SERVICE);
+        inputMethodManager.hideSoftInputFromWindow(v.getWindowToken(), 0);
+        if (getCurrentFocus() != null) getCurrentFocus().clearFocus();
+
+        if (!isConnected())
+            Toast.makeText(this, "No Internet Connection!", Toast.LENGTH_SHORT).show();
+
+        else if (s_otp.isEmpty())
+            Toast.makeText(this, "OTP is required!", Toast.LENGTH_SHORT).show();
+
+        else if (s_otp.length() != 6)
+            Toast.makeText(this, "OTP must be at least 6 characters", Toast.LENGTH_SHORT).show();
+
+        else return true;
+
+        return false;
+
+    }
+
+    private void onSubmit() {
+
+        final PhoneAuthCredential credential = PhoneAuthProvider.getCredential(s_verification_id, s_otp);
+        firebaseUser = firebaseAuth.getCurrentUser();
+
+        if (firebaseUser != null) {
+
+            firebaseUser
+                    .linkWithCredential(credential)
+                    .addOnSuccessListener(authResult -> {
+
+                        final String s_user_id = firebaseUser.getUid();
+                        final boolean user_is_verified = true;
+
+                        final HashMap<String, Object> user = new HashMap<>();
+                        user.put("user_is_verified", user_is_verified);
+
+                        updateUser(user, s_user_id);
+
+                    }).addOnFailureListener(e -> {
+
+                is_loading.setVisibility(View.GONE);
+
+                final String _e = e.toString().toLowerCase();
+
+                if (_e.contains("expired"))
+                    Toast.makeText(this, "OTP has expired", Toast.LENGTH_SHORT).show();
+
+                else if (_e.contains("invalid"))
+                    Toast.makeText(this, "OTP doesn't match", Toast.LENGTH_SHORT).show();
+
+                else
+                    Toast.makeText(this, "Please Contact Your Service Provider", Toast.LENGTH_SHORT).show();
+
+            });
+        }
+
+    }
+
+    private void updateUser(HashMap<String, Object> user, String s_user_id) {
+
+        documentRef = firebaseFirestore
+                .collection("Users")
+                .document(s_user_id);
+
+        documentRef
+                .get()
+                .addOnSuccessListener(documentSnapshot -> {
+
+                    if (documentSnapshot != null)
+
+                        if (documentSnapshot.exists())
+
+                            documentRef
+                                    .update(user)
+                                    .addOnSuccessListener(unused -> {
+
+                                        firebaseAuth.signOut();
+                                        Toast.makeText(this, "You're Successfully Added!", Toast.LENGTH_LONG).show();
+                                        startActivity(new Intent(this, LoginActivity.class));
+                                        finish();
+                                    });
+
+                });
 
     }
 
