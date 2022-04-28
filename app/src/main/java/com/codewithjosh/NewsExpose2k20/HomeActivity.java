@@ -22,8 +22,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class HomeActivity extends AppCompatActivity {
 
-    CircleImageView nav_profile;
-    ImageButton nav_home, nav_create_update;
+    ImageButton nav_home, nav_profile, nav_create_update;
 
     FirebaseAuth firebaseAuth;
     FirebaseDatabase firebaseDatabase;
@@ -45,8 +44,6 @@ public class HomeActivity extends AppCompatActivity {
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
 
                         final UserModel user = snapshot.getValue(UserModel.class);
-
-                        Glide.with(getApplicationContext()).load(user.getUser_image()).into(nav_profile);
 
                         if (user.isUser_is_admin()) nav_create_update.setVisibility(View.VISIBLE);
                         else nav_create_update.setVisibility(View.GONE);

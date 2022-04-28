@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorRaisinBlack"
+    android:background="?attr/colorSecondary"
     android:orientation="vertical"
     tools:context=".HomeActivity">
 
@@ -15,23 +15,48 @@
 
         <com.google.android.material.appbar.AppBarLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="75dp"
+            android:background="@drawable/create_linear_appbar">
 
             <androidx.appcompat.widget.Toolbar
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="?attr/colorSecondary">
+                android:layout_height="match_parent">
 
                 <ImageButton
                     android:id="@+id/nav_home"
-                    android:layout_width="75dp"
-                    android:layout_height="75dp"
+                    android:layout_width="51dp"
+                    android:layout_height="42dp"
                     android:background="@drawable/ic_logo" />
 
-                <de.hdodenhof.circleimageview.CircleImageView
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/tahoma_regular"
+                        android:text="News"
+                        android:textColor="?attr/colorOnPrimary"
+                        android:textSize="8pt" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/tahoma_regular"
+                        android:text="exposé"
+                        android:textAllCaps="true"
+                        android:textColor="?attr/colorPrimary"
+                        android:textSize="8pt" />
+
+                </LinearLayout>
+
+                <ImageButton
                     android:id="@+id/nav_profile"
-                    android:layout_width="55dp"
-                    android:layout_height="55dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/ic_drawer"
                     android:layout_gravity="end"
                     android:layout_marginEnd="18dp" />
 
@@ -48,10 +73,10 @@
 
     <ImageButton
         android:id="@+id/nav_create_update"
-        android:layout_width="75dp"
-        android:layout_height="75dp"
-        android:layout_marginEnd="15dp"
-        android:layout_marginBottom="20dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="25dp"
+        android:layout_marginBottom="25dp"
         android:background="@drawable/ic_create_update"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
