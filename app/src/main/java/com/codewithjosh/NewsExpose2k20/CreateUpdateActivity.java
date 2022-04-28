@@ -2,21 +2,23 @@ package com.codewithjosh.NewsExpose2k20;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.codewithjosh.NewsExpose2k20.models.UpdateModel;
+import com.codewithjosh.NewsExpose2k20.models.UserModel;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -28,18 +30,67 @@ public class CreateUpdateActivity extends AppCompatActivity {
     ImageButton btn_back, btn_create_update;
     ImageView iv_update_image;
 
-    String s_update_image;
+    String s_user_id, s_update_image;
     UploadTask uTask;
     Uri uri;
 
     FirebaseAuth firebaseAuth;
     FirebaseDatabase firebaseDatabase;
+    FirebaseFirestore firebaseFirestore;
     FirebaseStorage firebaseStorage;
 
     DatabaseReference databaseRef;
     StorageReference storageRef;
 
     ProgressDialog pd;
+
+    SharedPreferences sharedPref;
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        firebaseFirestore = FirebaseFirestore.getInstance();
+
+        load();
+        loadUserBio(s_user_id);
+
+    }
+
+    private void load() {
+
+        sharedPref = getSharedPreferences("user", MODE_PRIVATE);
+
+        s_user_id = sharedPref.getString("s_user_id", String.valueOf(MODE_PRIVATE));
+
+    }
+
+    private void loadUserBio(final String s_user_id) {
+
+        firebaseFirestore
+                .collection("Users")
+                .document(s_user_id)
+                .addSnapshotListener((value, error) -> {
+
+                    if (value != null) {
+
+                        final UserModel user = value.toObject(UserModel.class);
+
+                        if (user != null) {
+
+                            final String s_user_bio = user.getUser_bio();
+                            final String s_hint = "What's on your mind, " + s_user_bio + "?";
+                            final String s_hint_empty = "Add a caption…";
+
+                            if (!s_user_bio.isEmpty()) et_update_content.setHint(s_hint);
+
+                            else et_update_content.setHint(s_hint_empty);
+
+                        }
+                    }
+                });
+
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
