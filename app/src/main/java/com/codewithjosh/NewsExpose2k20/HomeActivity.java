@@ -1,61 +1,66 @@
 package com.codewithjosh.NewsExpose2k20;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageButton;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.bumptech.glide.Glide;
 import com.codewithjosh.NewsExpose2k20.fragments.HomeFragment;
 import com.codewithjosh.NewsExpose2k20.fragments.ProfileFragment;
 import com.codewithjosh.NewsExpose2k20.models.UserModel;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
-
-import de.hdodenhof.circleimageview.CircleImageView;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 public class HomeActivity extends AppCompatActivity {
 
-    CircleImageView nav_profile;
-    ImageButton nav_home, nav_create_update;
+    ImageButton nav_home, nav_profile, nav_create_update;
 
-    FirebaseAuth firebaseAuth;
-    FirebaseDatabase firebaseDatabase;
+    FirebaseFirestore firebaseFirestore;
+
+    SharedPreferences sharedPref;
 
     @Override
     protected void onStart() {
         super.onStart();
 
-        firebaseAuth = FirebaseAuth.getInstance();
-        firebaseDatabase = FirebaseDatabase.getInstance();
+        firebaseFirestore = FirebaseFirestore.getInstance();
 
-        final String s_user_id = firebaseAuth.getCurrentUser().getUid();
+        load();
 
-        firebaseDatabase
-                .getReference("Users")
-                .child(s_user_id)
-                .addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+    }
 
-                        final UserModel user = snapshot.getValue(UserModel.class);
+    private void load() {
 
-                        Glide.with(getApplicationContext()).load(user.getUser_image()).into(nav_profile);
+        sharedPref = getSharedPreferences("user", MODE_PRIVATE);
 
-                        if (user.isUser_is_admin()) nav_create_update.setVisibility(View.VISIBLE);
-                        else nav_create_update.setVisibility(View.GONE);
+        final String s_user_id = sharedPref.getString("s_user_id", String.valueOf(MODE_PRIVATE));
 
-                    }
+        checkUserAdmin(s_user_id);
 
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
+    }
 
+    private void checkUserAdmin(String s_user_id) {
+
+        firebaseFirestore
+                .collection("Users")
+                .document(s_user_id)
+                .addSnapshotListener((value, error) -> {
+
+                    if (value != null) {
+
+                        final UserModel user = value.toObject(UserModel.class);
+
+                        if (user != null) {
+
+                            final boolean user_is_admin = user.isUser_is_admin();
+
+                            if (user_is_admin) nav_create_update.setVisibility(View.VISIBLE);
+
+                            else nav_create_update.setVisibility(View.GONE);
+
+                        }
                     }
                 });
 
@@ -66,9 +71,20 @@ public class HomeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
-        nav_profile = findViewById(R.id.nav_profile);
+        initViews();
+        build();
+
+    }
+
+    private void initViews() {
+
         nav_home = findViewById(R.id.nav_home);
+        nav_profile = findViewById(R.id.nav_profile);
         nav_create_update = findViewById(R.id.nav_create_update);
+
+    }
+
+    private void build() {
 
         nav_create_update.setOnClickListener(v -> startActivity(new Intent(this, CreateUpdateActivity.class)));
 
