@@ -8,7 +8,7 @@ android {
 
     defaultConfig {
         applicationId "com.codewithjosh.NewsExpose2k20"
-        minSdk 21
+        minSdk 23
         targetSdk 32
         versionCode 8
         versionName "0.8.0"
