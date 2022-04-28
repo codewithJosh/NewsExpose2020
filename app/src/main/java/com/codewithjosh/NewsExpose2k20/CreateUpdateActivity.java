@@ -25,9 +25,8 @@ import com.theartofdev.edmodo.cropper.CropImage;
 public class CreateUpdateActivity extends AppCompatActivity {
 
     EditText et_update_content;
-    ImageButton btn_back;
+    ImageButton btn_back, btn_create_update;
     ImageView iv_update_image;
-    TextView btn_create_update;
 
     String s_update_image;
     UploadTask uTask;
@@ -49,8 +48,8 @@ public class CreateUpdateActivity extends AppCompatActivity {
 
         et_update_content = findViewById(R.id.et_update_content);
         btn_back = findViewById(R.id.btn_back);
-        iv_update_image = findViewById(R.id.iv_update_image);
         btn_create_update = findViewById(R.id.btn_create_update);
+        iv_update_image = findViewById(R.id.iv_update_image);
 
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseDatabase = FirebaseDatabase.getInstance();
