@@ -150,6 +150,8 @@ public class CreateUpdateActivity extends AppCompatActivity {
 
         getImage();
 
+        iv_update_image.setOnClickListener(v -> getImage());
+
     }
 
     private boolean isConnected() {
