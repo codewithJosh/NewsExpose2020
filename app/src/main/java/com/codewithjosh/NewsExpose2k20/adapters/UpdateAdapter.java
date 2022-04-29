@@ -2,6 +2,7 @@ package com.codewithjosh.NewsExpose2k20.adapters;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,12 +19,13 @@ import com.codewithjosh.NewsExpose2k20.CommentActivity;
 import com.codewithjosh.NewsExpose2k20.R;
 import com.codewithjosh.NewsExpose2k20.models.UpdateModel;
 import com.codewithjosh.NewsExpose2k20.models.UserModel;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.List;
 
@@ -31,10 +33,20 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class UpdateAdapter extends RecyclerView.Adapter<UpdateAdapter.ViewHolder> {
 
+    String s_user_id;
+
+    FirebaseDatabase firebaseDatabase;
+
+    FirebaseFirestore firebaseFirestore;
+    DocumentReference documentRef;
+
+    CollectionReference seenRef, commentRef;
+    SharedPreferences sharedPref;
+
+    SharedPreferences.Editor editor;
+
     public Context context;
     public List<UpdateModel> updateList;
-    FirebaseAuth firebaseAuth;
-    FirebaseDatabase firebaseDatabase;
 
     public UpdateAdapter(Context context, List<UpdateModel> updateList) {
         this.context = context;
@@ -53,53 +65,95 @@ public class UpdateAdapter extends RecyclerView.Adapter<UpdateAdapter.ViewHolder
 
         final UpdateModel update = updateList.get(position);
 
-        firebaseAuth = FirebaseAuth.getInstance();
+//        initViews
+        final CircleImageView civ_user_image = holder.civ_user_image;
+        final ImageButton btn_seen = holder.btn_seen;
+        final ImageButton nav_comment = holder.nav_comment;
+        final ImageView iv_update_image = holder.iv_update_image;
+        final TextView tv_seen_count = holder.tv_seen_count;
+        final TextView tv_update_content = holder.tv_update_content;
+        final TextView tv_comment_count = holder.tv_comment_count;
+        final TextView tv_user_bio = holder.tv_user_bio;
+
+//        load
+        final String s_update_id = update.getUpdate_id();
+        final String s_update_image = update.getUpdate_image();
+        final String s_update_content = update.getUpdate_content();
+        final String s_update_user_id = update.getUser_id();
+
+        initInstance();
+        initSharedPref();
+        load();
+
+        loadUser(civ_user_image, tv_user_bio, s_update_user_id);
+
+        if (!s_update_content.isEmpty()) {
+
+            tv_update_content.setVisibility(View.VISIBLE);
+            tv_update_content.setText(update.getUpdate_content());
+        } else tv_update_content.setVisibility(View.GONE);
+
+        Glide.with(context).load(s_update_image).into(iv_update_image);
+
+        seenRef = firebaseFirestore
+                .collection("Updates")
+                .document(s_update_id)
+                .collection("Seen");
+
+        isSeen(btn_seen, tv_seen_count);
+
+        seenCount(tv_seen_count);
+
+        btn_seen.setOnClickListener(v -> {
+
+            final UserModel user = new UserModel();
+
+            documentRef = firebaseFirestore
+                    .collection("Updates")
+                    .document(s_update_id)
+                    .collection("Seen")
+                    .document(s_user_id);
+
+            if (btn_seen.getTag().equals("seen")) documentRef.set(user);
+
+            else documentRef.delete();
+
+        });
+
+        commentRef = firebaseFirestore
+                .collection("Updates")
+                .document(s_update_id)
+                .collection("Comments");
+
+        commentCount(tv_comment_count);
+
+        nav_comment.setOnClickListener(v -> {
+
+            editor.putString("s_update_id", s_update_id);
+            editor.apply();
+            context.startActivity(new Intent(context, CommentActivity.class));
+        });
+
+    }
+
+    private void load() {
+
+        s_user_id = sharedPref.getString("s_user_id", String.valueOf(Context.MODE_PRIVATE));
+
+    }
+
+    private void initInstance() {
+
         firebaseDatabase = FirebaseDatabase.getInstance();
+        firebaseFirestore = FirebaseFirestore.getInstance();
 
-        final String s_user_id = firebaseAuth.getCurrentUser().getUid();
+    }
 
-        Glide.with(context).load(update.getUpdate_image()).into(holder.iv_update_image);
+    private void initSharedPref() {
 
-        if (update.getUpdate_content().isEmpty()) holder.tv_update_content.setVisibility(View.GONE);
-        else {
-            holder.tv_update_content.setVisibility(View.VISIBLE);
-            holder.tv_update_content.setText(update.getUpdate_content());
-        }
+        sharedPref = context.getSharedPreferences("user", Context.MODE_PRIVATE);
+        editor = sharedPref.edit();
 
-        if (update.getUser_id().isEmpty()) {
-            holder.tv_user_name.setVisibility(View.VISIBLE);
-            holder.tv_user_name.setText(context.getResources().getString(R.string.def_user_name));
-        } else {
-            holder.tv_user_name.setVisibility(View.VISIBLE);
-            holder.tv_user_name.setText(update.getUser_id());
-        }
-
-        isSeen(update.getUpdate_id(), s_user_id, holder.btn_seen);
-        seenCount(holder.tv_seen_count, s_user_id, update.getUpdate_id());
-        commentCount(update.getUpdate_id(), holder.tv_comment_count);
-
-        holder.btn_seen.setOnClickListener(v -> {
-
-            final DatabaseReference seenRef = firebaseDatabase
-                    .getReference()
-                    .child("Seen")
-                    .child(update.getUpdate_id())
-                    .child(s_user_id);
-
-            if (holder.btn_seen.getTag().equals("seen")) seenRef.setValue(true);
-            else seenRef.removeValue();
-
-        });
-
-        holder.nav_comment.setOnClickListener(v -> {
-
-            Intent intent = new Intent(context, CommentActivity.class);
-            intent.putExtra("s_update_id", update.getUpdate_id());
-            intent.putExtra("s_user_id", s_user_id);
-            context.startActivity(intent);
-        });
-
-        getSource(holder.civ_user_image, holder.tv_user_name, update.getUser_id());
     }
 
     @Override
@@ -107,109 +161,80 @@ public class UpdateAdapter extends RecyclerView.Adapter<UpdateAdapter.ViewHolder
         return updateList.size();
     }
 
-    private void getSource(final CircleImageView civ_user_image, final TextView tv_user_name, final String s_user_id) {
+    private void loadUser(final CircleImageView civ_user_image, final TextView tv_user_name, final String s_update_user_id) {
 
-        firebaseDatabase
-                .getReference("Users")
-                .child(s_user_id)
-                .addValueEventListener(new ValueEventListener() {
+        firebaseFirestore
+                .collection("Users")
+                .document(s_update_user_id)
+                .addSnapshotListener((value, error) -> {
 
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    if (value != null)
 
-                        final UserModel user = dataSnapshot.getValue(UserModel.class);
+                        if (value.exists()) {
 
-                        Glide.with(context).load(user.getUser_image()).into(civ_user_image);
-                        tv_user_name.setText(user.getUser_name());
+                            final UserModel user = value.toObject(UserModel.class);
 
-                    }
+                            if (user != null) {
 
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
+                                final String s_user_image = user.getUser_image();
+                                final String s_user_bio = user.getUser_bio();
 
-                    }
+                                Glide.with(context).load(s_user_image).into(civ_user_image);
+                                tv_user_name.setText(s_user_bio);
+                            }
+                        }
                 });
 
     }
 
-    private void isSeen(final String s_update_id, final String s_user_id, final ImageButton btn_seen) {
+    private void isSeen(final ImageButton btn_seen, final TextView tv_seen_count) {
 
-        firebaseDatabase
-                .getReference("Seen")
-                .child(s_update_id)
-                .addValueEventListener(new ValueEventListener() {
+        seenRef
+                .document(s_user_id)
+                .addSnapshotListener((value, error) -> {
 
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    if (value != null)
 
-                        if (dataSnapshot.child(s_user_id).exists()) {
+                        if (value.exists()) {
 
                             btn_seen.setImageResource(R.drawable.ic_seened);
-                            btn_seen.setTag("seened");
-                        } else {
-
-                            btn_seen.setImageResource(R.drawable.ic_seen);
-                            btn_seen.setTag("seen");
+                            btn_seen.setTag("");
+                            tv_seen_count.setTextColor(context.getColor(R.color.colorFulvous));
                         }
+                        else {
+                            btn_seen.setTag("seen");
+                            btn_seen.setImageResource(R.drawable.ic_seen);
+                            tv_seen_count.setTextColor(context.getColor(R.color.colorWhite_FF));
+                        }
+                });
 
-                    }
+    }
 
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
+    private void seenCount(final TextView tv_seen_count) {
 
+        seenRef
+                .addSnapshotListener((value, error) -> {
+
+                    if (value != null) {
+
+                        final String s_seen_count = String.valueOf(value.size());
+
+                        tv_seen_count.setText(s_seen_count);
                     }
                 });
 
     }
 
-    private void seenCount(final TextView tv_seen_count, final String s_user_id, final String s_update_id) {
+    private void commentCount(final TextView tv_comment_count) {
 
-        firebaseDatabase
-                .getReference("Seen")
-                .child(s_update_id)
-                .addValueEventListener(new ValueEventListener() {
+        commentRef
+                .addSnapshotListener((value, error) -> {
 
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    if (value != null) {
 
-                        tv_seen_count.setText(String.valueOf(dataSnapshot.getChildrenCount()));
+                        final String s_comment_count = String.valueOf(value.size());
 
-                        if (dataSnapshot.child(s_user_id).exists())
-                            tv_seen_count.setTextColor(context.getResources().getColor(R.color.colorKUCrimson));
-                        else
-                            tv_seen_count.setTextColor(context.getResources().getColor(R.color.colorLightGray));
-
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                    }
-                });
-
-    }
-
-    private void commentCount(final String s_update_id, final TextView tv_comment_count) {
-
-        final int i_version_code = BuildConfig.VERSION_CODE;
-
-        firebaseDatabase
-                .getReference("Comments")
-                .child(s_update_id)
-                .orderByChild("user_version_code")
-                .equalTo(i_version_code)
-                .addValueEventListener(new ValueEventListener() {
-
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-
-                        tv_comment_count.setText(String.valueOf(dataSnapshot.getChildrenCount()));
-
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
-
+                        tv_comment_count.setText(s_comment_count);
                     }
                 });
 
@@ -220,7 +245,7 @@ public class UpdateAdapter extends RecyclerView.Adapter<UpdateAdapter.ViewHolder
         CircleImageView civ_user_image;
         ImageButton btn_seen, nav_comment;
         ImageView iv_update_image;
-        TextView tv_seen_count, tv_update_content, tv_comment_count, tv_user_name;
+        TextView tv_seen_count, tv_update_content, tv_comment_count, tv_user_bio;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -229,7 +254,7 @@ public class UpdateAdapter extends RecyclerView.Adapter<UpdateAdapter.ViewHolder
             btn_seen = itemView.findViewById(R.id.btn_seen);
             nav_comment = itemView.findViewById(R.id.nav_comment);
             iv_update_image = itemView.findViewById(R.id.iv_update_image);
-            tv_user_name = itemView.findViewById(R.id.tv_user_bio);
+            tv_user_bio = itemView.findViewById(R.id.tv_user_bio);
             tv_update_content = itemView.findViewById(R.id.tv_update_content);
             tv_seen_count = itemView.findViewById(R.id.tv_seen_count);
             tv_comment_count = itemView.findViewById(R.id.tv_comment_count);

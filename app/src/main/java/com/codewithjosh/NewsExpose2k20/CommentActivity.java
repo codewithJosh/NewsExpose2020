@@ -1,5 +1,6 @@
 package com.codewithjosh.NewsExpose2k20;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -35,6 +36,8 @@ public class CommentActivity extends AppCompatActivity {
     private CommentAdapter commentAdapter;
     private List<CommentModel> commentList;
 
+    SharedPreferences sharedPref;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,10 +50,10 @@ public class CommentActivity extends AppCompatActivity {
         recycler_comments = findViewById(R.id.recycler_comments);
 
         i_version_code = BuildConfig.VERSION_CODE;
-        s_update_id = getIntent().getStringExtra("s_update_id");
-        s_user_id = getIntent().getStringExtra("s_user_id");
 
         firebaseDatabase = FirebaseDatabase.getInstance();
+
+        load();
 
         btn_back.setOnClickListener(v -> onBackPressed());
 
@@ -76,6 +79,14 @@ public class CommentActivity extends AppCompatActivity {
         recycler_comments.setAdapter(commentAdapter);
 
         getComments();
+    }
+
+    private void load() {
+
+        sharedPref = getSharedPreferences("user", MODE_PRIVATE);
+        s_update_id = sharedPref.getString("s_update_id", String.valueOf(MODE_PRIVATE));
+        s_user_id = sharedPref.getString("s_user_id", String.valueOf(MODE_PRIVATE));
+
     }
 
     private void onSend(final String s_comment_content) {
