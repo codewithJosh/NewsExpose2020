@@ -229,7 +229,7 @@ public class UpdateAdapter extends RecyclerView.Adapter<UpdateAdapter.ViewHolder
             btn_seen = itemView.findViewById(R.id.btn_seen);
             nav_comment = itemView.findViewById(R.id.nav_comment);
             iv_update_image = itemView.findViewById(R.id.iv_update_image);
-            tv_user_name = itemView.findViewById(R.id.tv_user_name);
+            tv_user_name = itemView.findViewById(R.id.tv_user_bio);
             tv_update_content = itemView.findViewById(R.id.tv_update_content);
             tv_seen_count = itemView.findViewById(R.id.tv_seen_count);
             tv_comment_count = itemView.findViewById(R.id.tv_comment_count);
