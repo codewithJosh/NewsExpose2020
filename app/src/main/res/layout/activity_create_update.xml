@@ -1,90 +1,153 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/img_background"
+    android:background="@drawable/img_background_1"
     tools:context=".CreateUpdateActivity">
 
-    <ImageView
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:alpha="0.7"
-        android:background="?attr/colorOnSecondary" />
+        android:orientation="vertical">
 
-    <com.google.android.material.appbar.AppBarLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <androidx.appcompat.widget.Toolbar
+        <com.google.android.material.appbar.AppBarLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="?attr/colorSecondary">
+            android:layout_height="60dp"
+            android:background="@drawable/create_linear_appbar">
 
-            <ImageButton
-                android:id="@+id/btn_back"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/ic_back" />
-
-            <TextView
-                android:id="@+id/btn_create_update"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="end"
-                android:layout_marginEnd="18dp"
-                android:text="@string/text_update"
-                android:textAllCaps="true"
-                android:textColor="?attr/colorPrimary"
-                android:textSize="16sp"
-                android:textStyle="bold" />
-
-        </androidx.appcompat.widget.Toolbar>
-
-    </com.google.android.material.appbar.AppBarLayout>
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true">
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:alpha="0.3"
-            android:background="?attr/colorOnSecondary"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:padding="15dp">
-
-            <ImageView
-                android:id="@+id/iv_update_image"
+            <androidx.appcompat.widget.Toolbar
                 android:layout_width="match_parent"
-                android:layout_height="250dp" />
+                android:layout_height="match_parent">
 
-            <EditText
-                android:id="@+id/et_update_content"
+                <ImageButton
+                    android:id="@+id/btn_back"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/ic_back" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/tahoma_regular"
+                        android:text="News"
+                        android:textColor="?attr/colorOnPrimary"
+                        android:textSize="8pt" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/tahoma_regular"
+                        android:text="exposé"
+                        android:textAllCaps="true"
+                        android:textColor="?attr/colorPrimary"
+                        android:textSize="8pt" />
+
+                </LinearLayout>
+
+                <ImageButton
+                    android:id="@+id/btn_create_update"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end"
+                    android:layout_marginEnd="18dp"
+                    android:background="@drawable/ic_upload" />
+
+            </androidx.appcompat.widget.Toolbar>
+
+        </com.google.android.material.appbar.AppBarLayout>
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="15dp"
-                android:background="@color/colorRaisinBlack"
-                android:hint="@string/hint_update_content"
-                android:includeFontPadding="false"
-                android:maxLines="5"
-                android:padding="10dp"
-                android:textColor="?attr/colorOnPrimary"
-                android:textColorHint="@color/colorPhilippineGray" />
+                android:layout_gravity="center">
 
-        </LinearLayout>
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:alpha="0.8"
+                    android:background="?attr/colorSecondary"
+                    app:layout_constraintBottom_toBottomOf="@id/linear_create_update"
+                    app:layout_constraintEnd_toEndOf="@id/linear_create_update"
+                    app:layout_constraintStart_toStartOf="@id/linear_create_update"
+                    app:layout_constraintTop_toTopOf="@id/linear_create_update" />
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+                <LinearLayout
+                    android:id="@+id/linear_create_update"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginHorizontal="15dp"
+                    android:orientation="vertical"
+                    android:padding="15dp">
 
-</RelativeLayout>
+                    <ImageView
+                        android:id="@+id/iv_update_image"
+                        android:layout_width="match_parent"
+                        android:layout_height="250dp" />
+
+                    <EditText
+                        android:id="@+id/et_update_content"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="15dp"
+                        android:autofillHints="no"
+                        android:background="@drawable/create_input_decoration"
+                        android:hint="@string/hint_update_content"
+                        android:includeFontPadding="false"
+                        android:inputType="textMultiLine"
+                        android:maxLength="1024"
+                        android:maxLines="5"
+                        android:minLines="1"
+                        android:padding="10dp"
+                        android:textColor="?attr/colorPrimary"
+                        android:textColorHint="@color/colorChineseSilver1" />
+
+                </LinearLayout>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </ScrollView>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/is_loading"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:alpha="0.9"
+        android:background="?attr/colorSecondary"
+        android:clickable="true"
+        android:focusable="true"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <com.tuyenmonkey.mkloader.MKLoader
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            app:mk_color="?attr/colorPrimary"
+            app:mk_type="TwinFishesSpinner" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="50dp"
+            android:includeFontPadding="false"
+            android:letterSpacing="0.06"
+            android:text="@string/text_uploading"
+            android:textAllCaps="true"
+            android:textColor="@color/colorChineseSilver" />
+
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

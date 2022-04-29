@@ -1,12 +1,17 @@
 package com.codewithjosh.NewsExpose2k20;
 
+import android.Manifest;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
 import com.codewithjosh.NewsExpose2k20.fragments.HomeFragment;
 import com.codewithjosh.NewsExpose2k20.fragments.ProfileFragment;
@@ -15,7 +20,13 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 public class HomeActivity extends AppCompatActivity {
 
+    public static final int CAMERA_REQUEST = 99;
+    public static final int STORAGE_REQUEST = 100;
+
     ImageButton nav_home, nav_profile, nav_create_update;
+
+    String[] cameraPermission;
+    String[] storagePermission;
 
     FirebaseFirestore firebaseFirestore;
 
@@ -71,6 +82,9 @@ public class HomeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
+        cameraPermission = new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE};
+        storagePermission = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE};
+
         initViews();
         build();
 
@@ -86,7 +100,7 @@ public class HomeActivity extends AppCompatActivity {
 
     private void build() {
 
-        nav_create_update.setOnClickListener(v -> startActivity(new Intent(this, CreateUpdateActivity.class)));
+        nav_create_update.setOnClickListener(v -> onCreateUpdate());
 
         nav_home.setOnClickListener(v -> getSupportFragmentManager().beginTransaction().replace(R.id.frame,
                 new HomeFragment()).commit());
@@ -96,6 +110,75 @@ public class HomeActivity extends AppCompatActivity {
 
         getSupportFragmentManager().beginTransaction().replace(R.id.frame,
                 new HomeFragment()).commit();
+
+    }
+
+    private void onCreateUpdate() {
+
+        if (!checkCameraPermission()) requestCameraPermission();
+
+        else if (!checkStoragePermission()) requestStoragePermission();
+
+        else startActivity(new Intent(this, CreateUpdateActivity.class));
+
+    }
+
+    private boolean checkCameraPermission() {
+
+        boolean result = ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) == (PackageManager.PERMISSION_GRANTED);
+        boolean _result = ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == (PackageManager.PERMISSION_GRANTED);
+        return result && _result;
+
+    }
+
+    private boolean checkStoragePermission() {
+        return ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == (PackageManager.PERMISSION_GRANTED);
+    }
+
+    private void requestCameraPermission() {
+        requestPermissions(cameraPermission, CAMERA_REQUEST);
+    }
+
+    private void requestStoragePermission() {
+        requestPermissions(storagePermission, STORAGE_REQUEST);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        switch (requestCode) {
+
+            case CAMERA_REQUEST:
+
+                if (grantResults.length > 0) {
+
+                    boolean camera_accepted = grantResults[0] == (PackageManager.PERMISSION_GRANTED);
+                    boolean storage_accepted = grantResults[1] == (PackageManager.PERMISSION_GRANTED);
+
+                    if (camera_accepted && storage_accepted) onCreateUpdate();
+
+                    else
+                        Toast.makeText(this, "Please enable camera and storage permission", Toast.LENGTH_SHORT).show();
+
+                }
+                break;
+
+            case STORAGE_REQUEST:
+
+                if (grantResults.length > 0) {
+
+                    boolean storage_accepted = grantResults[0] == (PackageManager.PERMISSION_GRANTED);
+
+                    if (storage_accepted) onCreateUpdate();
+
+                    else
+                        Toast.makeText(this, "Please enable storage permission", Toast.LENGTH_SHORT).show();
+
+                }
+                break;
+
+        }
 
     }
 

@@ -11,7 +11,6 @@
     <string name="hint_re_password">Re-Enter Password</string>
     <string name="text_sign_in">Sign In</string>
     <string name="hint_update_content">Add a caption…</string>
-    <string name="text_update">update</string>
     <string name="def_user_name">Anonymous</string>
     <string name="text_comments">Comments</string>
     <string name="hint_comment_content">Add a comment…</string>
@@ -29,4 +28,5 @@
     <string name="text_resend">Resend</string>
     <string name="text_button_next">next</string>
     <string name="text_checkbox_recaptcha">I\'m not a robot</string>
+    <string name="text_uploading">uploading</string>
 </resources>
