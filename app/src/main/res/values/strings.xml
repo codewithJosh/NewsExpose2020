@@ -29,4 +29,7 @@
     <string name="text_button_next">next</string>
     <string name="text_checkbox_recaptcha">I\'m not a robot</string>
     <string name="text_uploading">uploading</string>
+    <string name="text_loading">loading</string>
+    <string name="text_status_disconnected">No Internet Connection</string>
+    <string name="text_status_empty">No Updates</string>
 </resources>

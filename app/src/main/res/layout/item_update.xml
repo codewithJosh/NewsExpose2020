@@ -1,107 +1,119 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginTop="20dp"
-    android:layout_marginBottom="5dp"
+    android:layout_margin="18dp"
     android:background="@drawable/create_secondary_item_decoration_round"
-    android:orientation="vertical"
-    android:padding="20dp">
+    android:padding="18dp">
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/civ_user_image"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/civ_user_image"
-            android:layout_width="60dp"
-            android:layout_height="60dp" />
+        android:layout_width="wrap_content"
+        android:layout_height="60dp"
+        android:layout_marginStart="15dp"
+        android:gravity="center_vertical"
+        android:orientation="vertical"
+        app:layout_constraintStart_toEndOf="@id/civ_user_image"
+        app:layout_constraintTop_toTopOf="parent">
 
         <TextView
-            android:id="@+id/tv_user_name"
+            android:id="@+id/tv_user_bio"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_marginStart="15dp"
             android:textColor="?attr/colorOnPrimary"
-            android:textSize="16sp" />
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tv_subtitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="?attr/colorOnPrimary"
+            android:textSize="14sp" />
 
     </LinearLayout>
 
-    <LinearLayout
+    <TextView
+        android:id="@+id/tv_update_content"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:layout_marginTop="15dp"
+        android:textColor="?attr/colorOnPrimary"
+        android:textSize="14sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/civ_user_image" />
 
-        <TextView
-            android:id="@+id/tv_update_content"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
-            android:textColor="?attr/colorOnPrimary" />
+    <ImageView
+        android:id="@+id/iv_update_image"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_update_content" />
 
-        <ImageView
-            android:id="@+id/iv_update_image"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="15dp" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="15dp"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/iv_update_image">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.5"
+            android:gravity="center"
             android:orientation="horizontal">
 
-            <LinearLayout
-                android:layout_width="match_parent"
+            <ImageButton
+                android:id="@+id/btn_seen"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="0.5"
-                android:gravity="center"
-                android:orientation="horizontal">
+                android:background="@android:color/transparent" />
 
-                <ImageButton
-                    android:id="@+id/btn_seen"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    android:background="@android:color/transparent" />
-
-                <TextView
-                    android:id="@+id/tv_seen_count"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="15dp"
-                    android:textColor="@color/colorLightGray"
-                    android:textStyle="bold" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
+            <TextView
+                android:id="@+id/tv_seen_count"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_weight="0.5"
-                android:gravity="center"
-                android:orientation="horizontal">
+                android:layout_marginStart="18dp"
+                android:textColor="?attr/colorOnPrimary" />
 
-                <ImageButton
-                    android:id="@+id/nav_comment"
-                    android:layout_width="25dp"
-                    android:layout_height="25dp"
-                    android:background="@drawable/ic_comment" />
+        </LinearLayout>
 
-                <TextView
-                    android:id="@+id/tv_comment_count"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="15dp"
-                    android:textColor="@color/colorLightGray"
-                    android:textStyle="bold" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:layout_weight="0.5"
+            android:gravity="center"
+            android:orientation="horizontal">
 
-            </LinearLayout>
+            <ImageButton
+                android:id="@+id/nav_comment"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/ic_comment" />
+
+            <TextView
+                android:id="@+id/tv_comment_count"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="18dp"
+                android:textColor="?attr/colorOnPrimary" />
 
         </LinearLayout>
 
     </LinearLayout>
 
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
