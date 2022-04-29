@@ -3,7 +3,9 @@ package com.codewithjosh.NewsExpose2k20.adapters;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.view.GestureDetector;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
@@ -113,21 +115,7 @@ public class UpdateAdapter extends RecyclerView.Adapter<UpdateAdapter.ViewHolder
 
         seenCount(tv_seen_count);
 
-        btn_seen.setOnClickListener(v -> {
-
-            final UserModel user = new UserModel();
-
-            documentRef = firebaseFirestore
-                    .collection("Updates")
-                    .document(s_update_id)
-                    .collection("Seen")
-                    .document(s_user_id);
-
-            if (btn_seen.getTag().equals("seen")) documentRef.set(user);
-
-            else documentRef.delete();
-
-        });
+        btn_seen.setOnClickListener(v -> onSeen(btn_seen, s_update_id));
 
         commentRef = firebaseFirestore
                 .collection("Updates")
@@ -142,6 +130,45 @@ public class UpdateAdapter extends RecyclerView.Adapter<UpdateAdapter.ViewHolder
             editor.apply();
             context.startActivity(new Intent(context, CommentActivity.class));
         });
+
+        iv_update_image.setOnTouchListener(new View.OnTouchListener() {
+
+            private GestureDetector gestureDetector = new GestureDetector(context, new GestureDetector.SimpleOnGestureListener() {
+
+                @Override
+                public boolean onDoubleTap(MotionEvent e) {
+                    onSeen(btn_seen, s_update_id);
+                    return super.onDoubleTap(e);
+                }
+
+                @Override
+                public boolean onSingleTapConfirmed(MotionEvent event) { return false; }
+            });
+
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+
+                gestureDetector.onTouchEvent(event);
+                return true;
+
+            }
+        });
+
+    }
+
+    private void onSeen(ImageButton btn_seen, String s_update_id) {
+
+        final UserModel user = new UserModel();
+
+        documentRef = firebaseFirestore
+                .collection("Updates")
+                .document(s_update_id)
+                .collection("Seen")
+                .document(s_user_id);
+
+        if (btn_seen.getTag().equals("seen")) documentRef.set(user);
+
+        else documentRef.delete();
 
     }
 
