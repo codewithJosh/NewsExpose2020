@@ -29,8 +29,6 @@ import com.theartofdev.edmodo.cropper.CropImage;
 
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Random;
 
 public class CreateUpdateActivity extends AppCompatActivity {
@@ -144,7 +142,7 @@ public class CreateUpdateActivity extends AppCompatActivity {
             else {
 
                 is_loading.setVisibility(View.GONE);
-                Toast.makeText( this, "No Internet Connection!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "No Internet Connection!", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -232,12 +230,12 @@ public class CreateUpdateActivity extends AppCompatActivity {
                 if (!value.exists())
 
                     documentRef
-                        .set(update)
-                        .addOnSuccessListener(unused -> {
+                            .set(update)
+                            .addOnSuccessListener(unused -> {
 
-                            is_loading.setVisibility(View.GONE);
-                            onBackPressed();
-                        });
+                                is_loading.setVisibility(View.GONE);
+                                onBackPressed();
+                            });
         });
 
     }

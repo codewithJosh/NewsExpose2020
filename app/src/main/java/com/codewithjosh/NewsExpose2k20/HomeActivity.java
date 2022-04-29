@@ -131,17 +131,23 @@ public class HomeActivity extends AppCompatActivity {
 
     }
 
-    private boolean checkStoragePermission() { return ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == (PackageManager.PERMISSION_GRANTED); }
+    private boolean checkStoragePermission() {
+        return ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == (PackageManager.PERMISSION_GRANTED);
+    }
 
-    private void requestCameraPermission() { requestPermissions(cameraPermission, CAMERA_REQUEST); }
+    private void requestCameraPermission() {
+        requestPermissions(cameraPermission, CAMERA_REQUEST);
+    }
 
-    private void requestStoragePermission() { requestPermissions(storagePermission, STORAGE_REQUEST); }
+    private void requestStoragePermission() {
+        requestPermissions(storagePermission, STORAGE_REQUEST);
+    }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
-        switch (requestCode){
+        switch (requestCode) {
 
             case CAMERA_REQUEST:
 
@@ -152,7 +158,8 @@ public class HomeActivity extends AppCompatActivity {
 
                     if (camera_accepted && storage_accepted) onCreateUpdate();
 
-                    else Toast.makeText(this, "Please enable camera and storage permission", Toast.LENGTH_SHORT).show();
+                    else
+                        Toast.makeText(this, "Please enable camera and storage permission", Toast.LENGTH_SHORT).show();
 
                 }
                 break;
@@ -165,7 +172,8 @@ public class HomeActivity extends AppCompatActivity {
 
                     if (storage_accepted) onCreateUpdate();
 
-                    else Toast.makeText(this, "Please enable storage permission", Toast.LENGTH_SHORT).show();
+                    else
+                        Toast.makeText(this, "Please enable storage permission", Toast.LENGTH_SHORT).show();
 
                 }
                 break;
