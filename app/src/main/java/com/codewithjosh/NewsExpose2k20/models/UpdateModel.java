@@ -1,22 +1,24 @@
 package com.codewithjosh.NewsExpose2k20.models;
 
+import java.util.Date;
+
 public class UpdateModel {
 
     private String update_id;
     private String update_image;
     private String update_content;
+    private Date update_timestamp;
     private String user_id;
-    private int user_version_code;
 
     public UpdateModel() {
     }
 
-    public UpdateModel(String update_id, String update_image, String update_content, String user_id, int user_version_code) {
+    public UpdateModel(String update_id, String update_image, String update_content, Date update_timestamp, String user_id) {
         this.update_id = update_id;
         this.update_image = update_image;
         this.update_content = update_content;
+        this.update_timestamp = update_timestamp;
         this.user_id = user_id;
-        this.user_version_code = user_version_code;
     }
 
     public String getUpdate_id() {
@@ -43,20 +45,20 @@ public class UpdateModel {
         this.update_content = update_content;
     }
 
+    public Date getUpdate_timestamp() {
+        return update_timestamp;
+    }
+
+    public void setUpdate_timestamp(Date update_timestamp) {
+        this.update_timestamp = update_timestamp;
+    }
+
     public String getUser_id() {
         return user_id;
     }
 
     public void setUser_id(String user_id) {
         this.user_id = user_id;
-    }
-
-    public int getUser_version_code() {
-        return user_version_code;
-    }
-
-    public void setUser_version_code(int user_version_code) {
-        this.user_version_code = user_version_code;
     }
 
 }
