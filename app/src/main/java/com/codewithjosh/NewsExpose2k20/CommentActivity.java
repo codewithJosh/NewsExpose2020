@@ -2,6 +2,7 @@ package com.codewithjosh.NewsExpose2k20;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -26,8 +27,9 @@ import java.util.List;
 
 public class CommentActivity extends AppCompatActivity {
 
+    Button btn_comment;
     EditText et_comment_content;
-    ImageButton btn_back, btn_comment;
+    ImageButton btn_back;
     ImageView iv_user_image;
     RecyclerView recycler_comments;
     int i_version_code;

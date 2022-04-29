@@ -1,20 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/img_background"
-    android:orientation="vertical"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@drawable/img_background_2"
     tools:context=".CommentActivity">
 
     <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appbar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="60dp"
+        android:background="@drawable/create_linear_appbar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <androidx.appcompat.widget.Toolbar
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="?attr/colorSecondary">
+            android:layout_height="match_parent">
 
             <ImageButton
                 android:id="@+id/btn_back"
@@ -26,6 +30,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="20dp"
+                android:fontFamily="@font/tahoma_regular"
                 android:includeFontPadding="false"
                 android:text="@string/text_comments"
                 android:textColor="?attr/colorOnPrimary"
@@ -35,58 +40,124 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <RelativeLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1">
+        app:layout_constraintBottom_toTopOf="@id/linear_comment"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/appbar">
 
-        <ImageView
+        <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:alpha="0.85"
-            android:background="?attr/colorOnSecondary" />
+            android:layout_height="match_parent">
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recycler_comments"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recycler_comments"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
 
-    </RelativeLayout>
+        </ScrollView>
 
-    <LinearLayout
+        <TextView
+            android:id="@+id/tv_status"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:textColor="@color/colorSpanishGray"
+            android:textSize="16sp"
+            android:textStyle="italic"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/linear_comment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/colorRaisinBlack"
+        android:background="@drawable/create_linear_appbar"
         android:orientation="horizontal"
-        android:padding="4dp">
+        android:padding="4dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/civ_user_image"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_gravity="center" />
+            android:layout_width="43dp"
+            android:layout_height="43dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
 
         <EditText
             android:id="@+id/et_comment_content"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_gravity="center"
             android:layout_marginHorizontal="10dp"
-            android:layout_weight="1"
             android:background="@android:color/transparent"
+            android:fontFamily="@font/tahoma_regular"
             android:hint="@string/hint_comment_content"
             android:includeFontPadding="false"
-            android:textColor="?attr/colorOnPrimary"
-            android:textColorHint="@color/colorPhilippineGray" />
+            android:inputType="textMultiLine"
+            android:maxLength="1024"
+            android:maxLines="2"
+            android:minLines="1"
+            android:textColor="?attr/colorPrimary"
+            android:textColorHint="@color/colorChineseSilver1"
+            android:textSize="7pt"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/btn_comment"
+            app:layout_constraintStart_toEndOf="@id/civ_user_image"
+            app:layout_constraintTop_toTopOf="parent"/>
 
-        <ImageButton
+        <Button
             android:id="@+id/btn_comment"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
             android:layout_gravity="center"
-            android:layout_marginEnd="5dp"
-            android:background="@drawable/ic_send" />
+            android:background="@drawable/create_send_button"
+            android:enabled="false"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <LinearLayout
+        android:id="@+id/is_loading"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:alpha="0.9"
+        android:background="?attr/colorSecondary"
+        android:clickable="true"
+        android:focusable="true"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/appbar">
+
+        <com.tuyenmonkey.mkloader.MKLoader
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            app:mk_color="?attr/colorPrimary"
+            app:mk_type="TwinFishesSpinner" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="50dp"
+            android:includeFontPadding="false"
+            android:letterSpacing="0.06"
+            android:text="@string/text_loading"
+            android:textAllCaps="true"
+            android:textColor="@color/colorChineseSilver" />
 
     </LinearLayout>
 
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
