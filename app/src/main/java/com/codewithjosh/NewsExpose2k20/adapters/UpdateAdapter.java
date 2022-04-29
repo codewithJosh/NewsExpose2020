@@ -16,15 +16,11 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.codewithjosh.NewsExpose2k20.BuildConfig;
 import com.codewithjosh.NewsExpose2k20.CommentActivity;
 import com.codewithjosh.NewsExpose2k20.R;
 import com.codewithjosh.NewsExpose2k20.models.UpdateModel;
 import com.codewithjosh.NewsExpose2k20.models.UserModel;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -41,21 +37,15 @@ public class UpdateAdapter extends RecyclerView.Adapter<UpdateAdapter.ViewHolder
     private static final int MINUTE_MILLIS = 60 * SECOND_MILLIS;
     private static final int HOUR_MILLIS = 60 * MINUTE_MILLIS;
     private static final int DAY_MILLIS = 24 * HOUR_MILLIS;
-
-    String s_user_id;
-
-    FirebaseDatabase firebaseDatabase;
-
-    FirebaseFirestore firebaseFirestore;
-    DocumentReference documentRef;
-
-    CollectionReference seenRef, commentRef;
-    SharedPreferences sharedPref;
-
-    SharedPreferences.Editor editor;
-
     public Context context;
     public List<UpdateModel> updateList;
+    String s_user_id;
+    FirebaseDatabase firebaseDatabase;
+    FirebaseFirestore firebaseFirestore;
+    DocumentReference documentRef;
+    CollectionReference seenRef, commentRef;
+    SharedPreferences sharedPref;
+    SharedPreferences.Editor editor;
 
     public UpdateAdapter(Context context, List<UpdateModel> updateList) {
         this.context = context;
@@ -142,7 +132,9 @@ public class UpdateAdapter extends RecyclerView.Adapter<UpdateAdapter.ViewHolder
                 }
 
                 @Override
-                public boolean onSingleTapConfirmed(MotionEvent event) { return false; }
+                public boolean onSingleTapConfirmed(MotionEvent event) {
+                    return false;
+                }
             });
 
             @Override
@@ -256,8 +248,7 @@ public class UpdateAdapter extends RecyclerView.Adapter<UpdateAdapter.ViewHolder
                             btn_seen.setImageResource(R.drawable.ic_seened);
                             btn_seen.setTag("");
                             tv_seen_count.setTextColor(context.getColor(R.color.colorFulvous));
-                        }
-                        else {
+                        } else {
                             btn_seen.setTag("seen");
                             btn_seen.setImageResource(R.drawable.ic_seen);
                             tv_seen_count.setTextColor(context.getColor(R.color.colorWhite_FF));

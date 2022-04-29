@@ -33,10 +33,9 @@ public class CommentActivity extends AppCompatActivity {
     int i_version_code;
     String s_update_id, s_user_id;
     FirebaseDatabase firebaseDatabase;
+    SharedPreferences sharedPref;
     private CommentAdapter commentAdapter;
     private List<CommentModel> commentList;
-
-    SharedPreferences sharedPref;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
