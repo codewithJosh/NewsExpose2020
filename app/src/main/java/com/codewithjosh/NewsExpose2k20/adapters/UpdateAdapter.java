@@ -27,11 +27,18 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class UpdateAdapter extends RecyclerView.Adapter<UpdateAdapter.ViewHolder> {
+
+    private static final int SECOND_MILLIS = 1000;
+    private static final int MINUTE_MILLIS = 60 * SECOND_MILLIS;
+    private static final int HOUR_MILLIS = 60 * MINUTE_MILLIS;
+    private static final int DAY_MILLIS = 24 * HOUR_MILLIS;
 
     String s_user_id;
 
@@ -74,18 +81,20 @@ public class UpdateAdapter extends RecyclerView.Adapter<UpdateAdapter.ViewHolder
         final TextView tv_update_content = holder.tv_update_content;
         final TextView tv_comment_count = holder.tv_comment_count;
         final TextView tv_user_bio = holder.tv_user_bio;
+        final TextView tv_subtitle = holder.tv_subtitle;
 
 //        load
         final String s_update_id = update.getUpdate_id();
         final String s_update_image = update.getUpdate_image();
         final String s_update_content = update.getUpdate_content();
+        final Date date_update_timestamp = update.getUpdate_timestamp();
         final String s_update_user_id = update.getUser_id();
 
         initInstance();
         initSharedPref();
         load();
 
-        loadUser(civ_user_image, tv_user_bio, s_update_user_id);
+        loadUser(civ_user_image, tv_user_bio, tv_subtitle, s_update_user_id, date_update_timestamp);
 
         if (!s_update_content.isEmpty()) {
 
@@ -136,12 +145,6 @@ public class UpdateAdapter extends RecyclerView.Adapter<UpdateAdapter.ViewHolder
 
     }
 
-    private void load() {
-
-        s_user_id = sharedPref.getString("s_user_id", String.valueOf(Context.MODE_PRIVATE));
-
-    }
-
     private void initInstance() {
 
         firebaseDatabase = FirebaseDatabase.getInstance();
@@ -156,12 +159,13 @@ public class UpdateAdapter extends RecyclerView.Adapter<UpdateAdapter.ViewHolder
 
     }
 
-    @Override
-    public int getItemCount() {
-        return updateList.size();
+    private void load() {
+
+        s_user_id = sharedPref.getString("s_user_id", String.valueOf(Context.MODE_PRIVATE));
+
     }
 
-    private void loadUser(final CircleImageView civ_user_image, final TextView tv_user_name, final String s_update_user_id) {
+    private void loadUser(final CircleImageView civ_user_image, final TextView tv_user_name, final TextView tv_subtitle, final String s_update_user_id, final Date date_update_timestamp) {
 
         firebaseFirestore
                 .collection("Users")
@@ -178,12 +182,37 @@ public class UpdateAdapter extends RecyclerView.Adapter<UpdateAdapter.ViewHolder
 
                                 final String s_user_image = user.getUser_image();
                                 final String s_user_bio = user.getUser_bio();
+                                final String s_user_name = user.getUser_name();
+                                final String s_subtitle = getTimeAgo(date_update_timestamp) + " · " + s_user_name;
 
                                 Glide.with(context).load(s_user_image).into(civ_user_image);
                                 tv_user_name.setText(s_user_bio);
+                                tv_subtitle.setText(s_subtitle);
                             }
                         }
                 });
+
+    }
+
+    private String getTimeAgo(final Date date_update_timestamp) {
+
+        final Calendar calendar = Calendar.getInstance();
+
+        long now = calendar.getTime().getTime();
+        long time = date_update_timestamp.getTime();
+
+        if (time < 1000000000000L) time *= 1000;
+        final long diff = now - time;
+
+        if (diff < MINUTE_MILLIS) return "Just now";
+
+        else if (diff < 60 * MINUTE_MILLIS) return diff / MINUTE_MILLIS + "m";
+
+        else if (diff < 24 * HOUR_MILLIS) return diff / HOUR_MILLIS + "h";
+
+        else if (diff < 48 * HOUR_MILLIS) return "yesterday";
+
+        else return diff / DAY_MILLIS + "d";
 
     }
 
@@ -240,12 +269,17 @@ public class UpdateAdapter extends RecyclerView.Adapter<UpdateAdapter.ViewHolder
 
     }
 
+    @Override
+    public int getItemCount() {
+        return updateList.size();
+    }
+
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
         CircleImageView civ_user_image;
         ImageButton btn_seen, nav_comment;
         ImageView iv_update_image;
-        TextView tv_seen_count, tv_update_content, tv_comment_count, tv_user_bio;
+        TextView tv_seen_count, tv_update_content, tv_comment_count, tv_user_bio, tv_subtitle;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -258,6 +292,7 @@ public class UpdateAdapter extends RecyclerView.Adapter<UpdateAdapter.ViewHolder
             tv_update_content = itemView.findViewById(R.id.tv_update_content);
             tv_seen_count = itemView.findViewById(R.id.tv_seen_count);
             tv_comment_count = itemView.findViewById(R.id.tv_comment_count);
+            tv_subtitle = itemView.findViewById(R.id.tv_subtitle);
 
         }
 
