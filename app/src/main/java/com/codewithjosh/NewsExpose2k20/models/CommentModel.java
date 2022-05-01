@@ -1,18 +1,20 @@
 package com.codewithjosh.NewsExpose2k20.models;
 
+import java.util.Date;
+
 public class CommentModel {
 
     private String comment_content;
+    private Date comment_timestamp;
     private String user_id;
-    private int user_version_code;
 
     public CommentModel() {
     }
 
-    public CommentModel(String comment_content, String user_id, int user_version_code) {
+    public CommentModel(String comment_content, Date comment_timestamp, String user_id) {
         this.comment_content = comment_content;
+        this.comment_timestamp = comment_timestamp;
         this.user_id = user_id;
-        this.user_version_code = user_version_code;
     }
 
     public String getComment_content() {
@@ -23,20 +25,20 @@ public class CommentModel {
         this.comment_content = comment_content;
     }
 
+    public Date getComment_timestamp() {
+        return comment_timestamp;
+    }
+
+    public void setComment_timestamp(Date comment_timestamp) {
+        this.comment_timestamp = comment_timestamp;
+    }
+
     public String getUser_id() {
         return user_id;
     }
 
     public void setUser_id(String user_id) {
         this.user_id = user_id;
-    }
-
-    public int getUser_version_code() {
-        return user_version_code;
-    }
-
-    public void setUser_version_code(int user_version_code) {
-        this.user_version_code = user_version_code;
     }
 
 }
