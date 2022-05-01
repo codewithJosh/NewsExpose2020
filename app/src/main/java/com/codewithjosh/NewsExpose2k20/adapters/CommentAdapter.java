@@ -15,8 +15,8 @@ import com.codewithjosh.NewsExpose2k20.models.CommentModel;
 import com.codewithjosh.NewsExpose2k20.models.UserModel;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.List;
 
@@ -26,7 +26,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
 
     public Context context;
     public List<CommentModel> commentList;
-    FirebaseDatabase firebaseDatabase;
+    FirebaseFirestore firebaseFirestore;
 
     public CommentAdapter(Context context, List<CommentModel> commentList) {
         this.context = context;
@@ -43,13 +43,48 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
 
-        final CommentModel commentModel = commentList.get(position);
+        final CommentModel comment = commentList.get(position);
 
-        firebaseDatabase = FirebaseDatabase.getInstance();
+//        initViews
+        final CircleImageView civ_user_image = holder.civ_user_image;
+        final TextView tv_comment_content = holder.tv_comment_content;
+        final TextView tv_user_bio = holder.tv_user_bio;
 
-        holder.tv_comment_content.setText(commentModel.getComment_content());
+//        load
+        final String s_comment_content = comment.getComment_content();
+        final String s_user_id = comment.getUser_id();
 
-        getUser(holder.civ_user_image, holder.tv_user_name, commentModel.getUser_id());
+        firebaseFirestore = FirebaseFirestore.getInstance();
+
+        loadUser(civ_user_image, tv_user_bio, s_user_id);
+
+        tv_comment_content.setText(s_comment_content);
+
+    }
+
+    private void loadUser(final CircleImageView civ_user_image, final TextView tv_user_bio, final String s_user_id) {
+
+        firebaseFirestore
+                .collection("Users")
+                .document(s_user_id)
+                .addSnapshotListener((value, error) -> {
+
+                    if (value != null)
+
+                        if (value.exists()) {
+
+                            final UserModel user = value.toObject(UserModel.class);
+
+                            if (user != null) {
+
+                                final String s_user_image = user.getUser_image();
+                                final String s_user_bio = user.getUser_bio();
+
+                                Glide.with(context).load(s_user_image).into(civ_user_image);
+                                tv_user_bio.setText(s_user_bio);
+                            }
+                        }
+                });
 
     }
 
@@ -58,43 +93,18 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
         return commentList.size();
     }
 
-    private void getUser(final CircleImageView civ_user_image, final TextView tv_user_name, final String s_user_id) {
-
-        firebaseDatabase
-                .getReference()
-                .child("Users")
-                .child(s_user_id)
-                .addValueEventListener(new ValueEventListener() {
-
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-
-                        final UserModel user = dataSnapshot.getValue(UserModel.class);
-
-                        Glide.with(context).load(user.getUser_image()).into(civ_user_image);
-                        tv_user_name.setText(user.getUser_name());
-
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                    }
-                });
-
-    }
-
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
         CircleImageView civ_user_image;
-        TextView tv_user_name, tv_comment_content;
+        TextView tv_user_bio, tv_comment_content;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
 
             civ_user_image = itemView.findViewById(R.id.civ_user_image);
-            tv_user_name = itemView.findViewById(R.id.tv_user_bio);
+            tv_user_bio = itemView.findViewById(R.id.tv_user_bio);
             tv_comment_content = itemView.findViewById(R.id.tv_comment_content);
+
         }
 
     }
