@@ -13,9 +13,6 @@ import com.bumptech.glide.Glide;
 import com.codewithjosh.NewsExpose2k20.R;
 import com.codewithjosh.NewsExpose2k20.models.CommentModel;
 import com.codewithjosh.NewsExpose2k20.models.UserModel;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.Calendar;

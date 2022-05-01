@@ -205,7 +205,8 @@ public class CommentActivity extends AppCompatActivity {
             InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(CommentActivity.INPUT_METHOD_SERVICE);
             inputMethodManager.hideSoftInputFromWindow(v.getWindowToken(), 0);
 
-            if (!isConnected()) Toast.makeText(this, "No Internet Connection!", Toast.LENGTH_SHORT).show();
+            if (!isConnected())
+                Toast.makeText(this, "No Internet Connection!", Toast.LENGTH_SHORT).show();
 
             else onComment();
 
