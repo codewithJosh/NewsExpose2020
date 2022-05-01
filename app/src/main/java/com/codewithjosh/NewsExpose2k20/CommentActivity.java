@@ -145,6 +145,7 @@ public class CommentActivity extends AppCompatActivity {
         is_loading.setVisibility(View.VISIBLE);
 
         collectionRef
+                .orderBy("comment_timestamp")
                 .addSnapshotListener((value, error) -> {
 
                     if (value != null)
