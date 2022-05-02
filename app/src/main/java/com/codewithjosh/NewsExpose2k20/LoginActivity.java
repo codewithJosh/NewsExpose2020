@@ -15,6 +15,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.codewithjosh.NewsExpose2k20.models.UserModel;
 import com.google.firebase.auth.FirebaseAuth;
@@ -30,7 +31,7 @@ public class LoginActivity extends AppCompatActivity {
 
     Button btn_login;
     EditText et_user_name, et_password;
-    LinearLayout nav_register, is_loading;
+    ConstraintLayout nav_register, is_loading;
 
     int i_version_code;
     String s_user_name, s_password;
