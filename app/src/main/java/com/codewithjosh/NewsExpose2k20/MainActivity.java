@@ -14,6 +14,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.codewithjosh.NewsExpose2k20.models.UserModel;
 import com.google.firebase.auth.FirebaseAuth;
@@ -23,8 +24,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 public class MainActivity extends AppCompatActivity {
 
     Button nav_login, nav_register;
-    LinearLayout is_loading;
-    RelativeLayout is_unsupported;
+    ConstraintLayout is_loading, is_unsupported;
     TextView tv_version_name;
 
     FirebaseFirestore firebaseFirestore;
