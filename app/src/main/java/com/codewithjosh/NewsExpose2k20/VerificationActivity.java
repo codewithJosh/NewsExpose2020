@@ -17,6 +17,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.google.firebase.FirebaseException;
 import com.google.firebase.auth.FirebaseAuth;
@@ -34,7 +35,7 @@ public class VerificationActivity extends AppCompatActivity {
 
     Button btn_submit;
     EditText et_otp;
-    LinearLayout btn_resend, is_loading;
+    ConstraintLayout btn_resend, is_loading;
     TextView tv_resend;
 
     String s_user_contact, s_otp, s_verification_id;
