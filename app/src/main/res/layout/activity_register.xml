@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -9,8 +9,7 @@
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center">
+        android:layout_height="match_parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -30,7 +29,6 @@
                 android:id="@+id/tv_app_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
                 android:layout_marginTop="35dp"
                 android:fontFamily="@font/tahoma_regular"
                 android:letterSpacing="0.6"
@@ -121,46 +119,41 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/et_user_name" />
 
-                <LinearLayout
-                    android:id="@+id/linear_contact"
-                    android:layout_width="match_parent"
+                <com.hbb20.CountryCodePicker
+                    android:id="@+id/ccp_country"
+                    android:layout_width="wrap_content"
                     android:layout_height="50dp"
                     android:layout_marginTop="20dp"
-                    app:layout_constraintEnd_toEndOf="parent"
+                    android:gravity="center"
+                    app:ccpDialog_background="@drawable/img_background_2"
+                    app:ccpDialog_textColor="?attr/colorOnPrimary"
+                    app:ccp_autoDetectCountry="true"
+                    app:ccp_contentColor="?attr/colorPrimary"
+                    app:ccp_showPhoneCode="false"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/et_email">
+                    app:layout_constraintTop_toBottomOf="@id/et_email"/>
 
-                    <com.hbb20.CountryCodePicker
-                        android:id="@+id/ccp_country"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:gravity="center"
-                        app:ccpDialog_background="@drawable/img_background_2"
-                        app:ccpDialog_textColor="?attr/colorOnPrimary"
-                        app:ccp_autoDetectCountry="true"
-                        app:ccp_contentColor="?attr/colorPrimary"
-                        app:ccp_showPhoneCode="false" />
-
-                    <EditText
-                        android:id="@+id/et_contact"
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:autofillHints="no"
-                        android:background="@drawable/create_input_decoration"
-                        android:digits="@string/digits_2"
-                        android:hint="@string/hint_contact"
-                        android:imeOptions="actionNext"
-                        android:includeFontPadding="false"
-                        android:inputType="phone"
-                        android:maxLength="11"
-                        android:padding="10dp"
-                        android:singleLine="true"
-                        android:textColor="?attr/colorPrimary"
-                        android:textColorHint="@color/colorChineseSilver1"
-                        android:textSize="8pt" />
-
-                </LinearLayout>
+                <EditText
+                    android:id="@+id/et_contact"
+                    android:layout_width="0dp"
+                    android:layout_height="50dp"
+                    android:layout_marginTop="20dp"
+                    android:autofillHints="no"
+                    android:background="@drawable/create_input_decoration"
+                    android:digits="@string/digits_2"
+                    android:hint="@string/hint_contact"
+                    android:imeOptions="actionNext"
+                    android:includeFontPadding="false"
+                    android:inputType="phone"
+                    android:maxLength="11"
+                    android:padding="10dp"
+                    android:singleLine="true"
+                    android:textColor="?attr/colorPrimary"
+                    android:textColorHint="@color/colorChineseSilver1"
+                    android:textSize="8pt"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/ccp_country"
+                    app:layout_constraintTop_toBottomOf="@+id/et_email" />
 
                 <EditText
                     android:id="@+id/et_password"
@@ -182,7 +175,7 @@
                     android:textSize="8pt"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/linear_contact" />
+                    app:layout_constraintTop_toBottomOf="@id/ccp_country" />
 
                 <EditText
                     android:id="@+id/et_re_password"
@@ -250,41 +243,40 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/tv_agreement" />
 
-                <LinearLayout
+                <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/nav_login"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="20dp"
-                    android:orientation="horizontal"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/btn_register">
 
                     <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:id="@+id/tv"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
                         android:fontFamily="@font/tahoma_regular"
-                        android:gravity="center"
                         android:includeFontPadding="false"
                         android:letterSpacing="0.06"
                         android:text="Already have an account?"
                         android:textColor="?attr/colorOnPrimary"
                         android:textSize="6pt"
-                        android:textStyle="italic" />
+                        android:textStyle="italic"/>
 
                     <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
                         android:fontFamily="@font/tahoma_regular"
-                        android:gravity="center"
                         android:includeFontPadding="false"
                         android:letterSpacing="0.06"
                         android:text="@string/text_sign_in"
                         android:textColor="?attr/colorPrimary"
                         android:textSize="6pt"
-                        android:textStyle="italic" />
+                        android:textStyle="italic"
+                        app:layout_constraintStart_toEndOf="@id/tv"/>
 
-                </LinearLayout>
+                </androidx.constraintlayout.widget.ConstraintLayout>
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -292,34 +284,54 @@
 
     </ScrollView>
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/is_loading"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:alpha="0.9"
-        android:background="?attr/colorSecondary"
         android:clickable="true"
         android:focusable="true"
-        android:gravity="center"
         android:orientation="vertical"
         android:visibility="gone">
 
-        <com.tuyenmonkey.mkloader.MKLoader
-            android:layout_width="70dp"
-            android:layout_height="70dp"
-            app:mk_color="?attr/colorPrimary"
-            app:mk_type="TwinFishesSpinner" />
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:alpha="0.9"
+            android:background="?attr/colorSecondary" />
 
-        <TextView
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="50dp"
-            android:includeFontPadding="false"
-            android:letterSpacing="0.06"
-            android:text="@string/text_signing_up"
-            android:textAllCaps="true"
-            android:textColor="@color/colorChineseSilver" />
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
-    </LinearLayout>
+            <com.tuyenmonkey.mkloader.MKLoader
+                android:id="@+id/mkloader"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:mk_color="?attr/colorPrimary"
+                app:mk_type="TwinFishesSpinner" />
 
-</RelativeLayout>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="50dp"
+                android:includeFontPadding="false"
+                android:letterSpacing="0.06"
+                android:text="@string/text_signing_up"
+                android:textAllCaps="true"
+                android:textColor="@color/colorChineseSilver"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/mkloader" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

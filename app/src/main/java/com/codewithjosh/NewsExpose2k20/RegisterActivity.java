@@ -16,6 +16,7 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
@@ -46,9 +47,9 @@ public class RegisterActivity extends AppCompatActivity {
     final String s_secret = "6LdmXHcfAAAAAHMLaAuerAsSOZDkNJYA-gJ8Fma3";
     Button btn_register;
     CheckBox cb_recaptcha;
+    ConstraintLayout nav_login, is_loading;
     CountryCodePicker ccp_country;
     EditText et_user_name, et_email, et_contact, et_password, et_re_password;
-    LinearLayout nav_login, is_loading;
     int i_version_code;
     String s_user_name, s_email, s_contact, s_password, s_re_password;
     FirebaseAuth firebaseAuth;
