@@ -126,38 +126,54 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/is_loading"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:alpha="0.9"
-        android:background="?attr/colorSecondary"
+        android:layout_height="match_parent"
         android:clickable="true"
         android:focusable="true"
-        android:gravity="center"
         android:orientation="vertical"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/appbar">
+        android:visibility="gone">
 
-        <com.tuyenmonkey.mkloader.MKLoader
-            android:layout_width="70dp"
-            android:layout_height="70dp"
-            app:mk_color="?attr/colorPrimary"
-            app:mk_type="TwinFishesSpinner" />
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:alpha="0.9"
+            android:background="?attr/colorSecondary" />
 
-        <TextView
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="50dp"
-            android:includeFontPadding="false"
-            android:letterSpacing="0.06"
-            android:text="@string/text_loading"
-            android:textAllCaps="true"
-            android:textColor="@color/colorChineseSilver" />
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
-    </LinearLayout>
+            <com.tuyenmonkey.mkloader.MKLoader
+                android:id="@+id/mkloader"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:mk_color="?attr/colorPrimary"
+                app:mk_type="TwinFishesSpinner" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="50dp"
+                android:includeFontPadding="false"
+                android:letterSpacing="0.06"
+                android:text="@string/text_loading"
+                android:textAllCaps="true"
+                android:textColor="@color/colorChineseSilver"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/mkloader" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

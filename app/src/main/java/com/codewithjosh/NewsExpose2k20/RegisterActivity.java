@@ -12,10 +12,10 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
@@ -46,9 +46,9 @@ public class RegisterActivity extends AppCompatActivity {
     final String s_secret = "6LdmXHcfAAAAAHMLaAuerAsSOZDkNJYA-gJ8Fma3";
     Button btn_register;
     CheckBox cb_recaptcha;
+    ConstraintLayout nav_login, is_loading;
     CountryCodePicker ccp_country;
     EditText et_user_name, et_email, et_contact, et_password, et_re_password;
-    LinearLayout nav_login, is_loading;
     int i_version_code;
     String s_user_name, s_email, s_contact, s_password, s_re_password;
     FirebaseAuth firebaseAuth;
@@ -377,10 +377,10 @@ public class RegisterActivity extends AppCompatActivity {
                                     .set(user)
                                     .addOnSuccessListener(unused -> {
 
-                                        final UserModel _user = new UserModel();
-                                        _user.setUser_email(s_email);
-                                        _user.setUser_name(s_user_name);
-                                        _user.setUser_version_code(i_version_code);
+                                        final HashMap<String, Object> _user = new HashMap<>();
+                                        _user.put("user_email", s_email);
+                                        _user.put("user_name", s_user_name);
+                                        _user.put("user_version_code", i_version_code);
 
                                         setUserRealtime(s_user_id, _user);
                                     })
@@ -394,7 +394,7 @@ public class RegisterActivity extends AppCompatActivity {
 
     }
 
-    private void setUserRealtime(final String s_user_id, final UserModel user) {
+    private void setUserRealtime(final String s_user_id, final HashMap<String, Object> user) {
 
         databaseRef = firebaseDatabase
                 .getReference("Users")

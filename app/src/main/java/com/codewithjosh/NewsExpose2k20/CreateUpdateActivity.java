@@ -12,11 +12,11 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.codewithjosh.NewsExpose2k20.models.UpdateModel;
 import com.codewithjosh.NewsExpose2k20.models.UserModel;
@@ -33,10 +33,10 @@ import java.util.Random;
 
 public class CreateUpdateActivity extends AppCompatActivity {
 
+    ConstraintLayout is_loading;
     EditText et_update_content;
     ImageButton btn_back, btn_create_update;
     ImageView iv_update_image;
-    LinearLayout is_loading;
 
     String s_user_id, s_update_content, s_update_image;
 

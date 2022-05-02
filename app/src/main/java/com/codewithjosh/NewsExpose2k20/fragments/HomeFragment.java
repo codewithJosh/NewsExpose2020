@@ -7,9 +7,9 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -17,7 +17,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.codewithjosh.NewsExpose2k20.R;
 import com.codewithjosh.NewsExpose2k20.adapters.UpdateAdapter;
 import com.codewithjosh.NewsExpose2k20.models.UpdateModel;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -27,11 +26,10 @@ import java.util.List;
 
 public class HomeFragment extends Fragment {
 
-    LinearLayout is_loading;
+    ConstraintLayout is_loading;
     RecyclerView recycler_updates;
     TextView tv_status;
 
-    FirebaseDatabase firebaseDatabase;
     FirebaseFirestore firebaseFirestore;
 
     Context context;
@@ -43,8 +41,9 @@ public class HomeFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_home, container, false);
 
+        firebaseFirestore = FirebaseFirestore.getInstance();
+
         initViews(view);
-        initInstance();
         loadUpdates();
 
         return view;
@@ -65,13 +64,6 @@ public class HomeFragment extends Fragment {
         updateList = new ArrayList<>();
         updateAdapter = new UpdateAdapter(getContext(), updateList);
         recycler_updates.setAdapter(updateAdapter);
-
-    }
-
-    private void initInstance() {
-
-        firebaseDatabase = FirebaseDatabase.getInstance();
-        firebaseFirestore = FirebaseFirestore.getInstance();
 
     }
 

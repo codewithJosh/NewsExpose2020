@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -9,7 +9,11 @@
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -19,7 +23,6 @@
                 android:id="@+id/iv_logo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="55dp"
                 android:src="@drawable/ic_logo"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -57,7 +60,6 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="20dp"
                 android:padding="15dp"
-                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tv_app_name">
@@ -107,7 +109,7 @@
                     android:background="@drawable/create_input_decoration"
                     android:digits="@string/digits_3"
                     android:hint="@string/hint_password"
-                    android:imeOptions="actionNext"
+                    android:imeOptions="actionDone"
                     android:includeFontPadding="false"
                     android:inputType="textPassword"
                     android:maxLength="32"
@@ -137,7 +139,7 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/et_password" />
 
-                <LinearLayout
+                <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/nav_register"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -148,8 +150,9 @@
                     app:layout_constraintTop_toBottomOf="@id/btn_login">
 
                     <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:id="@+id/tv"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
                         android:fontFamily="@font/tahoma_regular"
                         android:gravity="center"
                         android:includeFontPadding="false"
@@ -160,8 +163,8 @@
                         android:textStyle="italic" />
 
                     <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
                         android:fontFamily="@font/tahoma_regular"
                         android:gravity="center"
                         android:includeFontPadding="false"
@@ -169,9 +172,10 @@
                         android:text="@string/text_sign_up"
                         android:textColor="?attr/colorPrimary"
                         android:textSize="6pt"
-                        android:textStyle="italic" />
+                        android:textStyle="italic"
+                        app:layout_constraintStart_toEndOf="@id/tv" />
 
-                </LinearLayout>
+                </androidx.constraintlayout.widget.ConstraintLayout>
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -179,34 +183,54 @@
 
     </ScrollView>
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/is_loading"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:alpha="0.9"
-        android:background="?attr/colorSecondary"
         android:clickable="true"
         android:focusable="true"
-        android:gravity="center"
         android:orientation="vertical"
         android:visibility="gone">
 
-        <com.tuyenmonkey.mkloader.MKLoader
-            android:layout_width="70dp"
-            android:layout_height="70dp"
-            app:mk_color="?attr/colorPrimary"
-            app:mk_type="TwinFishesSpinner" />
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:alpha="0.9"
+            android:background="?attr/colorSecondary" />
 
-        <TextView
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="50dp"
-            android:includeFontPadding="false"
-            android:letterSpacing="0.06"
-            android:text="@string/text_logging_in"
-            android:textAllCaps="true"
-            android:textColor="@color/colorChineseSilver" />
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
-    </LinearLayout>
+            <com.tuyenmonkey.mkloader.MKLoader
+                android:id="@+id/mkloader"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:mk_color="?attr/colorPrimary"
+                app:mk_type="TwinFishesSpinner" />
 
-</RelativeLayout>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="50dp"
+                android:includeFontPadding="false"
+                android:letterSpacing="0.06"
+                android:text="@string/text_logging_in"
+                android:textAllCaps="true"
+                android:textColor="@color/colorChineseSilver"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/mkloader" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
