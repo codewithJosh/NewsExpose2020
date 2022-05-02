@@ -5,71 +5,71 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="?attr/colorSecondary"
-    android:orientation="vertical"
     tools:context=".HomeActivity">
 
-    <LinearLayout
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appbar"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_height="75dp"
+        android:background="@drawable/create_linear_appbar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
-        <com.google.android.material.appbar.AppBarLayout
+        <androidx.appcompat.widget.Toolbar
             android:layout_width="match_parent"
-            android:layout_height="75dp"
-            android:background="@drawable/create_linear_appbar">
+            android:layout_height="match_parent">
 
-            <androidx.appcompat.widget.Toolbar
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
+            <ImageButton
+                android:id="@+id/nav_home"
+                android:layout_width="51dp"
+                android:layout_height="42dp"
+                android:background="@drawable/ic_logo" />
 
-                <ImageButton
-                    android:id="@+id/nav_home"
-                    android:layout_width="51dp"
-                    android:layout_height="42dp"
-                    android:background="@drawable/ic_logo" />
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center">
 
-                <LinearLayout
+                <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center">
+                    android:fontFamily="@font/tahoma_regular"
+                    android:text="News"
+                    android:textColor="?attr/colorOnPrimary"
+                    android:textSize="8pt" />
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="@font/tahoma_regular"
-                        android:text="News"
-                        android:textColor="?attr/colorOnPrimary"
-                        android:textSize="8pt" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="@font/tahoma_regular"
-                        android:text="exposé"
-                        android:textAllCaps="true"
-                        android:textColor="?attr/colorPrimary"
-                        android:textSize="8pt" />
-
-                </LinearLayout>
-
-                <ImageButton
-                    android:id="@+id/nav_profile"
+                <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="end"
-                    android:layout_marginEnd="18dp"
-                    android:background="@drawable/ic_drawer" />
+                    android:fontFamily="@font/tahoma_regular"
+                    android:text="exposé"
+                    android:textAllCaps="true"
+                    android:textColor="?attr/colorPrimary"
+                    android:textSize="8pt" />
 
-            </androidx.appcompat.widget.Toolbar>
+            </LinearLayout>
 
-        </com.google.android.material.appbar.AppBarLayout>
+            <ImageButton
+                android:id="@+id/nav_profile"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:layout_marginEnd="18dp"
+                android:background="@drawable/ic_drawer" />
 
-        <FrameLayout
-            android:id="@+id/frame"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+        </androidx.appcompat.widget.Toolbar>
 
-    </LinearLayout>
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <FrameLayout
+        android:id="@+id/frame"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/appbar" />
 
     <ImageButton
         android:id="@+id/nav_create_update"
@@ -78,7 +78,7 @@
         android:layout_marginEnd="25dp"
         android:layout_marginBottom="25dp"
         android:background="@drawable/ic_create_update"
-        android:visibility="gone"
+        android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
