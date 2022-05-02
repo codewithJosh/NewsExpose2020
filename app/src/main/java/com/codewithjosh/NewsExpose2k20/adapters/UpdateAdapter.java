@@ -148,7 +148,7 @@ public class UpdateAdapter extends RecyclerView.Adapter<UpdateAdapter.ViewHolder
 
     }
 
-    private void onSeen(ImageButton btn_seen, String s_update_id) {
+    private void onSeen(final ImageButton btn_seen, final String s_update_id) {
 
         final UserModel user = new UserModel();
 

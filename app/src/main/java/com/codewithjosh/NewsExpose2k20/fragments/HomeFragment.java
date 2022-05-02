@@ -32,7 +32,6 @@ public class HomeFragment extends Fragment {
     RecyclerView recycler_updates;
     TextView tv_status;
 
-    FirebaseDatabase firebaseDatabase;
     FirebaseFirestore firebaseFirestore;
 
     Context context;
@@ -44,8 +43,9 @@ public class HomeFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_home, container, false);
 
+        firebaseFirestore = FirebaseFirestore.getInstance();
+
         initViews(view);
-        initInstance();
         loadUpdates();
 
         return view;
@@ -66,13 +66,6 @@ public class HomeFragment extends Fragment {
         updateList = new ArrayList<>();
         updateAdapter = new UpdateAdapter(getContext(), updateList);
         recycler_updates.setAdapter(updateAdapter);
-
-    }
-
-    private void initInstance() {
-
-        firebaseDatabase = FirebaseDatabase.getInstance();
-        firebaseFirestore = FirebaseFirestore.getInstance();
 
     }
 
