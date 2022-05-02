@@ -52,7 +52,7 @@ public class HomeActivity extends AppCompatActivity {
 
     }
 
-    private void checkUserAdmin(String s_user_id) {
+    private void checkUserAdmin(final String s_user_id) {
 
         firebaseFirestore
                 .collection("Users")
@@ -102,11 +102,21 @@ public class HomeActivity extends AppCompatActivity {
 
         nav_create_update.setOnClickListener(v -> onCreateUpdate());
 
-        nav_home.setOnClickListener(v -> getSupportFragmentManager().beginTransaction().replace(R.id.frame,
-                new HomeFragment()).commit());
+        nav_home.setOnClickListener(v -> {
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.frame, new HomeFragment())
+                    .commit();
+            onStart();
+        });
 
-        nav_profile.setOnClickListener(v -> getSupportFragmentManager().beginTransaction().replace(R.id.frame,
-                new ProfileFragment()).commit());
+        nav_profile.setOnClickListener(v -> {
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.frame, new ProfileFragment())
+                    .commit();
+            nav_create_update.setVisibility(View.GONE);
+        });
 
         getSupportFragmentManager().beginTransaction().replace(R.id.frame,
                 new HomeFragment()).commit();
