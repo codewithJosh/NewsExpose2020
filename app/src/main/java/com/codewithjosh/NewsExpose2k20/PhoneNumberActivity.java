@@ -17,6 +17,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
@@ -43,10 +44,10 @@ public class PhoneNumberActivity extends AppCompatActivity {
     final String s_site = "6LdmXHcfAAAAAAGqu4EGoI8Ihrk8IB78NdM2cKFJ";
     final String s_secret = "6LdmXHcfAAAAAHMLaAuerAsSOZDkNJYA-gJ8Fma3";
     Button btn_next;
+    ConstraintLayout is_loading;
     CheckBox cb_recaptcha;
     CountryCodePicker ccp_country;
     EditText et_contact;
-    LinearLayout is_loading;
     TextView btn_skip;
     String s_user_id, s_user_contact, s_contact;
     FirebaseFirestore firebaseFirestore;
