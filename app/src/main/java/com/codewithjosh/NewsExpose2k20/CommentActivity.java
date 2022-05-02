@@ -18,6 +18,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -39,10 +40,10 @@ import java.util.List;
 public class CommentActivity extends AppCompatActivity {
 
     Button btn_comment;
+    ConstraintLayout is_loading;
     EditText et_comment_content;
     ImageButton btn_back;
     ImageView iv_user_image;
-    LinearLayout is_loading;
     RecyclerView recycler_comments;
     TextView tv_status;
 
