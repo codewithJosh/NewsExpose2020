@@ -50,13 +50,12 @@ public class MainActivity extends AppCompatActivity {
                     .document(s_version_code)
                     .addSnapshotListener((value, error) -> {
 
-                        if (value != null) {
+                        if (value != null)
 
                             if (value.exists()) checkCurrentAuthState();
 
                             else onUnsupported();
 
-                        }
                     });
         } else Toast.makeText(this, "No Internet Connection!", Toast.LENGTH_LONG).show();
 
@@ -94,10 +93,9 @@ public class MainActivity extends AppCompatActivity {
                             final String s_user_contact = user.getUser_contact();
                             final boolean user_is_verified = user.isUser_is_verified();
 
-                            if (user_is_verified) {
-
+                            if (user_is_verified)
                                 startActivity(new Intent(this, HomeActivity.class));
-                            } else {
+                            else {
 
                                 editor.putString("s_user_contact", s_user_contact);
                                 editor.apply();
