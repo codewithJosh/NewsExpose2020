@@ -131,7 +131,7 @@
                     app:ccp_contentColor="?attr/colorPrimary"
                     app:ccp_showPhoneCode="false"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/et_email"/>
+                    app:layout_constraintTop_toBottomOf="@id/et_email" />
 
                 <EditText
                     android:id="@+id/et_contact"
@@ -262,7 +262,7 @@
                         android:text="Already have an account?"
                         android:textColor="?attr/colorOnPrimary"
                         android:textSize="6pt"
-                        android:textStyle="italic"/>
+                        android:textStyle="italic" />
 
                     <TextView
                         android:layout_width="match_parent"
@@ -274,7 +274,7 @@
                         android:textColor="?attr/colorPrimary"
                         android:textSize="6pt"
                         android:textStyle="italic"
-                        app:layout_constraintStart_toEndOf="@id/tv"/>
+                        app:layout_constraintStart_toEndOf="@id/tv" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 

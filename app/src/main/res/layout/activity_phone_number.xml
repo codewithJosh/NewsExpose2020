@@ -90,7 +90,7 @@
                     app:ccp_contentColor="?attr/colorPrimary"
                     app:ccp_showPhoneCode="false"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/tv_verification"/>
+                    app:layout_constraintTop_toBottomOf="@id/tv_verification" />
 
                 <EditText
                     android:id="@+id/et_contact"
