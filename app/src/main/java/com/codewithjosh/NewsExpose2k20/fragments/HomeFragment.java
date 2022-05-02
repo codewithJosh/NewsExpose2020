@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -27,7 +28,7 @@ import java.util.List;
 
 public class HomeFragment extends Fragment {
 
-    LinearLayout is_loading;
+    ConstraintLayout is_loading;
     RecyclerView recycler_updates;
     TextView tv_status;
 
