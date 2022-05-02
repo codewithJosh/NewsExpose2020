@@ -78,6 +78,9 @@ public class MainActivity extends AppCompatActivity {
 
             final String s_user_id = firebaseUser.getUid();
 
+            editor.putString("s_user_id", s_user_id);
+            editor.apply();
+
             firebaseFirestore
                     .collection("Users")
                     .document(s_user_id)
