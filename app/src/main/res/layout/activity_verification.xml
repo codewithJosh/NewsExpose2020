@@ -11,13 +11,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:padding="20dp">
 
             <ImageView
                 android:id="@+id/iv_logo"
@@ -40,8 +39,8 @@
                 android:textAllCaps="true"
                 android:textColor="@color/color_willpower_orange"
                 android:textSize="6pt"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="@id/iv_logo"
+                app:layout_constraintStart_toStartOf="@id/iv_logo"
                 app:layout_constraintTop_toBottomOf="@id/iv_logo" />
 
             <View
@@ -58,10 +57,8 @@
                 android:id="@+id/constraint_verification"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="20dp"
+                android:layout_marginTop="20dp"
                 android:padding="15dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tv_app_name">
 
                 <TextView
@@ -79,7 +76,7 @@
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <EditText
-                    android:id="@+id/et_otp"
+                    android:id="@+id/et_o_t_p"
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
                     android:layout_marginTop="20dp"
@@ -98,8 +95,6 @@
                     android:textColor="?attr/colorPrimary"
                     android:textColorHint="@color/color_chinese_silver_1"
                     android:textSize="8pt"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/tv_verification" />
 
                 <TextView
@@ -112,8 +107,7 @@
                     android:text="We sent you an SMS code after verification on this number."
                     android:textColor="@color/color_spanish_gray"
                     android:textSize="6pt"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/et_otp" />
+                    app:layout_constraintTop_toBottomOf="@id/et_o_t_p" />
 
                 <Button
                     android:id="@+id/btn_submit"
@@ -128,8 +122,6 @@
                     android:text="@string/text_button_submit"
                     android:textAllCaps="true"
                     android:textColor="?attr/colorOnPrimary"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/tv_agreement" />
 
                 <androidx.constraintlayout.widget.ConstraintLayout

@@ -63,7 +63,7 @@ public class VerificationActivity extends AppCompatActivity {
     private void initViews() {
 
         btn_submit = findViewById(R.id.btn_submit);
-        et_otp = findViewById(R.id.et_otp);
+        et_otp = findViewById(R.id.et_o_t_p);
         btn_resend = findViewById(R.id.btn_resend);
         is_loading = findViewById(R.id.is_loading);
         tv_resend = findViewById(R.id.tv_resend);
