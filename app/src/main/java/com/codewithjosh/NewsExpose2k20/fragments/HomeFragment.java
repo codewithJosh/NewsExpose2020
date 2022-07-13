@@ -26,24 +26,22 @@ import java.util.List;
 
 public class HomeFragment extends Fragment {
 
-    ConstraintLayout is_loading;
-    RecyclerView recycler_updates;
-    TextView tv_status;
-
+    ConstraintLayout isLoading;
+    RecyclerView recyclerUpdates;
+    TextView tvStatus;
     FirebaseFirestore firebaseFirestore;
-
     Context context;
     private UpdateAdapter updateAdapter;
-    private List<UpdateModel> updateList;
+    private List<UpdateModel> updates;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_home, container, false);
 
-        firebaseFirestore = FirebaseFirestore.getInstance();
-
         initViews(view);
+        initInstances();
         loadUpdates();
 
         return view;
@@ -52,35 +50,51 @@ public class HomeFragment extends Fragment {
 
     private void initViews(final View view) {
 
-        is_loading = view.findViewById(R.id.is_loading);
-        recycler_updates = view.findViewById(R.id.recycler_updates);
-        tv_status = view.findViewById(R.id.tv_status);
+        isLoading = view.findViewById(R.id.is_loading);
+        recyclerUpdates = view.findViewById(R.id.recycler_updates);
+        tvStatus = view.findViewById(R.id.tv_status);
 
-        recycler_updates.setHasFixedSize(true);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
+        initRecyclerView();
+
+        updates = new ArrayList<>();
+        updateAdapter = new UpdateAdapter(getContext(), updates);
+        recyclerUpdates.setAdapter(updateAdapter);
+
+    }
+
+    private void initRecyclerView()
+    {
+
+        final LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context);
         linearLayoutManager.setReverseLayout(true);
         linearLayoutManager.setStackFromEnd(true);
-        recycler_updates.setLayoutManager(linearLayoutManager);
-        updateList = new ArrayList<>();
-        updateAdapter = new UpdateAdapter(getContext(), updateList);
-        recycler_updates.setAdapter(updateAdapter);
+        recyclerUpdates.setLayoutManager(linearLayoutManager);
+        recyclerUpdates.setHasFixedSize(true);
+
+    }
+
+    private void initInstances()
+    {
+
+        firebaseFirestore = FirebaseFirestore.getInstance();
 
     }
 
     private void loadUpdates() {
 
-        is_loading.setVisibility(View.VISIBLE);
+        isLoading.setVisibility(View.VISIBLE);
 
         firebaseFirestore
                 .collection("Updates")
                 .orderBy("update_timestamp")
-                .addSnapshotListener((value, error) -> {
+                .addSnapshotListener((value, error) ->
+                {
 
                     if (value != null)
 
                         if (validate(value)) onLoadUpdates(value);
 
-                        else is_loading.setVisibility(View.GONE);
+                        else isLoading.setVisibility(View.GONE);
 
                 });
 
@@ -88,15 +102,16 @@ public class HomeFragment extends Fragment {
 
     private void onLoadUpdates(final QuerySnapshot value) {
 
-        is_loading.setVisibility(View.GONE);
-        tv_status.setText("");
+        isLoading.setVisibility(View.GONE);
+        tvStatus.setText("");
 
-        updateList.clear();
-        for (QueryDocumentSnapshot snapshot : value) {
+        updates.clear();
+        for (QueryDocumentSnapshot snapshot : value)
+        {
 
             final UpdateModel update = snapshot.toObject(UpdateModel.class);
+            updates.add(update);
 
-            updateList.add(update);
         }
         updateAdapter.notifyDataSetChanged();
 
@@ -104,9 +119,9 @@ public class HomeFragment extends Fragment {
 
     private boolean validate(final QuerySnapshot value) {
 
-        if (!isConnected()) tv_status.setText(R.string.text_status_disconnected);
+        if (!isConnected()) tvStatus.setText(R.string.text_status_disconnected);
 
-        else if (value.isEmpty()) tv_status.setText(R.string.text_status_empty);
+        else if (value.isEmpty()) tvStatus.setText(R.string.text_status_empty);
 
         else return true;
 
@@ -118,8 +133,8 @@ public class HomeFragment extends Fragment {
 
         if (getContext() != null) context = getContext();
 
-        ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+        final ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        final NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
         return networkInfo != null && networkInfo.isConnectedOrConnecting();
 
     }
