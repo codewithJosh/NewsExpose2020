@@ -41,145 +41,148 @@ import java.util.Map;
 
 public class RegisterActivity extends AppCompatActivity {
 
-    final String s_tag = RegisterActivity.class.getSimpleName();
-    final String s_site = "6LdmXHcfAAAAAAGqu4EGoI8Ihrk8IB78NdM2cKFJ";
-    final String s_secret = "6LdmXHcfAAAAAHMLaAuerAsSOZDkNJYA-gJ8Fma3";
-    Button btn_register;
-    CheckBox cb_recaptcha;
-    ConstraintLayout nav_login, is_loading;
-    CountryCodePicker ccp_country;
-    EditText et_user_name, et_email, et_contact, et_password, et_re_password;
-    int i_version_code;
-    String s_user_name, s_email, s_contact, s_password, s_re_password;
+    final String tag = RegisterActivity.class.getSimpleName();
+    final String site = "6LdmXHcfAAAAAAGqu4EGoI8Ihrk8IB78NdM2cKFJ";
+    final String secret = "6LdmXHcfAAAAAHMLaAuerAsSOZDkNJYA-gJ8Fma3";
+    Button btnRegister;
+    CheckBox cbRecaptcha;
+    ConstraintLayout navLogin;
+    ConstraintLayout isLoading;
+    CountryCodePicker ccpCountry;
+    EditText etUserName;
+    EditText etEmail;
+    EditText etContact;
+    EditText etPassword;
+    EditText etRePassword;
+    int versionCode;
+    String userName;
+    String email;
+    String contact;
+    String password;
+    String rePassword;
     FirebaseAuth firebaseAuth;
     FirebaseDatabase firebaseDatabase;
     FirebaseFirestore firebaseFirestore;
     FirebaseUser firebaseUser;
-
     DatabaseReference databaseRef;
     DocumentReference documentRef;
-
-    RequestQueue req;
-    SharedPreferences sharedPref;
+    RequestQueue requestQueue;
     SharedPreferences.Editor editor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
-        i_version_code = BuildConfig.VERSION_CODE;
+        versionCode = BuildConfig.VERSION_CODE;
 
-        initView();
-        initInstance();
+        initViews();
+        initInstances();
         initSharedPref();
         build();
 
     }
 
-    private void initView() {
+    private void initViews() {
 
-        btn_register = findViewById(R.id.btn_register);
-        cb_recaptcha = findViewById(R.id.cb_recaptcha);
-        ccp_country = findViewById(R.id.ccp_country);
-        et_user_name = findViewById(R.id.et_user_name);
-        et_email = findViewById(R.id.et_email);
-        et_contact = findViewById(R.id.et_contact);
-        et_password = findViewById(R.id.et_password);
-        et_re_password = findViewById(R.id.et_re_password);
-        nav_login = findViewById(R.id.nav_login);
-        is_loading = findViewById(R.id.is_loading);
+        btnRegister = findViewById(R.id.btn_register);
+        cbRecaptcha = findViewById(R.id.cb_recaptcha);
+        ccpCountry = findViewById(R.id.ccp_country);
+        etUserName = findViewById(R.id.et_user_name);
+        etEmail = findViewById(R.id.et_email);
+        etContact = findViewById(R.id.et_contact);
+        etPassword = findViewById(R.id.et_password);
+        etRePassword = findViewById(R.id.et_re_password);
+        navLogin = findViewById(R.id.nav_login);
+        isLoading = findViewById(R.id.is_loading);
 
     }
 
-    private void initInstance() {
+    private void initInstances() {
 
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseDatabase = FirebaseDatabase.getInstance();
         firebaseFirestore = FirebaseFirestore.getInstance();
-        req = Volley.newRequestQueue(getApplicationContext());
+        requestQueue = Volley.newRequestQueue(this);
 
     }
 
     private void initSharedPref() {
 
-        sharedPref = getSharedPreferences("user", MODE_PRIVATE);
-        editor = sharedPref.edit();
+        editor = getSharedPreferences("user", MODE_PRIVATE).edit();
 
     }
 
     private void build() {
 
-        nav_login.setOnClickListener(v -> {
+        navLogin.setOnClickListener(v ->
+        {
+
             startActivity(new Intent(this, LoginActivity.class));
             finish();
+
         });
 
-        btn_register.setOnClickListener(v -> {
+        btnRegister.setOnClickListener(v ->
+        {
 
             getString();
 
             if (validate(v)) checkUserName();
 
-            else is_loading.setVisibility(View.GONE);
+            else isLoading.setVisibility(View.GONE);
 
         });
 
-        ccp_country.registerCarrierNumberEditText(et_contact);
+        ccpCountry.registerCarrierNumberEditText(etContact);
 
-        cb_recaptcha.setOnClickListener(v -> onRecaptcha());
+        cbRecaptcha.setOnClickListener(v -> onRecaptcha());
 
     }
 
     private void getString() {
 
-        s_user_name = et_user_name.getText().toString().toLowerCase();
-        s_email = et_email.getText().toString().toLowerCase();
-        s_contact = et_contact.getText().toString();
-        s_password = et_password.getText().toString();
-        s_re_password = et_re_password.getText().toString();
+        userName = etUserName.getText().toString().toLowerCase();
+        email = etEmail.getText().toString().toLowerCase();
+        contact = etContact.getText().toString();
+        password = etPassword.getText().toString();
+        rePassword = etRePassword.getText().toString();
 
     }
 
     private boolean validate(final View v) {
 
-        is_loading.setVisibility(View.VISIBLE);
-        InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(CommentActivity.INPUT_METHOD_SERVICE);
+        isLoading.setVisibility(View.VISIBLE);
+        final InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         inputMethodManager.hideSoftInputFromWindow(v.getWindowToken(), 0);
         if (getCurrentFocus() != null) getCurrentFocus().clearFocus();
 
-        if (!isConnected())
-            Toast.makeText(this, "No Internet Connection!", Toast.LENGTH_SHORT).show();
+        if (!isConnected()) Toast.makeText(this, "No Internet Connection!", Toast.LENGTH_SHORT).show();
 
-        else if (s_user_name.isEmpty() || s_email.isEmpty()
-                || s_password.isEmpty() || s_re_password.isEmpty())
+        else if (userName.isEmpty()
+                || email.isEmpty()
+                || password.isEmpty()
+                || rePassword.isEmpty())
             Toast.makeText(this, "All fields are required!", Toast.LENGTH_SHORT).show();
 
-        else if (!s_user_name.startsWith("@ne."))
-            Toast.makeText(this, "Username must starts with @ne.", Toast.LENGTH_SHORT).show();
+        else if (!userName.startsWith("@ne.")) Toast.makeText(this, "Username must starts with @ne.", Toast.LENGTH_SHORT).show();
 
-        else if (s_user_name.length() < 5)
-            Toast.makeText(this, "Provide a valid Username", Toast.LENGTH_SHORT).show();
+        else if (userName.length() < 5) Toast.makeText(this, "Provide a valid Username", Toast.LENGTH_SHORT).show();
 
-        else if (!s_email.endsWith("@ne.xpose"))
-            Toast.makeText(this, "Email must end with @ne.xpose", Toast.LENGTH_SHORT).show();
+        else if (!email.endsWith("@ne.xpose")) Toast.makeText(this, "Email must end with @ne.xpose", Toast.LENGTH_SHORT).show();
 
-        else if (s_email.length() < 10)
-            Toast.makeText(this, "Provide a valid Email Address", Toast.LENGTH_SHORT).show();
+        else if (email.length() < 10) Toast.makeText(this, "Provide a valid Email Address", Toast.LENGTH_SHORT).show();
 
-        else if (!s_contact.startsWith("09"))
-            Toast.makeText(this, "Provide a valid Phone Number", Toast.LENGTH_SHORT).show();
+        else if (!contact.startsWith("09")) Toast.makeText(this, "Provide a valid Phone Number", Toast.LENGTH_SHORT).show();
 
-        else if (s_contact.length() < 11)
-            Toast.makeText(this, "Phone Number must be at least 11 digits", Toast.LENGTH_SHORT).show();
+        else if (contact.length() < 11) Toast.makeText(this, "Phone Number must be at least 11 digits", Toast.LENGTH_SHORT).show();
 
-        else if (s_password.length() < 6)
-            Toast.makeText(this, "Password must be at least 6 characters", Toast.LENGTH_SHORT).show();
+        else if (password.length() < 6) Toast.makeText(this, "Password must be at least 6 characters", Toast.LENGTH_SHORT).show();
 
-        else if (!s_password.equals(s_re_password))
-            Toast.makeText(this, "Password doesn't match", Toast.LENGTH_SHORT).show();
+        else if (!password.equals(rePassword)) Toast.makeText(this, "Password doesn't match", Toast.LENGTH_SHORT).show();
 
-        else if (!cb_recaptcha.isChecked()) onRecaptcha();
+        else if (!cbRecaptcha.isChecked()) onRecaptcha();
 
         else return true;
 
@@ -189,19 +192,19 @@ public class RegisterActivity extends AppCompatActivity {
 
     private boolean isConnected() {
 
-        ConnectivityManager connectivityManager = (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+        final ConnectivityManager connectivityManager = (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE);
+        final NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
         return networkInfo != null && networkInfo.isConnectedOrConnecting();
 
     }
 
     private void onRecaptcha() {
 
-        cb_recaptcha.setChecked(false);
+        cbRecaptcha.setChecked(false);
 
         SafetyNet
                 .getClient(this)
-                .verifyWithRecaptcha(s_site)
+                .verifyWithRecaptcha(site)
                 .addOnSuccessListener(recaptchaTokenResponse -> {
 
                     if (recaptchaTokenResponse.getTokenResult() != null
@@ -209,62 +212,78 @@ public class RegisterActivity extends AppCompatActivity {
 
                         handleSiteVerify(recaptchaTokenResponse.getTokenResult());
 
-                }).addOnFailureListener(e -> {
+                }).addOnFailureListener(e ->
+                {
 
-            if (e instanceof ApiException) {
+                    if (e instanceof ApiException)
+                    {
 
-                ApiException apiException = (ApiException) e;
-                Log.d(s_tag, "Error message: " + CommonStatusCodes.getStatusCodeString(apiException.getStatusCode()));
-            } else Log.d(s_tag, "Unknown type of error: " + e.getMessage());
+                        final ApiException apiException = (ApiException) e;
+                        Log.d(tag, "Error message: " + CommonStatusCodes.getStatusCodeString(apiException.getStatusCode()));
 
-        });
+                    }
+                    else Log.d(tag, "Unknown type of error: " + e.getMessage());
+
+                });
 
     }
 
-    protected void handleSiteVerify(final String s_tokenResult) {
+    protected void handleSiteVerify(final String tokenResult) {
 
-        final String s_url = "https://www.google.com/recaptcha/api/siteverify";
+        final String url = "https://www.google.com/recaptcha/api/siteverify";
 
-        StringRequest sr_req = new StringRequest(Request.Method.POST, s_url,
-                response -> {
+        final StringRequest stringRequest = new StringRequest(
+                Request.Method.POST,
+                url,
+                response ->
+                {
 
-                    try {
+                    try
+                    {
 
-                        JSONObject jsonObject = new JSONObject(response);
+                        final JSONObject jsonObject = new JSONObject(response);
 
-                        if (jsonObject.getBoolean("success")) {
+                        if (jsonObject.getBoolean("success"))
+                        {
 
-                            cb_recaptcha.setTextColor(getResources().getColor(R.color.color_fulvous));
-                            cb_recaptcha.setChecked(true);
-                            cb_recaptcha.setClickable(false);
-                        } else
-                            Toast.makeText(getApplicationContext(), jsonObject.getString("error-codes"), Toast.LENGTH_LONG).show();
+                            cbRecaptcha.setTextColor(getColor(R.color.color_fulvous));
+                            cbRecaptcha.setChecked(true);
+                            cbRecaptcha.setClickable(false);
 
-                    } catch (Exception ex) {
+                        }
+                        else Toast.makeText(this, jsonObject.getString("error-codes"), Toast.LENGTH_LONG).show();
 
-                        Log.d(s_tag, "JSON exception: " + ex.getMessage());
                     }
+                    catch (Exception ex)
+                    {
+
+                        Log.d(tag, "JSON exception: " + ex.getMessage());
+
+                    }
+
                 },
-                error -> Log.d(s_tag, "Error message: " + error.getMessage())) {
+                error -> Log.d(tag, "Error message: " + error.getMessage())) {
 
             @Override
-            protected Map<String, String> getParams() {
+            protected Map<String, String> getParams()
+            {
 
-                Map<String, String> params = new HashMap<>();
-                params.put("secret", s_secret);
-                params.put("response", s_tokenResult);
+                final Map<String, String> params = new HashMap<>();
+                params.put("secret", secret);
+                params.put("response", tokenResult);
                 return params;
 
             }
+
         };
 
-        sr_req.setRetryPolicy(new DefaultRetryPolicy(
+        stringRequest.setRetryPolicy(new DefaultRetryPolicy(
                 50000,
                 DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
                 DefaultRetryPolicy.DEFAULT_BACKOFF_MULT
         ));
 
-        req.add(sr_req);
+        requestQueue.add(stringRequest);
 
     }
 
@@ -272,17 +291,21 @@ public class RegisterActivity extends AppCompatActivity {
 
         firebaseFirestore
                 .collection("Users")
-                .whereEqualTo("user_name", s_user_name)
+                .whereEqualTo("user_name", userName)
                 .get()
-                .addOnSuccessListener(queryDocumentSnapshots -> {
+                .addOnSuccessListener(queryDocumentSnapshots ->
+                {
 
                     if (queryDocumentSnapshots != null)
 
-                        if (!queryDocumentSnapshots.isEmpty()) {
+                        if (queryDocumentSnapshots.isEmpty()) checkContact();
 
-                            is_loading.setVisibility(View.GONE);
+                        else {
+
+                            isLoading.setVisibility(View.GONE);
                             Toast.makeText(this, "Username is Already Taken!", Toast.LENGTH_SHORT).show();
-                        } else checkContact();
+
+                        }
 
                 });
 
@@ -292,17 +315,22 @@ public class RegisterActivity extends AppCompatActivity {
 
         firebaseFirestore
                 .collection("Users")
-                .whereEqualTo("user_contact", s_contact)
+                .whereEqualTo("user_contact", contact)
                 .get()
-                .addOnSuccessListener(queryDocumentSnapshots -> {
+                .addOnSuccessListener(queryDocumentSnapshots ->
+                {
 
                     if (queryDocumentSnapshots != null)
 
-                        if (!queryDocumentSnapshots.isEmpty()) {
+                        if (queryDocumentSnapshots.isEmpty()) onRegister();
 
-                            is_loading.setVisibility(View.GONE);
+                        else
+                        {
+
+                            isLoading.setVisibility(View.GONE);
                             Toast.makeText(this, "Phone Number is Unavailable!", Toast.LENGTH_SHORT).show();
-                        } else onRegister();
+
+                        }
 
                 });
 
@@ -311,118 +339,124 @@ public class RegisterActivity extends AppCompatActivity {
     private void onRegister() {
 
         firebaseAuth
-                .createUserWithEmailAndPassword(s_email, s_password)
-                .addOnSuccessListener(authResult -> {
+                .createUserWithEmailAndPassword(email, password)
+                .addOnSuccessListener(authResult ->
+                {
 
                     firebaseUser = firebaseAuth.getCurrentUser();
 
-                    if (firebaseUser != null) {
+                    if (firebaseUser != null)
+                    {
 
-                        final String s_user_bio = "";
-                        final String s_user_id = firebaseUser.getUid();
-                        final String s_user_image = "https://firebasestorage.googleapis.com/v0/b/news-expose-2k20.appspot.com/o/20220415_Res%2FDefaultUserImage.png?alt=media&token=4cdbad29-194b-410e-80fa-feb641a06998";
-                        final boolean user_is_admin = false;
-                        final boolean user_is_verified = false;
+                        final String userBio = "";
+                        final String userId = firebaseUser.getUid();
+                        final String userImage = "https://firebasestorage.googleapis.com/v0/b/news-expose-2k20.appspot.com/o/Res_20220713%2Fdefault_user_image.png?alt=media&token=73111bc4-aa84-41f3-b4fe-8f5ef206dd2a";
+                        final boolean userIsAdmin = false;
+                        final boolean userIsVerified = false;
 
                         final UserModel user = new UserModel(
-                                s_user_bio,
-                                s_contact,
-                                s_email,
-                                s_user_id,
-                                s_user_image,
-                                user_is_admin,
-                                user_is_verified,
-                                s_user_name,
-                                i_version_code
+                                userBio,
+                                contact,
+                                email,
+                                userId,
+                                userImage,
+                                userIsAdmin,
+                                userIsVerified,
+                                userName,
+                                versionCode
                         );
 
-                        setUserFirestore(s_user_id, user);
+                        setUserFirestore(userId, user);
 
                     }
 
-                }).addOnFailureListener(e -> {
+                }).addOnFailureListener(e ->
+                {
 
-            is_loading.setVisibility(View.GONE);
+                    isLoading.setVisibility(View.GONE);
 
-            final String s_e = e.toString().toLowerCase();
+                    final String _e = e.toString().toLowerCase();
 
-            if (s_e.contains("the email address is already in use by another account"))
-                Toast.makeText(this, "Email is Already Exist!", Toast.LENGTH_SHORT).show();
+                    if (_e.contains("the email address is already in use by another account")) Toast.makeText(this, "Email is Already Exist!", Toast.LENGTH_SHORT).show();
 
-            else if (s_e.contains("a network error (such as timeout, interrupted connection or unreachable host) has occurred"))
-                Toast.makeText(this, "No Internet Connection!", Toast.LENGTH_SHORT).show();
+                    else if (_e.contains("a network error (such as timeout, interrupted connection or unreachable host) has occurred")) Toast.makeText(this, "No Internet Connection!", Toast.LENGTH_SHORT).show();
 
-            else
-                Toast.makeText(this, "Please Contact Your Service Provider", Toast.LENGTH_SHORT).show();
+                    else Toast.makeText(this, "Please Contact Your Service Provider", Toast.LENGTH_SHORT).show();
 
-        });
-
-    }
-
-    private void setUserFirestore(final String s_user_id, final UserModel user) {
-
-        documentRef = firebaseFirestore
-                .collection("Users")
-                .document(s_user_id);
-
-        documentRef
-                .get()
-                .addOnSuccessListener(documentSnapshot -> {
-
-                    if (documentSnapshot != null)
-
-                        if (!documentSnapshot.exists()) {
-
-                            documentRef
-                                    .set(user)
-                                    .addOnSuccessListener(unused -> {
-
-                                        final HashMap<String, Object> _user = new HashMap<>();
-                                        _user.put("user_email", s_email);
-                                        _user.put("user_name", s_user_name);
-                                        _user.put("user_version_code", i_version_code);
-
-                                        setUserRealtime(s_user_id, _user);
-                                    })
-                                    .addOnFailureListener(e -> {
-
-                                        is_loading.setVisibility(View.GONE);
-                                        Toast.makeText(this, "Please Contact Your Service Provider", Toast.LENGTH_SHORT).show();
-                                    });
-                        }
                 });
 
     }
 
-    private void setUserRealtime(final String s_user_id, final HashMap<String, Object> user) {
+    private void setUserFirestore(final String userId, final UserModel user) {
+
+        documentRef = firebaseFirestore
+                .collection("Users")
+                .document(userId);
+
+        documentRef
+                .get()
+                .addOnSuccessListener(documentSnapshot ->
+                {
+
+                    if (documentSnapshot != null && !documentSnapshot.exists())
+
+                        documentRef
+                                .set(user)
+                                .addOnSuccessListener(unused ->
+                                {
+
+                                    final HashMap<String, Object> _user = new HashMap<>();
+                                    _user.put("user_email", email);
+                                    _user.put("user_name", userName);
+                                    _user.put("user_version_code", versionCode);
+
+                                    setUserRealtime(userId, _user);
+
+                                })
+                                .addOnFailureListener(e ->
+                                {
+
+                                    isLoading.setVisibility(View.GONE);
+                                    Toast.makeText(this, "Please Contact Your Service Provider", Toast.LENGTH_SHORT).show();
+
+                                });
+
+                });
+
+    }
+
+    private void setUserRealtime(final String userId, final HashMap<String, Object> user) {
 
         databaseRef = firebaseDatabase
                 .getReference("Users")
-                .child(s_user_id);
+                .child(userId);
 
         databaseRef
                 .get()
-                .addOnSuccessListener(documentSnapshot -> {
+                .addOnSuccessListener(documentSnapshot ->
+                {
 
-                    if (documentSnapshot != null)
+                    if (documentSnapshot != null && !documentSnapshot.exists())
 
-                        if (!documentSnapshot.exists()) {
+                        databaseRef
+                                .setValue(user)
+                                .addOnSuccessListener(unused ->
+                                {
 
-                            databaseRef
-                                    .setValue(user)
-                                    .addOnSuccessListener(unused -> {
+                                    editor.putString("user_contact", ccpCountry.getFullNumberWithPlus());
+                                    editor.apply();
+                                    startActivity(new Intent(this, VerificationActivity.class));
+                                    finish();
 
-                                        editor.putString("s_user_contact", ccp_country.getFullNumberWithPlus());
-                                        editor.apply();
-                                        startActivity(new Intent(this, VerificationActivity.class));
-                                        finish();
-                                    })
-                                    .addOnFailureListener(e -> {
+                                })
+                                .addOnFailureListener(e ->
+                                {
 
-                                        is_loading.setVisibility(View.GONE);
-                                        Toast.makeText(this, "Please Contact Your Service Provider", Toast.LENGTH_SHORT).show();
-                                    });
-                        }
+                                    isLoading.setVisibility(View.GONE);
+                                    Toast.makeText(this, "Please Contact Your Service Provider", Toast.LENGTH_SHORT).show();
+
+                                });
+
                 });
 
     }
