@@ -11,13 +11,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:padding="20dp">
 
             <ImageView
                 android:id="@+id/iv_logo"
@@ -40,8 +39,8 @@
                 android:textAllCaps="true"
                 android:textColor="@color/color_willpower_orange"
                 android:textSize="6pt"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="@id/iv_logo"
+                app:layout_constraintStart_toStartOf="@id/iv_logo"
                 app:layout_constraintTop_toBottomOf="@id/iv_logo" />
 
             <View
@@ -58,10 +57,8 @@
                 android:id="@+id/constraint_login"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="20dp"
+                android:layout_marginTop="20dp"
                 android:padding="15dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tv_app_name">
 
                 <TextView
@@ -96,8 +93,6 @@
                     android:textColor="?attr/colorPrimary"
                     android:textColorHint="@color/color_chinese_silver_1"
                     android:textSize="8pt"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/tv_sign_in" />
 
                 <EditText
@@ -118,8 +113,6 @@
                     android:textColor="?attr/colorPrimary"
                     android:textColorHint="@color/color_chinese_silver_1"
                     android:textSize="8pt"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/et_user_name" />
 
                 <Button
@@ -135,8 +128,6 @@
                     android:text="@string/text_sign_in"
                     android:textAllCaps="true"
                     android:textColor="?attr/colorOnPrimary"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/et_password" />
 
                 <androidx.constraintlayout.widget.ConstraintLayout
