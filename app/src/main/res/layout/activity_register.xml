@@ -13,13 +13,14 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:padding="20dp">
 
             <ImageView
                 android:id="@+id/iv_logo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="55dp"
+                android:layout_marginTop="35dp"
                 android:src="@drawable/ic_logo"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -36,8 +37,8 @@
                 android:textAllCaps="true"
                 android:textColor="@color/color_willpower_orange"
                 android:textSize="6pt"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="@id/iv_logo"
+                app:layout_constraintStart_toStartOf="@id/iv_logo"
                 app:layout_constraintTop_toBottomOf="@id/iv_logo" />
 
             <View
@@ -54,11 +55,8 @@
                 android:id="@+id/constraint_register"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="20dp"
+                android:layout_marginTop="20dp"
                 android:padding="15dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tv_app_name">
 
                 <TextView
@@ -93,8 +91,6 @@
                     android:textColor="?attr/colorPrimary"
                     android:textColorHint="@color/color_chinese_silver_1"
                     android:textSize="8pt"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/tv_sign_up" />
 
                 <EditText
@@ -115,8 +111,6 @@
                     android:textColor="?attr/colorPrimary"
                     android:textColorHint="@color/color_chinese_silver_1"
                     android:textSize="8pt"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/et_user_name" />
 
                 <com.hbb20.CountryCodePicker
@@ -152,8 +146,8 @@
                     android:textColorHint="@color/color_chinese_silver_1"
                     android:textSize="8pt"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/ccp_country"
-                    app:layout_constraintTop_toBottomOf="@+id/et_email" />
+                    app:layout_constraintStart_toEndOf="@id/ccp_country"
+                    app:layout_constraintTop_toBottomOf="@id/et_email" />
 
                 <EditText
                     android:id="@+id/et_password"
@@ -173,8 +167,6 @@
                     android:textColor="?attr/colorPrimary"
                     android:textColorHint="@color/color_chinese_silver_1"
                     android:textSize="8pt"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/ccp_country" />
 
                 <EditText
@@ -195,8 +187,6 @@
                     android:textColor="?attr/colorPrimary"
                     android:textColorHint="@color/color_chinese_silver_1"
                     android:textSize="8pt"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/et_password" />
 
                 <CheckBox
@@ -223,7 +213,6 @@
                     android:text="By clicking Sign Up, you agree to our Terms, Data Policy and Cookies Policy. You may receive SMS Notifications from us and can opt out any time."
                     android:textColor="@color/color_spanish_gray"
                     android:textSize="6pt"
-                    app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/cb_recaptcha" />
 
                 <Button
@@ -239,8 +228,6 @@
                     android:text="@string/text_sign_up"
                     android:textAllCaps="true"
                     android:textColor="?attr/colorOnPrimary"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/tv_agreement" />
 
                 <androidx.constraintlayout.widget.ConstraintLayout
