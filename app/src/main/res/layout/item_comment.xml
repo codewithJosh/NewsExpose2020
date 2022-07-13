@@ -40,7 +40,7 @@
             android:id="@+id/tv_subtitle"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:textColor="@color/colorSpanishGray"
+            android:textColor="@color/color_spanish_gray"
             android:textSize="14sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

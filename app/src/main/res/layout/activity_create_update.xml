@@ -113,7 +113,7 @@
                     android:minLines="1"
                     android:padding="10dp"
                     android:textColor="?attr/colorPrimary"
-                    android:textColorHint="@color/colorChineseSilver1" />
+                    android:textColorHint="@color/color_chinese_silver_1" />
 
             </LinearLayout>
 
@@ -162,7 +162,7 @@
                 android:letterSpacing="0.06"
                 android:text="@string/text_uploading"
                 android:textAllCaps="true"
-                android:textColor="@color/colorChineseSilver"
+                android:textColor="@color/color_chinese_silver"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/mkloader" />

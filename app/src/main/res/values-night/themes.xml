@@ -2,15 +2,15 @@
     <!-- Base application theme. -->
     <style name="Theme.NewsExposé" parent="Theme.MaterialComponents.Light.NoActionBar.Bridge">
         <!-- Primary brand color. -->
-        <item name="colorPrimary">@color/colorFulvous</item>
+        <item name="colorPrimary">@color/color_fulvous</item>
         <item name="colorPrimaryVariant">?attr/colorPrimary</item>
-        <item name="colorOnPrimary">@color/colorWhite_FF</item>
+        <item name="colorOnPrimary">@color/color_white_ff</item>
         <!-- Secondary brand color. -->
-        <item name="colorSecondary">@color/colorChineseBlack</item>
+        <item name="colorSecondary">@color/color_chinese_black</item>
         <item name="colorSecondaryVariant">?attr/colorSecondary</item>
-        <item name="colorOnSecondary">@color/colorBlack_FF</item>
+        <item name="colorOnSecondary">@color/color_black_ff</item>
         <!-- Status bar color. -->
-        <item name="android:statusBarColor" tools:targetApi="l">?attr/colorSecondaryVariant</item>
+        <item name="android:statusBarColor">?attr/colorSecondaryVariant</item>
         <!-- Customize your theme here. -->
     </style>
 </resources>

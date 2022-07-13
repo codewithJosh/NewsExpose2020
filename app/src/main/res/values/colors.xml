@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorBlack_FF">#FF000000</color>
-    <color name="colorWhite_FF">#FFFFFFFF</color>
-    <color name="colorFulvous">#E57608</color>
-    <color name="colorChineseBlack">#151515</color>
-    <color name="colorChineseSilver">#CACACA</color>
-    <color name="colorPumpkin">#F77814</color>
-    <color name="colorWillpowerOrange">#FC5700</color>
-    <color name="colorPhilippineOrange">#FF7000</color>
-    <color name="colorPrincetonOrange">#F2822A</color>
-    <color name="colorChineseSilver1">#CCCCCC</color>
-    <color name="colorSpanishGray">#999999</color>
-    <color name="colorRaisinBlack">#262626</color>
-    <color name="colorEerieBlack">#1D1D1D</color>
+    <color name="color_black_ff">#FF000000</color>
+    <color name="color_white_ff">#FFFFFFFF</color>
+    <color name="color_fulvous">#E57608</color>
+    <color name="color_chinese_black">#151515</color>
+    <color name="color_chinese_silver">#CACACA</color>
+    <color name="color_pumpkin">#F77814</color>
+    <color name="color_willpower_orange">#FC5700</color>
+    <color name="color_philippine_orange">#FF7000</color>
+    <color name="color_princeton_orange">#F2822A</color>
+    <color name="color_chinese_silver_1">#CCCCCC</color>
+    <color name="color_spanish_gray">#999999</color>
+    <color name="color_raisin_black">#262626</color>
+    <color name="color_eerie_black">#1D1D1D</color>
 </resources>

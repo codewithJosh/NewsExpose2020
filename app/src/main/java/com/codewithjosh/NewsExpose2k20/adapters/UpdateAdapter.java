@@ -247,11 +247,11 @@ public class UpdateAdapter extends RecyclerView.Adapter<UpdateAdapter.ViewHolder
 
                             btn_seen.setImageResource(R.drawable.ic_seened);
                             btn_seen.setTag("");
-                            tv_seen_count.setTextColor(context.getColor(R.color.colorFulvous));
+                            tv_seen_count.setTextColor(context.getColor(R.color.color_fulvous));
                         } else {
                             btn_seen.setTag("seen");
                             btn_seen.setImageResource(R.drawable.ic_seen);
-                            tv_seen_count.setTextColor(context.getColor(R.color.colorWhite_FF));
+                            tv_seen_count.setTextColor(context.getColor(R.color.color_white_ff));
                         }
                 });
 

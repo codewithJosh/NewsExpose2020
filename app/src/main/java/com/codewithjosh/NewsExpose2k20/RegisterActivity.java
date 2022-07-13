@@ -234,7 +234,7 @@ public class RegisterActivity extends AppCompatActivity {
 
                         if (jsonObject.getBoolean("success")) {
 
-                            cb_recaptcha.setTextColor(getResources().getColor(R.color.colorFulvous));
+                            cb_recaptcha.setTextColor(getResources().getColor(R.color.color_fulvous));
                             cb_recaptcha.setChecked(true);
                             cb_recaptcha.setClickable(false);
                         } else

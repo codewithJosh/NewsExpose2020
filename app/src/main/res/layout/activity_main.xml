@@ -36,7 +36,7 @@
         android:letterSpacing="0.6"
         android:text="@string/app_name"
         android:textAllCaps="true"
-        android:textColor="@color/colorWillpowerOrange"
+        android:textColor="@color/color_willpower_orange"
         android:textSize="6pt"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -165,7 +165,7 @@
                 android:letterSpacing="0.06"
                 android:text="@string/text_checking_for_updates"
                 android:textAllCaps="true"
-                android:textColor="@color/colorChineseSilver"
+                android:textColor="@color/color_chinese_silver"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/mkloader" />
