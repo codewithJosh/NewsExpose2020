@@ -39,32 +39,32 @@ import java.util.Map;
 
 public class PhoneNumberActivity extends AppCompatActivity {
 
-    final String s_tag = RegisterActivity.class.getSimpleName();
-    final String s_site = "6LdmXHcfAAAAAAGqu4EGoI8Ihrk8IB78NdM2cKFJ";
-    final String s_secret = "6LdmXHcfAAAAAHMLaAuerAsSOZDkNJYA-gJ8Fma3";
-    Button btn_next;
-    ConstraintLayout is_loading;
-    CheckBox cb_recaptcha;
-    CountryCodePicker ccp_country;
-    EditText et_contact;
-    TextView btn_skip;
-    String s_user_id, s_user_contact, s_contact;
+    final String tag = RegisterActivity.class.getSimpleName();
+    final String site = "6LdmXHcfAAAAAAGqu4EGoI8Ihrk8IB78NdM2cKFJ";
+    final String secret = "6LdmXHcfAAAAAHMLaAuerAsSOZDkNJYA-gJ8Fma3";
+    Button btnNext;
+    ConstraintLayout isLoading;
+    CheckBox cbRecaptcha;
+    CountryCodePicker ccpCountry;
+    EditText etContact;
+    TextView btnSkip;
+    String userId;
+    String userContact;
+    String contact;
     FirebaseFirestore firebaseFirestore;
-
-    RequestQueue req;
-
+    DocumentReference documentRef;
+    RequestQueue requestQueue;
     SharedPreferences sharedPref;
     SharedPreferences.Editor editor;
 
-    DocumentReference documentRef;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_phone_number);
 
         initViews();
-        initInstance();
+        initInstances();
         initSharedPref();
         load();
         build();
@@ -73,19 +73,19 @@ public class PhoneNumberActivity extends AppCompatActivity {
 
     private void initViews() {
 
-        btn_next = findViewById(R.id.btn_next);
-        cb_recaptcha = findViewById(R.id.cb_recaptcha);
-        ccp_country = findViewById(R.id.ccp_country);
-        et_contact = findViewById(R.id.et_contact);
-        is_loading = findViewById(R.id.is_loading);
-        btn_skip = findViewById(R.id.btn_skip);
+        btnNext = findViewById(R.id.btn_next);
+        cbRecaptcha = findViewById(R.id.cb_recaptcha);
+        ccpCountry = findViewById(R.id.ccp_country);
+        etContact = findViewById(R.id.et_contact);
+        isLoading = findViewById(R.id.is_loading);
+        btnSkip = findViewById(R.id.btn_skip);
 
     }
 
-    private void initInstance() {
+    private void initInstances() {
 
         firebaseFirestore = FirebaseFirestore.getInstance();
-        req = Volley.newRequestQueue(getApplicationContext());
+        requestQueue = Volley.newRequestQueue(this);
 
     }
 
@@ -98,55 +98,63 @@ public class PhoneNumberActivity extends AppCompatActivity {
 
     private void load() {
 
-        s_user_id = sharedPref.getString("s_user_id", String.valueOf(MODE_PRIVATE));
-        s_user_contact = sharedPref.getString("s_user_contact", String.valueOf(MODE_PRIVATE));
-        et_contact.setText(s_user_contact);
+        userId = sharedPref.getString("user_id", String.valueOf(MODE_PRIVATE));
+        userContact = sharedPref.getString("user_contact", String.valueOf(MODE_PRIVATE));
+        etContact.setText(userContact);
 
     }
 
     private void build() {
 
-        btn_skip.setOnClickListener(v -> {
+        btnSkip.setOnClickListener(v ->
+        {
 
-            is_loading.setVisibility(View.VISIBLE);
+            isLoading.setVisibility(View.VISIBLE);
 
-            if (isConnected()) {
+            if (isConnected())
+            {
 
-                final String s_user_contact = "";
-                final boolean user_is_verified = true;
+                final String userContact = "";
+                final boolean userIsVerified = true;
 
                 final HashMap<String, Object> user = new HashMap<>();
-                user.put("user_contact", s_user_contact);
-                user.put("user_is_verified", user_is_verified);
+                user.put("user_contact", userContact);
+                user.put("user_is_verified", userIsVerified);
 
                 updateUser(user);
-            } else {
-                is_loading.setVisibility(View.GONE);
+
+            }
+            else
+            {
+
+                isLoading.setVisibility(View.GONE);
                 Toast.makeText(this, "No Internet Connection!", Toast.LENGTH_SHORT).show();
+
             }
 
         });
 
-        btn_next.setOnClickListener(v -> {
+        btnNext.setOnClickListener(v ->
+        {
 
-            s_contact = et_contact.getText().toString();
+            contact = etContact.getText().toString();
 
             if (validate(v)) checkContact();
 
-            else is_loading.setVisibility(View.GONE);
+            else isLoading.setVisibility(View.GONE);
 
         });
 
-        ccp_country.registerCarrierNumberEditText(et_contact);
+        ccpCountry.registerCarrierNumberEditText(etContact);
 
-        cb_recaptcha.setOnClickListener(v -> onRecaptcha());
+        cbRecaptcha.setOnClickListener(v -> onRecaptcha());
 
     }
 
     private boolean isConnected() {
 
-        ConnectivityManager connectivityManager = (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+        final ConnectivityManager connectivityManager = (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE);
+        final NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
         return networkInfo != null && networkInfo.isConnectedOrConnecting();
 
     }
@@ -155,48 +163,46 @@ public class PhoneNumberActivity extends AppCompatActivity {
 
         documentRef = firebaseFirestore
                 .collection("Users")
-                .document(s_user_id);
+                .document(userId);
 
         documentRef
                 .get()
-                .addOnSuccessListener(documentSnapshot -> {
+                .addOnSuccessListener(documentSnapshot ->
+                {
 
-                    if (documentSnapshot != null)
+                    if (documentSnapshot != null && documentSnapshot.exists())
 
-                        if (documentSnapshot.exists())
+                        documentRef
+                            .update(user)
+                            .addOnSuccessListener(unused ->
+                            {
 
-                            documentRef
-                                    .update(user)
-                                    .addOnSuccessListener(unused -> {
+                                Toast.makeText(this, "Welcome, You've Successfully Login!", Toast.LENGTH_LONG).show();
+                                startActivity(new Intent(this, HomeActivity.class));
+                                finish();
 
-                                        Toast.makeText(this, "Welcome, You've Successfully Login!", Toast.LENGTH_LONG).show();
-                                        startActivity(new Intent(this, HomeActivity.class));
-                                        finish();
-                                    });
+                            });
+
                 });
 
     }
 
     private boolean validate(final View v) {
 
-        is_loading.setVisibility(View.VISIBLE);
-        InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(CommentActivity.INPUT_METHOD_SERVICE);
+        isLoading.setVisibility(View.VISIBLE);
+        final InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         inputMethodManager.hideSoftInputFromWindow(v.getWindowToken(), 0);
         if (getCurrentFocus() != null) getCurrentFocus().clearFocus();
 
-        if (!isConnected())
-            Toast.makeText(this, "No Internet Connection!", Toast.LENGTH_SHORT).show();
+        if (!isConnected()) Toast.makeText(this, "No Internet Connection!", Toast.LENGTH_SHORT).show();
 
-        else if (s_contact.isEmpty())
-            Toast.makeText(this, "Phone Number is required!", Toast.LENGTH_SHORT).show();
+        else if (contact.isEmpty()) Toast.makeText(this, "Phone Number is required!", Toast.LENGTH_SHORT).show();
 
-        else if (!s_contact.startsWith("09"))
-            Toast.makeText(this, "Provide a valid Phone Number", Toast.LENGTH_SHORT).show();
+        else if (!contact.startsWith("09")) Toast.makeText(this, "Provide a valid Phone Number", Toast.LENGTH_SHORT).show();
 
-        else if (s_contact.length() < 11)
-            Toast.makeText(this, "Phone Number must be at least 11 digits", Toast.LENGTH_SHORT).show();
+        else if (contact.length() < 11) Toast.makeText(this, "Phone Number must be at least 11 digits", Toast.LENGTH_SHORT).show();
 
-        else if (!cb_recaptcha.isChecked()) onRecaptcha();
+        else if (!cbRecaptcha.isChecked()) onRecaptcha();
 
         else return true;
 
@@ -206,75 +212,91 @@ public class PhoneNumberActivity extends AppCompatActivity {
 
     private void onRecaptcha() {
 
-        cb_recaptcha.setChecked(false);
+        cbRecaptcha.setChecked(false);
 
         SafetyNet
                 .getClient(this)
-                .verifyWithRecaptcha(s_site)
-                .addOnSuccessListener(recaptchaTokenResponse -> {
+                .verifyWithRecaptcha(site)
+                .addOnSuccessListener(recaptchaTokenResponse ->
+                {
 
                     if (recaptchaTokenResponse.getTokenResult() != null
-                            && !recaptchaTokenResponse.getTokenResult().isEmpty()) {
+                            && !recaptchaTokenResponse.getTokenResult().isEmpty())
 
                         handleSiteVerify(recaptchaTokenResponse.getTokenResult());
+
+                }).addOnFailureListener(e ->
+                {
+
+                    if (e instanceof ApiException)
+                    {
+
+                        final ApiException apiException = (ApiException) e;
+                        Log.d(tag, "Error message: " + CommonStatusCodes.getStatusCodeString(apiException.getStatusCode()));
+
                     }
+                    else Log.d(tag, "Unknown type of error: " + e.getMessage());
 
-                }).addOnFailureListener(e -> {
-
-            if (e instanceof ApiException) {
-
-                ApiException apiException = (ApiException) e;
-                Log.d(s_tag, "Error message: " + CommonStatusCodes.getStatusCodeString(apiException.getStatusCode()));
-            } else Log.d(s_tag, "Unknown type of error: " + e.getMessage());
-
-        });
+                });
 
     }
 
-    protected void handleSiteVerify(final String s_tokenResult) {
+    protected void handleSiteVerify(final String tokenResult) {
 
-        final String s_url = "https://www.google.com/recaptcha/api/siteverify";
+        final String url = "https://www.google.com/recaptcha/api/siteverify";
 
-        StringRequest sr_req = new StringRequest(Request.Method.POST, s_url,
-                response -> {
+        final StringRequest stringRequest = new StringRequest(
+                Request.Method.POST,
+                url,
+                response ->
+                {
 
-                    try {
+                    try
+                    {
 
-                        JSONObject jsonObject = new JSONObject(response);
+                        final JSONObject jsonObject = new JSONObject(response);
 
-                        if (jsonObject.getBoolean("success")) {
+                        if (jsonObject.getBoolean("success"))
+                        {
 
-                            cb_recaptcha.setTextColor(getResources().getColor(R.color.color_fulvous));
-                            cb_recaptcha.setChecked(true);
-                            cb_recaptcha.setClickable(false);
-                        } else
-                            Toast.makeText(getApplicationContext(), jsonObject.getString("error-codes"), Toast.LENGTH_LONG).show();
+                            cbRecaptcha.setTextColor(getColor(R.color.color_fulvous));
+                            cbRecaptcha.setChecked(true);
+                            cbRecaptcha.setClickable(false);
 
-                    } catch (Exception ex) {
+                        }
+                        else Toast.makeText(this, jsonObject.getString("error-codes"), Toast.LENGTH_LONG).show();
 
-                        Log.d(s_tag, "JSON exception: " + ex.getMessage());
                     }
+                    catch (Exception ex)
+                    {
+
+                        Log.d(tag, "JSON exception: " + ex.getMessage());
+
+                    }
+
                 },
-                error -> Log.d(s_tag, "Error message: " + error.getMessage())) {
+                error -> Log.d(tag, "Error message: " + error.getMessage())) {
 
             @Override
-            protected Map<String, String> getParams() {
+            protected Map<String, String> getParams()
+            {
 
-                Map<String, String> params = new HashMap<>();
-                params.put("secret", s_secret);
-                params.put("response", s_tokenResult);
+                final Map<String, String> params = new HashMap<>();
+                params.put("secret", secret);
+                params.put("response", tokenResult);
                 return params;
 
             }
+
         };
 
-        sr_req.setRetryPolicy(new DefaultRetryPolicy(
+        stringRequest.setRetryPolicy(new DefaultRetryPolicy(
                 50000,
                 DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
                 DefaultRetryPolicy.DEFAULT_BACKOFF_MULT
         ));
 
-        req.add(sr_req);
+        requestQueue.add(stringRequest);
 
     }
 
@@ -282,29 +304,37 @@ public class PhoneNumberActivity extends AppCompatActivity {
 
         firebaseFirestore
                 .collection("Users")
-                .whereEqualTo("user_contact", s_contact)
+                .whereEqualTo("user_contact", contact)
                 .get()
-                .addOnSuccessListener(queryDocumentSnapshots -> {
+                .addOnSuccessListener(queryDocumentSnapshots ->
+                {
 
                     final HashMap<String, Object> user = new HashMap<>();
-                    user.put("user_contact", s_contact);
+                    user.put("user_contact", contact);
 
                     if (queryDocumentSnapshots != null)
 
-                        if (!queryDocumentSnapshots.isEmpty())
+                        if (queryDocumentSnapshots.isEmpty()) onNext(user);
 
-                            for (QueryDocumentSnapshot snapshot : queryDocumentSnapshots) {
+                        else
+
+                            for (QueryDocumentSnapshot snapshot : queryDocumentSnapshots)
+                            {
 
                                 final UserModel getUser = snapshot.toObject(UserModel.class);
-                                final String _s_user_id = getUser.getUser_id();
+                                final String _userId = getUser.getUser_id();
 
-                                if (!_s_user_id.equals(s_user_id)) {
+                                if (_userId.equals(userId)) onNext(user);
 
-                                    is_loading.setVisibility(View.GONE);
+                                else
+                                {
+
+                                    isLoading.setVisibility(View.GONE);
                                     Toast.makeText(this, "Phone Number is Unavailable!", Toast.LENGTH_SHORT).show();
-                                } else onNext(user);
+
+                                }
+
                             }
-                        else onNext(user);
 
                 });
 
@@ -314,14 +344,16 @@ public class PhoneNumberActivity extends AppCompatActivity {
 
         firebaseFirestore
                 .collection("Users")
-                .document(s_user_id)
+                .document(userId)
                 .update(user)
-                .addOnSuccessListener(runnable -> {
+                .addOnSuccessListener(runnable ->
+                {
 
-                    editor.putString("s_user_contact", ccp_country.getFullNumberWithPlus());
+                    editor.putString("user_contact", ccpCountry.getFullNumberWithPlus());
                     editor.apply();
                     startActivity(new Intent(this, VerificationActivity.class));
                     finish();
+
                 });
 
     }
