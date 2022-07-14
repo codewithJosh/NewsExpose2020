@@ -66,8 +66,7 @@ public class CommentActivity extends AppCompatActivity {
 
     }
 
-    private void initInstances()
-    {
+    private void initInstances() {
 
         firebaseFirestore = FirebaseFirestore.getInstance();
 
@@ -94,13 +93,11 @@ public class CommentActivity extends AppCompatActivity {
                 .addSnapshotListener((value, error) ->
                 {
 
-                    if (value != null)
-                    {
+                    if (value != null) {
 
                         final UserModel user = value.toObject(UserModel.class);
 
-                        if (user != null)
-                        {
+                        if (user != null) {
 
                             final String userImage = user.getUser_image();
                             Glide.with(this).load(userImage).into(ivUserImage);
@@ -145,8 +142,7 @@ public class CommentActivity extends AppCompatActivity {
 
     }
 
-    private void initRecyclerView()
-    {
+    private void initRecyclerView() {
 
         final LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         linearLayoutManager.setReverseLayout(true);
@@ -165,8 +161,7 @@ public class CommentActivity extends AppCompatActivity {
                 .addSnapshotListener((value, error) ->
                 {
 
-                    if (value != null)
-                    {
+                    if (value != null) {
 
                         if (validate(value)) onLoadComments(value);
 
@@ -204,8 +199,7 @@ public class CommentActivity extends AppCompatActivity {
         tvStatus.setText("");
 
         comments.clear();
-        for (QueryDocumentSnapshot snapshot : value)
-        {
+        for (QueryDocumentSnapshot snapshot : value) {
 
             final CommentModel comment = snapshot.toObject(CommentModel.class);
             comments.add(comment);
@@ -287,8 +281,8 @@ public class CommentActivity extends AppCompatActivity {
             if (value != null && !value.exists())
 
                 documentRef
-                    .set(comment)
-                    .addOnSuccessListener(unused -> etCommentContent.setText(""));
+                        .set(comment)
+                        .addOnSuccessListener(unused -> etCommentContent.setText(""));
 
         });
 

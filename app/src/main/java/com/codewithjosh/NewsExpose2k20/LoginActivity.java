@@ -118,11 +118,14 @@ public class LoginActivity extends AppCompatActivity {
         inputMethodManager.hideSoftInputFromWindow(v.getWindowToken(), 0);
         if (getCurrentFocus() != null) getCurrentFocus().clearFocus();
 
-        if (!isConnected()) Toast.makeText(this, "No Internet Connection!", Toast.LENGTH_SHORT).show();
+        if (!isConnected())
+            Toast.makeText(this, "No Internet Connection!", Toast.LENGTH_SHORT).show();
 
-        else if (userName.isEmpty() || password.isEmpty()) Toast.makeText(this, "All fields are required!", Toast.LENGTH_SHORT).show();
+        else if (userName.isEmpty() || password.isEmpty())
+            Toast.makeText(this, "All fields are required!", Toast.LENGTH_SHORT).show();
 
-        else if (password.length() < 6) Toast.makeText(this, "Password Must be at least 6 characters", Toast.LENGTH_SHORT).show();
+        else if (password.length() < 6)
+            Toast.makeText(this, "Password Must be at least 6 characters", Toast.LENGTH_SHORT).show();
 
         else return true;
 
@@ -151,8 +154,7 @@ public class LoginActivity extends AppCompatActivity {
 
                         firebaseUser = authResult.getUser();
 
-                        if (firebaseUser != null)
-                        {
+                        if (firebaseUser != null) {
 
                             final int userVersionCode = user.getUser_version_code();
                             final String userId = firebaseUser.getUid();
@@ -162,17 +164,14 @@ public class LoginActivity extends AppCompatActivity {
 
                             if (userVersionCode == versionCode) checkCurrentUserVerified(user);
 
-                            else if (userVersionCode > versionCode)
-                            {
+                            else if (userVersionCode > versionCode) {
 
                                 firebaseAuth.signOut();
                                 Toast.makeText(this, "Your account is incompatible to this version!", Toast.LENGTH_LONG).show();
                                 startActivity(new Intent(this, MainActivity.class));
                                 finish();
 
-                            }
-                            else
-                            {
+                            } else {
 
                                 user.setUser_version_code(versionCode);
 
@@ -193,11 +192,14 @@ public class LoginActivity extends AppCompatActivity {
 
                         final String _e = e.toString().toLowerCase();
 
-                        if (_e.contains("the password is invalid or the user does not have a password")) Toast.makeText(this, "Incorrect Password!", Toast.LENGTH_SHORT).show();
+                        if (_e.contains("the password is invalid or the user does not have a password"))
+                            Toast.makeText(this, "Incorrect Password!", Toast.LENGTH_SHORT).show();
 
-                        else if (_e.contains("a network error (such as timeout, interrupted connection or unreachable host) has occurred")) Toast.makeText(this, "No Internet Connection!", Toast.LENGTH_SHORT).show();
+                        else if (_e.contains("a network error (such as timeout, interrupted connection or unreachable host) has occurred"))
+                            Toast.makeText(this, "No Internet Connection!", Toast.LENGTH_SHORT).show();
 
-                        else Toast.makeText(this, "Please Contact Your Service Provider", Toast.LENGTH_SHORT).show();
+                        else
+                            Toast.makeText(this, "Please Contact Your Service Provider", Toast.LENGTH_SHORT).show();
 
                     });
 
@@ -212,12 +214,11 @@ public class LoginActivity extends AppCompatActivity {
                 .addOnSuccessListener(queryDocumentSnapshots ->
                 {
 
-                    if (queryDocumentSnapshots != null)
+                    if (queryDocumentSnapshots != null) {
 
                         if (!queryDocumentSnapshots.isEmpty())
 
-                            for (QueryDocumentSnapshot snapshot : queryDocumentSnapshots)
-                            {
+                            for (QueryDocumentSnapshot snapshot : queryDocumentSnapshots) {
 
                                 final UserModel user = snapshot.toObject(UserModel.class);
                                 onLogin(user);
@@ -225,6 +226,8 @@ public class LoginActivity extends AppCompatActivity {
                             }
 
                         else checkUserNameRealtime();
+
+                    }
 
                 });
 
@@ -236,25 +239,21 @@ public class LoginActivity extends AppCompatActivity {
                 .getReference("Users")
                 .orderByChild("user_name")
                 .equalTo(userName)
-                .addListenerForSingleValueEvent(new ValueEventListener()
-                {
+                .addListenerForSingleValueEvent(new ValueEventListener() {
 
                     @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot)
-                    {
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
 
                         if (snapshot.exists())
 
-                            for (DataSnapshot _snapshot : snapshot.getChildren())
-                            {
+                            for (DataSnapshot _snapshot : snapshot.getChildren()) {
 
                                 final UserModel user = _snapshot.getValue(UserModel.class);
                                 if (user != null) onLogin(user);
 
                             }
 
-                        else
-                        {
+                        else {
 
                             isLoading.setVisibility(View.GONE);
                             Toast.makeText(LoginActivity.this, "User Doesn't Exist!", Toast.LENGTH_SHORT).show();
@@ -264,8 +263,7 @@ public class LoginActivity extends AppCompatActivity {
                     }
 
                     @Override
-                    public void onCancelled(@NonNull DatabaseError error)
-                    {
+                    public void onCancelled(@NonNull DatabaseError error) {
 
                     }
 
@@ -278,15 +276,12 @@ public class LoginActivity extends AppCompatActivity {
         final String userContact = user.getUser_contact();
         final boolean userIsVerified = user.isUser_is_verified();
 
-        if (userIsVerified)
-        {
+        if (userIsVerified) {
 
             Toast.makeText(this, "Welcome, You've Successfully Login!", Toast.LENGTH_LONG).show();
             startActivity(new Intent(this, HomeActivity.class));
 
-        }
-        else
-        {
+        } else {
 
             editor.putString("user_contact", userContact);
             editor.apply();

@@ -62,8 +62,7 @@ public class HomeFragment extends Fragment {
 
     }
 
-    private void initRecyclerView()
-    {
+    private void initRecyclerView() {
 
         final LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context);
         linearLayoutManager.setReverseLayout(true);
@@ -73,8 +72,7 @@ public class HomeFragment extends Fragment {
 
     }
 
-    private void initInstances()
-    {
+    private void initInstances() {
 
         firebaseFirestore = FirebaseFirestore.getInstance();
 
@@ -90,11 +88,13 @@ public class HomeFragment extends Fragment {
                 .addSnapshotListener((value, error) ->
                 {
 
-                    if (value != null)
+                    if (value != null) {
 
                         if (validate(value)) onLoadUpdates(value);
 
                         else isLoading.setVisibility(View.GONE);
+
+                    }
 
                 });
 
@@ -106,8 +106,7 @@ public class HomeFragment extends Fragment {
         tvStatus.setText("");
 
         updates.clear();
-        for (QueryDocumentSnapshot snapshot : value)
-        {
+        for (QueryDocumentSnapshot snapshot : value) {
 
             final UpdateModel update = snapshot.toObject(UpdateModel.class);
             updates.add(update);

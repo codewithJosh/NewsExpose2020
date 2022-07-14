@@ -11,7 +11,6 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
 
 import com.codewithjosh.NewsExpose2k20.fragments.HomeFragment;
 import com.codewithjosh.NewsExpose2k20.fragments.ProfileFragment;
@@ -59,13 +58,11 @@ public class HomeActivity extends AppCompatActivity {
                 .addSnapshotListener((value, error) ->
                 {
 
-                    if (value != null)
-                    {
+                    if (value != null) {
 
                         final UserModel user = value.toObject(UserModel.class);
 
-                        if (user != null)
-                        {
+                        if (user != null) {
 
                             final boolean userIsAdmin = user.isUser_is_admin();
 
@@ -74,16 +71,16 @@ public class HomeActivity extends AppCompatActivity {
                             else navCreateUpdate.setVisibility(View.GONE);
 
                         }
-                        
+
                     }
-                    
+
                 });
 
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
@@ -94,8 +91,8 @@ public class HomeActivity extends AppCompatActivity {
 
     private void initViews() {
 
-        cameraPermission = new String[] { Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE };
-        storagePermission = new String[] { Manifest.permission.WRITE_EXTERNAL_STORAGE };
+        cameraPermission = new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE};
+        storagePermission = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE};
 
         navHome = findViewById(R.id.nav_home);
         navProfile = findViewById(R.id.nav_profile);
@@ -107,28 +104,28 @@ public class HomeActivity extends AppCompatActivity {
 
         navCreateUpdate.setOnClickListener(v -> onCreateUpdate());
 
-        navHome.setOnClickListener(v -> 
+        navHome.setOnClickListener(v ->
         {
-            
+
             getSupportFragmentManager()
                     .beginTransaction()
                     .replace(R.id.frame, new HomeFragment())
                     .commit();
-            
+
             onStart();
-            
+
         });
 
-        navProfile.setOnClickListener(v -> 
+        navProfile.setOnClickListener(v ->
         {
-            
+
             getSupportFragmentManager()
                     .beginTransaction()
                     .replace(R.id.frame, new ProfileFragment())
                     .commit();
-            
+
             navCreateUpdate.setVisibility(View.GONE);
-            
+
         });
 
         getSupportFragmentManager()
@@ -157,56 +154,55 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     private boolean checkStoragePermission() {
-        
+
         return checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) == (PackageManager.PERMISSION_GRANTED);
-        
+
     }
 
     private void requestCameraPermission() {
-        
+
         requestPermissions(cameraPermission, cameraRequest);
-        
+
     }
 
     private void requestStoragePermission() {
-        
+
         requestPermissions(storagePermission, storageRequest);
-        
+
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        
+
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
-        switch (requestCode) 
-        {
+        switch (requestCode) {
 
             case cameraRequest:
 
-                if (grantResults.length > 0) 
-                {
+                if (grantResults.length > 0) {
 
                     final boolean cameraAccepted = grantResults[0] == (PackageManager.PERMISSION_GRANTED);
                     final boolean storageAccepted = grantResults[1] == (PackageManager.PERMISSION_GRANTED);
 
                     if (cameraAccepted && storageAccepted) onCreateUpdate();
 
-                    else Toast.makeText(this, "Please enable camera and storage permission", Toast.LENGTH_SHORT).show();
+                    else
+                        Toast.makeText(this, "Please enable camera and storage permission", Toast.LENGTH_SHORT).show();
 
                 }
                 break;
 
             case storageRequest:
 
-                if (grantResults.length > 0) 
-                {
+                if (grantResults.length > 0) {
 
                     final boolean storageAccepted = grantResults[0] == (PackageManager.PERMISSION_GRANTED);
 
                     if (storageAccepted) onCreateUpdate();
 
-                    else Toast.makeText(this, "Please enable storage permission", Toast.LENGTH_SHORT).show();
+                    else
+                        Toast.makeText(this, "Please enable storage permission", Toast.LENGTH_SHORT).show();
 
                 }
                 break;

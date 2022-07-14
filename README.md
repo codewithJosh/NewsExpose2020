@@ -9,12 +9,14 @@
 ## FEATURES:sparkles:
 
 ### MAIN FEATURES
+
 - Login and Register
 - Create an Update (Admin only)
 - Realtime React and Comment on Update
 - User Profile (Coming Soon)
 
 ### SECURITY FEATURES
+
 - Google reCAPTCHA (Completely Automated Public Turing test to tell Computers and Humans Apart)
 - Google Firebase Phone Number Authentication
 

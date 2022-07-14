@@ -97,14 +97,12 @@ public class UpdateAdapter extends RecyclerView.Adapter<UpdateAdapter.ViewHolder
 
         loadUser(civUserImage, tvUserBio, tvSubtitle, updateUserId, updateTimestamp);
 
-        if (!updateContent.isEmpty())
-        {
+        if (!updateContent.isEmpty()) {
 
             tvUpdateContent.setVisibility(View.VISIBLE);
             tvUpdateContent.setText(update.getUpdate_content());
 
-        }
-        else tvUpdateContent.setVisibility(View.GONE);
+        } else tvUpdateContent.setVisibility(View.GONE);
 
         Glide.with(context).load(updateImage).into(ivUpdateImage);
 
@@ -135,11 +133,9 @@ public class UpdateAdapter extends RecyclerView.Adapter<UpdateAdapter.ViewHolder
 
         });
 
-        ivUpdateImage.setOnTouchListener(new View.OnTouchListener()
-        {
+        ivUpdateImage.setOnTouchListener(new View.OnTouchListener() {
 
-            private GestureDetector gestureDetector = new GestureDetector(context, new GestureDetector.SimpleOnGestureListener()
-            {
+            private GestureDetector gestureDetector = new GestureDetector(context, new GestureDetector.SimpleOnGestureListener() {
 
                 @Override
                 public boolean onDoubleTap(MotionEvent e) {
@@ -214,13 +210,11 @@ public class UpdateAdapter extends RecyclerView.Adapter<UpdateAdapter.ViewHolder
                 .addSnapshotListener((value, error) ->
                 {
 
-                    if (value != null && value.exists())
-                    {
+                    if (value != null && value.exists()) {
 
                         final UserModel user = value.toObject(UserModel.class);
 
-                        if (user != null)
-                        {
+                        if (user != null) {
 
                             final String userImage = user.getUser_image();
                             final String userBio = user.getUser_bio();
@@ -287,19 +281,15 @@ public class UpdateAdapter extends RecyclerView.Adapter<UpdateAdapter.ViewHolder
                 .addSnapshotListener((value, error) ->
                 {
 
-                    if (value != null)
-                    {
+                    if (value != null) {
 
-                        if (value.exists())
-                        {
+                        if (value.exists()) {
 
                             btnSeen.setImageResource(R.drawable.ic_seened);
                             btnSeen.setTag("");
                             tvSeenCount.setTextColor(context.getColor(R.color.color_fulvous));
 
-                        }
-                        else
-                        {
+                        } else {
 
                             btnSeen.setTag("seen");
                             btnSeen.setImageResource(R.drawable.ic_seen);
@@ -319,8 +309,7 @@ public class UpdateAdapter extends RecyclerView.Adapter<UpdateAdapter.ViewHolder
                 .addSnapshotListener((value, error) ->
                 {
 
-                    if (value != null)
-                    {
+                    if (value != null) {
 
                         final String seenCount = String.valueOf(value.size());
                         tvSeenCount.setText(seenCount);
@@ -337,8 +326,7 @@ public class UpdateAdapter extends RecyclerView.Adapter<UpdateAdapter.ViewHolder
                 .addSnapshotListener((value, error) ->
                 {
 
-                    if (value != null)
-                    {
+                    if (value != null) {
 
                         final String commentCount = String.valueOf(value.size());
                         tvCommentCount.setText(commentCount);

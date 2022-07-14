@@ -75,8 +75,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
 
     }
 
-    private void initInstances()
-    {
+    private void initInstances() {
 
         firebaseFirestore = FirebaseFirestore.getInstance();
 
@@ -90,13 +89,11 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
                 .addSnapshotListener((value, error) ->
                 {
 
-                    if (value != null && value.exists())
-                    {
+                    if (value != null && value.exists()) {
 
                         final UserModel user = value.toObject(UserModel.class);
 
-                        if (user != null)
-                        {
+                        if (user != null) {
 
                             final String userImage = user.getUser_image();
                             final String userBio = user.getUser_bio();

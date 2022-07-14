@@ -76,13 +76,11 @@ public class CreateUpdateActivity extends AppCompatActivity {
                 .addSnapshotListener((value, error) ->
                 {
 
-                    if (value != null)
-                    {
+                    if (value != null) {
 
                         final UserModel user = value.toObject(UserModel.class);
 
-                        if (user != null)
-                        {
+                        if (user != null) {
 
                             final String userBio = user.getUser_bio();
 
@@ -145,8 +143,7 @@ public class CreateUpdateActivity extends AppCompatActivity {
             updateContent = etUpdateContent.getText().toString().trim();
             if (isConnected() && uri != null) onCreateUpdate();
 
-            else
-            {
+            else {
 
                 isLoading.setVisibility(View.GONE);
                 Toast.makeText(this, "No Internet Connection!", Toast.LENGTH_SHORT).show();
@@ -174,8 +171,7 @@ public class CreateUpdateActivity extends AppCompatActivity {
         final Random ran = new Random();
         final String fileExtension = getFileExtension(uri);
 
-        if (fileExtension != null)
-        {
+        if (fileExtension != null) {
 
             final int _fileExtension = fileExtension.lastIndexOf(".");
 
@@ -241,14 +237,14 @@ public class CreateUpdateActivity extends AppCompatActivity {
             if (value != null && !value.exists())
 
                 documentRef
-                    .set(update)
-                    .addOnSuccessListener(unused ->
-                    {
+                        .set(update)
+                        .addOnSuccessListener(unused ->
+                        {
 
-                        isLoading.setVisibility(View.GONE);
-                        onBackPressed();
+                            isLoading.setVisibility(View.GONE);
+                            onBackPressed();
 
-                    });
+                        });
 
         });
 
@@ -266,16 +262,14 @@ public class CreateUpdateActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE && resultCode == RESULT_OK)
-        {
+        if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE && resultCode == RESULT_OK) {
 
             final CropImage.ActivityResult result = CropImage.getActivityResult(data);
 
             if (result != null) uri = result.getUri();
             ivUpdateImage.setImageURI(uri);
 
-        }
-        else onBackPressed();
+        } else onBackPressed();
 
     }
 

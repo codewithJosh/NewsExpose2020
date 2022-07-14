@@ -111,8 +111,7 @@ public class PhoneNumberActivity extends AppCompatActivity {
 
             isLoading.setVisibility(View.VISIBLE);
 
-            if (isConnected())
-            {
+            if (isConnected()) {
 
                 final String userContact = "";
                 final boolean userIsVerified = true;
@@ -123,9 +122,7 @@ public class PhoneNumberActivity extends AppCompatActivity {
 
                 updateUser(user);
 
-            }
-            else
-            {
+            } else {
 
                 isLoading.setVisibility(View.GONE);
                 Toast.makeText(this, "No Internet Connection!", Toast.LENGTH_SHORT).show();
@@ -173,15 +170,15 @@ public class PhoneNumberActivity extends AppCompatActivity {
                     if (documentSnapshot != null && documentSnapshot.exists())
 
                         documentRef
-                            .update(user)
-                            .addOnSuccessListener(unused ->
-                            {
+                                .update(user)
+                                .addOnSuccessListener(unused ->
+                                {
 
-                                Toast.makeText(this, "Welcome, You've Successfully Login!", Toast.LENGTH_LONG).show();
-                                startActivity(new Intent(this, HomeActivity.class));
-                                finish();
+                                    Toast.makeText(this, "Welcome, You've Successfully Login!", Toast.LENGTH_LONG).show();
+                                    startActivity(new Intent(this, HomeActivity.class));
+                                    finish();
 
-                            });
+                                });
 
                 });
 
@@ -194,13 +191,17 @@ public class PhoneNumberActivity extends AppCompatActivity {
         inputMethodManager.hideSoftInputFromWindow(v.getWindowToken(), 0);
         if (getCurrentFocus() != null) getCurrentFocus().clearFocus();
 
-        if (!isConnected()) Toast.makeText(this, "No Internet Connection!", Toast.LENGTH_SHORT).show();
+        if (!isConnected())
+            Toast.makeText(this, "No Internet Connection!", Toast.LENGTH_SHORT).show();
 
-        else if (contact.isEmpty()) Toast.makeText(this, "Phone Number is required!", Toast.LENGTH_SHORT).show();
+        else if (contact.isEmpty())
+            Toast.makeText(this, "Phone Number is required!", Toast.LENGTH_SHORT).show();
 
-        else if (!contact.startsWith("09")) Toast.makeText(this, "Provide a valid Phone Number", Toast.LENGTH_SHORT).show();
+        else if (!contact.startsWith("09"))
+            Toast.makeText(this, "Provide a valid Phone Number", Toast.LENGTH_SHORT).show();
 
-        else if (contact.length() < 11) Toast.makeText(this, "Phone Number must be at least 11 digits", Toast.LENGTH_SHORT).show();
+        else if (contact.length() < 11)
+            Toast.makeText(this, "Phone Number must be at least 11 digits", Toast.LENGTH_SHORT).show();
 
         else if (!cbRecaptcha.isChecked()) onRecaptcha();
 
@@ -228,14 +229,12 @@ public class PhoneNumberActivity extends AppCompatActivity {
                 }).addOnFailureListener(e ->
                 {
 
-                    if (e instanceof ApiException)
-                    {
+                    if (e instanceof ApiException) {
 
                         final ApiException apiException = (ApiException) e;
                         Log.d(tag, "Error message: " + CommonStatusCodes.getStatusCodeString(apiException.getStatusCode()));
 
-                    }
-                    else Log.d(tag, "Unknown type of error: " + e.getMessage());
+                    } else Log.d(tag, "Unknown type of error: " + e.getMessage());
 
                 });
 
@@ -251,24 +250,20 @@ public class PhoneNumberActivity extends AppCompatActivity {
                 response ->
                 {
 
-                    try
-                    {
+                    try {
 
                         final JSONObject jsonObject = new JSONObject(response);
 
-                        if (jsonObject.getBoolean("success"))
-                        {
+                        if (jsonObject.getBoolean("success")) {
 
                             cbRecaptcha.setTextColor(getColor(R.color.color_fulvous));
                             cbRecaptcha.setChecked(true);
                             cbRecaptcha.setClickable(false);
 
-                        }
-                        else Toast.makeText(this, jsonObject.getString("error-codes"), Toast.LENGTH_LONG).show();
+                        } else
+                            Toast.makeText(this, jsonObject.getString("error-codes"), Toast.LENGTH_LONG).show();
 
-                    }
-                    catch (Exception ex)
-                    {
+                    } catch (Exception ex) {
 
                         Log.d(tag, "JSON exception: " + ex.getMessage());
 
@@ -278,8 +273,7 @@ public class PhoneNumberActivity extends AppCompatActivity {
                 error -> Log.d(tag, "Error message: " + error.getMessage())) {
 
             @Override
-            protected Map<String, String> getParams()
-            {
+            protected Map<String, String> getParams() {
 
                 final Map<String, String> params = new HashMap<>();
                 params.put("secret", secret);
@@ -312,22 +306,20 @@ public class PhoneNumberActivity extends AppCompatActivity {
                     final HashMap<String, Object> user = new HashMap<>();
                     user.put("user_contact", contact);
 
-                    if (queryDocumentSnapshots != null)
+                    if (queryDocumentSnapshots != null) {
 
                         if (queryDocumentSnapshots.isEmpty()) onNext(user);
 
                         else
 
-                            for (QueryDocumentSnapshot snapshot : queryDocumentSnapshots)
-                            {
+                            for (QueryDocumentSnapshot snapshot : queryDocumentSnapshots) {
 
                                 final UserModel getUser = snapshot.toObject(UserModel.class);
                                 final String _userId = getUser.getUser_id();
 
                                 if (_userId.equals(userId)) onNext(user);
 
-                                else
-                                {
+                                else {
 
                                     isLoading.setVisibility(View.GONE);
                                     Toast.makeText(this, "Phone Number is Unavailable!", Toast.LENGTH_SHORT).show();
@@ -335,6 +327,8 @@ public class PhoneNumberActivity extends AppCompatActivity {
                                 }
 
                             }
+
+                    }
 
                 });
 

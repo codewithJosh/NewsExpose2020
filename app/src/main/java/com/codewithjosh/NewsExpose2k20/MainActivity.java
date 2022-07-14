@@ -49,11 +49,13 @@ public class MainActivity extends AppCompatActivity {
                     .addSnapshotListener((value, error) ->
                     {
 
-                        if (value != null)
+                        if (value != null) {
 
                             if (value.exists()) checkCurrentAuthState();
 
                             else onUnsupported();
+
+                        }
 
                     });
 
@@ -76,8 +78,7 @@ public class MainActivity extends AppCompatActivity {
 
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
 
-        if (firebaseUser != null)
-        {
+        if (firebaseUser != null) {
 
             final String userId = firebaseUser.getUid();
 
@@ -93,8 +94,7 @@ public class MainActivity extends AppCompatActivity {
 
                         final UserModel user = documentSnapshot.toObject(UserModel.class);
 
-                        if (user != null)
-                        {
+                        if (user != null) {
 
                             final String userContact = user.getUser_contact();
                             final boolean userIsVerified = user.isUser_is_verified();

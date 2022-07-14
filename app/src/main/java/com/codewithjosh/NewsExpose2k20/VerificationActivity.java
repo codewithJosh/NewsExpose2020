@@ -95,15 +95,12 @@ public class VerificationActivity extends AppCompatActivity {
 
         isLoading.setVisibility(View.VISIBLE);
 
-        if (isConnected())
-        {
+        if (isConnected()) {
 
-            new CountDownTimer(60000, 1000)
-            {
+            new CountDownTimer(60000, 1000) {
 
                 @Override
-                public void onTick(long millisUntilFinished)
-                {
+                public void onTick(long millisUntilFinished) {
 
                     tvResend.setText(String.valueOf(millisUntilFinished / 1000));
                     btnResend.setEnabled(false);
@@ -111,8 +108,7 @@ public class VerificationActivity extends AppCompatActivity {
                 }
 
                 @Override
-                public void onFinish()
-                {
+                public void onFinish() {
 
                     tvResend.setText(R.string.text_resend);
                     btnResend.setEnabled(true);
@@ -126,18 +122,15 @@ public class VerificationActivity extends AppCompatActivity {
                     .setPhoneNumber(userContact)
                     .setTimeout(60L, TimeUnit.SECONDS)
                     .setActivity(this)
-                    .setCallbacks(new PhoneAuthProvider.OnVerificationStateChangedCallbacks()
-                    {
+                    .setCallbacks(new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
 
                         @Override
-                        public void onVerificationCompleted(@NonNull PhoneAuthCredential phoneAuthCredential)
-                        {
+                        public void onVerificationCompleted(@NonNull PhoneAuthCredential phoneAuthCredential) {
 
                         }
 
                         @Override
-                        public void onVerificationFailed(@NonNull FirebaseException e)
-                        {
+                        public void onVerificationFailed(@NonNull FirebaseException e) {
 
                             isLoading.setVisibility(View.GONE);
                             Toast.makeText(VerificationActivity.this, "Verification Failed!", Toast.LENGTH_SHORT).show();
@@ -157,9 +150,7 @@ public class VerificationActivity extends AppCompatActivity {
 
             PhoneAuthProvider.verifyPhoneNumber(options);
 
-        }
-        else
-        {
+        } else {
 
             isLoading.setVisibility(View.GONE);
             Toast.makeText(this, "No Internet Connection!", Toast.LENGTH_SHORT).show();
@@ -208,11 +199,13 @@ public class VerificationActivity extends AppCompatActivity {
         inputMethodManager.hideSoftInputFromWindow(v.getWindowToken(), 0);
         if (getCurrentFocus() != null) getCurrentFocus().clearFocus();
 
-        if (!isConnected()) Toast.makeText(this, "No Internet Connection!", Toast.LENGTH_SHORT).show();
+        if (!isConnected())
+            Toast.makeText(this, "No Internet Connection!", Toast.LENGTH_SHORT).show();
 
         else if (OTP.isEmpty()) Toast.makeText(this, "OTP is required!", Toast.LENGTH_SHORT).show();
 
-        else if (OTP.length() != 6) Toast.makeText(this, "OTP must be at least 6 characters", Toast.LENGTH_SHORT).show();
+        else if (OTP.length() != 6)
+            Toast.makeText(this, "OTP must be at least 6 characters", Toast.LENGTH_SHORT).show();
 
         else return true;
 
@@ -247,11 +240,14 @@ public class VerificationActivity extends AppCompatActivity {
 
                         final String _e = e.toString().toLowerCase();
 
-                        if (_e.contains("expired")) Toast.makeText(this, "OTP has expired", Toast.LENGTH_SHORT).show();
+                        if (_e.contains("expired"))
+                            Toast.makeText(this, "OTP has expired", Toast.LENGTH_SHORT).show();
 
-                        else if (_e.contains("invalid")) Toast.makeText(this, "OTP doesn't match", Toast.LENGTH_SHORT).show();
+                        else if (_e.contains("invalid"))
+                            Toast.makeText(this, "OTP doesn't match", Toast.LENGTH_SHORT).show();
 
-                        else Toast.makeText(this, "Please Contact Your Service Provider", Toast.LENGTH_SHORT).show();
+                        else
+                            Toast.makeText(this, "Please Contact Your Service Provider", Toast.LENGTH_SHORT).show();
 
                     });
 
@@ -271,16 +267,16 @@ public class VerificationActivity extends AppCompatActivity {
                     if (documentSnapshot != null && documentSnapshot.exists())
 
                         documentRef
-                            .update(user)
-                            .addOnSuccessListener(unused ->
-                            {
+                                .update(user)
+                                .addOnSuccessListener(unused ->
+                                {
 
-                                firebaseAuth.signOut();
-                                Toast.makeText(this, "You're Successfully Added!", Toast.LENGTH_LONG).show();
-                                startActivity(new Intent(this, LoginActivity.class));
-                                finish();
+                                    firebaseAuth.signOut();
+                                    Toast.makeText(this, "You're Successfully Added!", Toast.LENGTH_LONG).show();
+                                    startActivity(new Intent(this, LoginActivity.class));
+                                    finish();
 
-                            });
+                                });
 
                 });
 

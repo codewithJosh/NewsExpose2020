@@ -158,7 +158,8 @@ public class RegisterActivity extends AppCompatActivity {
         inputMethodManager.hideSoftInputFromWindow(v.getWindowToken(), 0);
         if (getCurrentFocus() != null) getCurrentFocus().clearFocus();
 
-        if (!isConnected()) Toast.makeText(this, "No Internet Connection!", Toast.LENGTH_SHORT).show();
+        if (!isConnected())
+            Toast.makeText(this, "No Internet Connection!", Toast.LENGTH_SHORT).show();
 
         else if (userName.isEmpty()
                 || email.isEmpty()
@@ -166,21 +167,29 @@ public class RegisterActivity extends AppCompatActivity {
                 || rePassword.isEmpty())
             Toast.makeText(this, "All fields are required!", Toast.LENGTH_SHORT).show();
 
-        else if (!userName.startsWith("@ne.")) Toast.makeText(this, "Username must starts with @ne.", Toast.LENGTH_SHORT).show();
+        else if (!userName.startsWith("@ne."))
+            Toast.makeText(this, "Username must starts with @ne.", Toast.LENGTH_SHORT).show();
 
-        else if (userName.length() < 5) Toast.makeText(this, "Provide a valid Username", Toast.LENGTH_SHORT).show();
+        else if (userName.length() < 5)
+            Toast.makeText(this, "Provide a valid Username", Toast.LENGTH_SHORT).show();
 
-        else if (!email.endsWith("@ne.xpose")) Toast.makeText(this, "Email must end with @ne.xpose", Toast.LENGTH_SHORT).show();
+        else if (!email.endsWith("@ne.xpose"))
+            Toast.makeText(this, "Email must end with @ne.xpose", Toast.LENGTH_SHORT).show();
 
-        else if (email.length() < 10) Toast.makeText(this, "Provide a valid Email Address", Toast.LENGTH_SHORT).show();
+        else if (email.length() < 10)
+            Toast.makeText(this, "Provide a valid Email Address", Toast.LENGTH_SHORT).show();
 
-        else if (!contact.startsWith("09")) Toast.makeText(this, "Provide a valid Phone Number", Toast.LENGTH_SHORT).show();
+        else if (!contact.startsWith("09"))
+            Toast.makeText(this, "Provide a valid Phone Number", Toast.LENGTH_SHORT).show();
 
-        else if (contact.length() < 11) Toast.makeText(this, "Phone Number must be at least 11 digits", Toast.LENGTH_SHORT).show();
+        else if (contact.length() < 11)
+            Toast.makeText(this, "Phone Number must be at least 11 digits", Toast.LENGTH_SHORT).show();
 
-        else if (password.length() < 6) Toast.makeText(this, "Password must be at least 6 characters", Toast.LENGTH_SHORT).show();
+        else if (password.length() < 6)
+            Toast.makeText(this, "Password must be at least 6 characters", Toast.LENGTH_SHORT).show();
 
-        else if (!password.equals(rePassword)) Toast.makeText(this, "Password doesn't match", Toast.LENGTH_SHORT).show();
+        else if (!password.equals(rePassword))
+            Toast.makeText(this, "Password doesn't match", Toast.LENGTH_SHORT).show();
 
         else if (!cbRecaptcha.isChecked()) onRecaptcha();
 
@@ -205,7 +214,8 @@ public class RegisterActivity extends AppCompatActivity {
         SafetyNet
                 .getClient(this)
                 .verifyWithRecaptcha(site)
-                .addOnSuccessListener(recaptchaTokenResponse -> {
+                .addOnSuccessListener(recaptchaTokenResponse ->
+                {
 
                     if (recaptchaTokenResponse.getTokenResult() != null
                             && !recaptchaTokenResponse.getTokenResult().isEmpty())
@@ -215,14 +225,12 @@ public class RegisterActivity extends AppCompatActivity {
                 }).addOnFailureListener(e ->
                 {
 
-                    if (e instanceof ApiException)
-                    {
+                    if (e instanceof ApiException) {
 
                         final ApiException apiException = (ApiException) e;
                         Log.d(tag, "Error message: " + CommonStatusCodes.getStatusCodeString(apiException.getStatusCode()));
 
-                    }
-                    else Log.d(tag, "Unknown type of error: " + e.getMessage());
+                    } else Log.d(tag, "Unknown type of error: " + e.getMessage());
 
                 });
 
@@ -238,24 +246,20 @@ public class RegisterActivity extends AppCompatActivity {
                 response ->
                 {
 
-                    try
-                    {
+                    try {
 
                         final JSONObject jsonObject = new JSONObject(response);
 
-                        if (jsonObject.getBoolean("success"))
-                        {
+                        if (jsonObject.getBoolean("success")) {
 
                             cbRecaptcha.setTextColor(getColor(R.color.color_fulvous));
                             cbRecaptcha.setChecked(true);
                             cbRecaptcha.setClickable(false);
 
-                        }
-                        else Toast.makeText(this, jsonObject.getString("error-codes"), Toast.LENGTH_LONG).show();
+                        } else
+                            Toast.makeText(this, jsonObject.getString("error-codes"), Toast.LENGTH_LONG).show();
 
-                    }
-                    catch (Exception ex)
-                    {
+                    } catch (Exception ex) {
 
                         Log.d(tag, "JSON exception: " + ex.getMessage());
 
@@ -265,8 +269,7 @@ public class RegisterActivity extends AppCompatActivity {
                 error -> Log.d(tag, "Error message: " + error.getMessage())) {
 
             @Override
-            protected Map<String, String> getParams()
-            {
+            protected Map<String, String> getParams() {
 
                 final Map<String, String> params = new HashMap<>();
                 params.put("secret", secret);
@@ -296,7 +299,7 @@ public class RegisterActivity extends AppCompatActivity {
                 .addOnSuccessListener(queryDocumentSnapshots ->
                 {
 
-                    if (queryDocumentSnapshots != null)
+                    if (queryDocumentSnapshots != null) {
 
                         if (queryDocumentSnapshots.isEmpty()) checkContact();
 
@@ -306,6 +309,8 @@ public class RegisterActivity extends AppCompatActivity {
                             Toast.makeText(this, "Username is Already Taken!", Toast.LENGTH_SHORT).show();
 
                         }
+
+                    }
 
                 });
 
@@ -320,17 +325,18 @@ public class RegisterActivity extends AppCompatActivity {
                 .addOnSuccessListener(queryDocumentSnapshots ->
                 {
 
-                    if (queryDocumentSnapshots != null)
+                    if (queryDocumentSnapshots != null) {
 
                         if (queryDocumentSnapshots.isEmpty()) onRegister();
 
-                        else
-                        {
+                        else {
 
                             isLoading.setVisibility(View.GONE);
                             Toast.makeText(this, "Phone Number is Unavailable!", Toast.LENGTH_SHORT).show();
 
                         }
+
+                    }
 
                 });
 
@@ -345,8 +351,7 @@ public class RegisterActivity extends AppCompatActivity {
 
                     firebaseUser = firebaseAuth.getCurrentUser();
 
-                    if (firebaseUser != null)
-                    {
+                    if (firebaseUser != null) {
 
                         final String userBio = "";
                         final String userId = firebaseUser.getUid();
@@ -377,11 +382,14 @@ public class RegisterActivity extends AppCompatActivity {
 
                     final String _e = e.toString().toLowerCase();
 
-                    if (_e.contains("the email address is already in use by another account")) Toast.makeText(this, "Email is Already Exist!", Toast.LENGTH_SHORT).show();
+                    if (_e.contains("the email address is already in use by another account"))
+                        Toast.makeText(this, "Email is Already Exist!", Toast.LENGTH_SHORT).show();
 
-                    else if (_e.contains("a network error (such as timeout, interrupted connection or unreachable host) has occurred")) Toast.makeText(this, "No Internet Connection!", Toast.LENGTH_SHORT).show();
+                    else if (_e.contains("a network error (such as timeout, interrupted connection or unreachable host) has occurred"))
+                        Toast.makeText(this, "No Internet Connection!", Toast.LENGTH_SHORT).show();
 
-                    else Toast.makeText(this, "Please Contact Your Service Provider", Toast.LENGTH_SHORT).show();
+                    else
+                        Toast.makeText(this, "Please Contact Your Service Provider", Toast.LENGTH_SHORT).show();
 
                 });
 
