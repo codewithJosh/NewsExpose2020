@@ -38,42 +38,60 @@ import java.util.List;
 
 public class CommentActivity extends AppCompatActivity {
 
-    Button btn_comment;
-    ConstraintLayout is_loading;
-    EditText et_comment_content;
-    ImageButton btn_back;
-    ImageView iv_user_image;
-    RecyclerView recycler_comments;
-    TextView tv_status;
-
-    String s_update_id, s_user_id, s_comment_content;
-
-    FirebaseFirestore firebaseFirestore;
-
+    Button btnComment;
+    ConstraintLayout isLoading;
+    EditText etCommentContent;
+    ImageButton btnBack;
+    ImageView ivUserImage;
+    RecyclerView recyclerComments;
+    TextView tvStatus;
+    String updateId;
+    String userId;
+    String commentContent;
     CollectionReference collectionRef;
     DocumentReference documentRef;
-
+    FirebaseFirestore firebaseFirestore;
     SharedPreferences sharedPref;
-
     private CommentAdapter commentAdapter;
-    private List<CommentModel> commentList;
+    private List<CommentModel> comments;
 
     @Override
     protected void onStart() {
+
         super.onStart();
+
+        initInstances();
+        load();
+        loadUserImage();
+
+    }
+
+    private void initInstances() {
 
         firebaseFirestore = FirebaseFirestore.getInstance();
 
-        load();
-        loadUserImage();
+    }
+
+    private void load() {
+
+        sharedPref = getSharedPreferences("user", MODE_PRIVATE);
+        updateId = sharedPref.getString("update_id", String.valueOf(MODE_PRIVATE));
+        userId = sharedPref.getString("user_id", String.valueOf(MODE_PRIVATE));
+
+        collectionRef = firebaseFirestore
+                .collection("Updates")
+                .document(updateId)
+                .collection("Comments");
+
     }
 
     private void loadUserImage() {
 
         firebaseFirestore
                 .collection("Users")
-                .document(s_user_id)
-                .addSnapshotListener((value, error) -> {
+                .document(userId)
+                .addSnapshotListener((value, error) ->
+                {
 
                     if (value != null) {
 
@@ -81,31 +99,26 @@ public class CommentActivity extends AppCompatActivity {
 
                         if (user != null) {
 
-                            final String s_user_image = user.getUser_image();
-
-                            Glide.with(this).load(s_user_image).into(iv_user_image);
+                            final String userImage = user.getUser_image();
+                            Glide.with(this).load(userImage).into(ivUserImage);
 
                         }
+
                     }
+
                 });
 
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_comment);
 
-        firebaseFirestore = FirebaseFirestore.getInstance();
-
         initViews();
+        initInstances();
         load();
-
-        collectionRef = firebaseFirestore
-                .collection("Updates")
-                .document(s_update_id)
-                .collection("Comments");
-
         loadComments();
         build();
 
@@ -113,46 +126,48 @@ public class CommentActivity extends AppCompatActivity {
 
     private void initViews() {
 
-        et_comment_content = findViewById(R.id.et_comment_content);
-        btn_back = findViewById(R.id.btn_back);
-        btn_comment = findViewById(R.id.btn_comment);
-        iv_user_image = findViewById(R.id.civ_user_image);
-        is_loading = findViewById(R.id.is_loading);
-        recycler_comments = findViewById(R.id.recycler_comments);
-        tv_status = findViewById(R.id.tv_status);
+        etCommentContent = findViewById(R.id.et_comment_content);
+        btnBack = findViewById(R.id.btn_back);
+        btnComment = findViewById(R.id.btn_comment);
+        ivUserImage = findViewById(R.id.civ_user_image);
+        isLoading = findViewById(R.id.is_loading);
+        recyclerComments = findViewById(R.id.recycler_comments);
+        tvStatus = findViewById(R.id.tv_status);
 
-        recycler_comments.setHasFixedSize(true);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
-        linearLayoutManager.setReverseLayout(true);
-        linearLayoutManager.setStackFromEnd(true);
-        recycler_comments.setLayoutManager(linearLayoutManager);
-        commentList = new ArrayList<>();
-        commentAdapter = new CommentAdapter(this, commentList);
-        recycler_comments.setAdapter(commentAdapter);
+        initRecyclerView();
+
+        comments = new ArrayList<>();
+        commentAdapter = new CommentAdapter(this, comments);
+        recyclerComments.setAdapter(commentAdapter);
 
     }
 
-    private void load() {
+    private void initRecyclerView() {
 
-        sharedPref = getSharedPreferences("user", MODE_PRIVATE);
-        s_update_id = sharedPref.getString("s_update_id", String.valueOf(MODE_PRIVATE));
-        s_user_id = sharedPref.getString("s_user_id", String.valueOf(MODE_PRIVATE));
+        final LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        linearLayoutManager.setReverseLayout(true);
+        linearLayoutManager.setStackFromEnd(true);
+        recyclerComments.setLayoutManager(linearLayoutManager);
+        recyclerComments.setHasFixedSize(true);
 
     }
 
     private void loadComments() {
 
-        is_loading.setVisibility(View.VISIBLE);
+        isLoading.setVisibility(View.VISIBLE);
 
         collectionRef
                 .orderBy("comment_timestamp")
-                .addSnapshotListener((value, error) -> {
+                .addSnapshotListener((value, error) ->
+                {
 
-                    if (value != null)
+                    if (value != null) {
 
                         if (validate(value)) onLoadComments(value);
 
-                        else is_loading.setVisibility(View.GONE);
+                        else isLoading.setVisibility(View.GONE);
+
+                    }
 
                 });
 
@@ -160,9 +175,9 @@ public class CommentActivity extends AppCompatActivity {
 
     private boolean validate(final QuerySnapshot value) {
 
-        if (!isConnected()) tv_status.setText(R.string.text_status_disconnected);
+        if (!isConnected()) tvStatus.setText(R.string.text_status_disconnected);
 
-        else if (value.isEmpty()) tv_status.setText(R.string.text_status_empty_1);
+        else if (value.isEmpty()) tvStatus.setText(R.string.text_status_empty_1);
 
         else return true;
 
@@ -172,23 +187,23 @@ public class CommentActivity extends AppCompatActivity {
 
     private boolean isConnected() {
 
-        ConnectivityManager connectivityManager = (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+        final ConnectivityManager connectivityManager = (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE);
+        final NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
         return networkInfo != null && networkInfo.isConnectedOrConnecting();
 
     }
 
     private void onLoadComments(final QuerySnapshot value) {
 
-        is_loading.setVisibility(View.GONE);
-        tv_status.setText("");
+        isLoading.setVisibility(View.GONE);
+        tvStatus.setText("");
 
-        commentList.clear();
+        comments.clear();
         for (QueryDocumentSnapshot snapshot : value) {
 
             final CommentModel comment = snapshot.toObject(CommentModel.class);
+            comments.add(comment);
 
-            commentList.add(comment);
         }
         commentAdapter.notifyDataSetChanged();
 
@@ -196,23 +211,24 @@ public class CommentActivity extends AppCompatActivity {
 
     private void build() {
 
-        btn_back.setOnClickListener(v -> onBackPressed());
+        btnBack.setOnClickListener(v -> onBackPressed());
 
-        btn_comment.setOnClickListener(v -> {
+        btnComment.setOnClickListener(v ->
+        {
 
-            s_comment_content = et_comment_content.getText().toString().trim();
+            commentContent = etCommentContent.getText().toString().trim();
 
-            InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(CommentActivity.INPUT_METHOD_SERVICE);
+            final InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
             inputMethodManager.hideSoftInputFromWindow(v.getWindowToken(), 0);
 
-            if (!isConnected())
-                Toast.makeText(this, "No Internet Connection!", Toast.LENGTH_SHORT).show();
+            if (isConnected()) onComment();
 
-            else onComment();
+            else Toast.makeText(this, "No Internet Connection!", Toast.LENGTH_SHORT).show();
 
         });
 
-        et_comment_content.addTextChangedListener(new TextWatcher() {
+        etCommentContent.addTextChangedListener(new TextWatcher() {
+
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -221,8 +237,8 @@ public class CommentActivity extends AppCompatActivity {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
 
-                s_comment_content = et_comment_content.getText().toString().trim();
-                btn_comment.setEnabled(!s_comment_content.isEmpty());
+                commentContent = etCommentContent.getText().toString().trim();
+                btnComment.setEnabled(!commentContent.isEmpty());
 
             }
 
@@ -230,43 +246,44 @@ public class CommentActivity extends AppCompatActivity {
             public void afterTextChanged(Editable s) {
 
             }
+
         });
 
     }
 
     private void onComment() {
 
-        final String s_comment_id = collectionRef
+        final String commentId = collectionRef
                 .document()
                 .getId();
 
         final Calendar calendar = Calendar.getInstance();
-        final Date date_comment_timestamp = calendar.getTime();
+        final Date commentTimestamp = calendar.getTime();
 
         final CommentModel comment = new CommentModel(
-                s_comment_content,
-                date_comment_timestamp,
-                s_user_id
+                commentContent,
+                commentTimestamp,
+                userId
         );
 
-        onSend(s_comment_id, comment);
+        onSend(commentId, comment);
 
     }
 
-    private void onSend(final String s_comment_id, final CommentModel comment) {
+    private void onSend(final String commentId, final CommentModel comment) {
 
         documentRef = collectionRef
-                .document(s_comment_id);
+                .document(commentId);
 
-        documentRef.addSnapshotListener((value, error) -> {
+        documentRef.addSnapshotListener((value, error) ->
+        {
 
-            if (value != null)
+            if (value != null && !value.exists())
 
-                if (!value.exists())
+                documentRef
+                        .set(comment)
+                        .addOnSuccessListener(unused -> etCommentContent.setText(""));
 
-                    documentRef
-                            .set(comment)
-                            .addOnSuccessListener(unused -> et_comment_content.setText(""));
         });
 
     }

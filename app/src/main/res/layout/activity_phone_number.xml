@@ -11,13 +11,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:padding="20dp">
 
             <ImageView
                 android:id="@+id/iv_logo"
@@ -38,10 +37,10 @@
                 android:letterSpacing="0.6"
                 android:text="@string/app_name"
                 android:textAllCaps="true"
-                android:textColor="@color/colorWillpowerOrange"
+                android:textColor="@color/color_willpower_orange"
                 android:textSize="6pt"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="@id/iv_logo"
+                app:layout_constraintStart_toStartOf="@id/iv_logo"
                 app:layout_constraintTop_toBottomOf="@id/iv_logo" />
 
             <View
@@ -58,10 +57,8 @@
                 android:id="@+id/constraint_verification"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="20dp"
+                android:layout_marginTop="20dp"
                 android:padding="15dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tv_app_name">
 
                 <TextView
@@ -99,7 +96,7 @@
                     android:layout_marginTop="20dp"
                     android:autofillHints="no"
                     android:background="@drawable/create_input_decoration"
-                    android:digits="@string/digits_2"
+                    android:digits="@string/digits_contact"
                     android:hint="@string/hint_contact"
                     android:imeOptions="actionDone"
                     android:includeFontPadding="false"
@@ -108,11 +105,11 @@
                     android:padding="10dp"
                     android:singleLine="true"
                     android:textColor="?attr/colorPrimary"
-                    android:textColorHint="@color/colorChineseSilver1"
+                    android:textColorHint="@color/color_chinese_silver_1"
                     android:textSize="8pt"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/ccp_country"
-                    app:layout_constraintTop_toBottomOf="@+id/tv_verification" />
+                    app:layout_constraintStart_toEndOf="@id/ccp_country"
+                    app:layout_constraintTop_toBottomOf="@id/tv_verification" />
 
                 <CheckBox
                     android:id="@+id/cb_recaptcha"
@@ -122,7 +119,7 @@
                     android:button="@drawable/create_check_circle"
                     android:padding="5dp"
                     android:text="@string/text_checkbox_recaptcha"
-                    android:textColor="@color/colorChineseSilver1"
+                    android:textColor="@color/color_chinese_silver_1"
                     android:textSize="7pt"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/ccp_country" />
@@ -136,9 +133,8 @@
                     android:includeFontPadding="false"
                     android:letterSpacing="0.06"
                     android:text="By clicking Next, you agree to our Terms, Data Policy and Cookies Policy. You may receive SMS Notifications from us and can opt out any time."
-                    android:textColor="@color/colorSpanishGray"
+                    android:textColor="@color/color_spanish_gray"
                     android:textSize="6pt"
-                    app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/cb_recaptcha" />
 
                 <Button
@@ -154,8 +150,6 @@
                     android:text="@string/text_button_next"
                     android:textAllCaps="true"
                     android:textColor="?attr/colorOnPrimary"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/tv_agreement" />
 
                 <TextView
@@ -222,7 +216,7 @@
                 android:letterSpacing="0.06"
                 android:text="@string/text_verifying"
                 android:textAllCaps="true"
-                android:textColor="@color/colorChineseSilver"
+                android:textColor="@color/color_chinese_silver"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/mkloader" />

@@ -12,8 +12,6 @@
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:background="@drawable/create_linear_appbar"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
         <androidx.appcompat.widget.Toolbar
@@ -64,16 +62,15 @@
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/appBarLayout">
+        app:layout_constraintTop_toBottomOf="@id/appBarLayout">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center">
+            android:layout_gravity="center"
+            android:padding="15dp">
 
             <View
                 android:layout_width="0dp"
@@ -89,7 +86,6 @@
                 android:id="@+id/linear_create_update"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginHorizontal="15dp"
                 android:orientation="vertical"
                 android:padding="15dp">
 
@@ -113,7 +109,7 @@
                     android:minLines="1"
                     android:padding="10dp"
                     android:textColor="?attr/colorPrimary"
-                    android:textColorHint="@color/colorChineseSilver1" />
+                    android:textColorHint="@color/color_chinese_silver_1" />
 
             </LinearLayout>
 
@@ -162,7 +158,7 @@
                 android:letterSpacing="0.06"
                 android:text="@string/text_uploading"
                 android:textAllCaps="true"
-                android:textColor="@color/colorChineseSilver"
+                android:textColor="@color/color_chinese_silver"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/mkloader" />

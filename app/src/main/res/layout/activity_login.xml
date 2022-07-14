@@ -11,13 +11,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:padding="20dp">
 
             <ImageView
                 android:id="@+id/iv_logo"
@@ -38,10 +37,10 @@
                 android:letterSpacing="0.6"
                 android:text="@string/app_name"
                 android:textAllCaps="true"
-                android:textColor="@color/colorWillpowerOrange"
+                android:textColor="@color/color_willpower_orange"
                 android:textSize="6pt"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="@id/iv_logo"
+                app:layout_constraintStart_toStartOf="@id/iv_logo"
                 app:layout_constraintTop_toBottomOf="@id/iv_logo" />
 
             <View
@@ -58,10 +57,8 @@
                 android:id="@+id/constraint_login"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="20dp"
+                android:layout_marginTop="20dp"
                 android:padding="15dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tv_app_name">
 
                 <TextView
@@ -85,7 +82,7 @@
                     android:layout_marginTop="20dp"
                     android:autofillHints="no"
                     android:background="@drawable/create_input_decoration"
-                    android:digits="@string/digits_1"
+                    android:digits="@string/digits_user_name"
                     android:hint="@string/hint_user_name"
                     android:imeOptions="actionNext"
                     android:includeFontPadding="false"
@@ -94,10 +91,8 @@
                     android:padding="10dp"
                     android:singleLine="true"
                     android:textColor="?attr/colorPrimary"
-                    android:textColorHint="@color/colorChineseSilver1"
+                    android:textColorHint="@color/color_chinese_silver_1"
                     android:textSize="8pt"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/tv_sign_in" />
 
                 <EditText
@@ -107,7 +102,7 @@
                     android:layout_marginTop="20dp"
                     android:autofillHints="no"
                     android:background="@drawable/create_input_decoration"
-                    android:digits="@string/digits_3"
+                    android:digits="@string/digits_password"
                     android:hint="@string/hint_password"
                     android:imeOptions="actionDone"
                     android:includeFontPadding="false"
@@ -116,10 +111,8 @@
                     android:padding="10dp"
                     android:singleLine="true"
                     android:textColor="?attr/colorPrimary"
-                    android:textColorHint="@color/colorChineseSilver1"
+                    android:textColorHint="@color/color_chinese_silver_1"
                     android:textSize="8pt"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/et_user_name" />
 
                 <Button
@@ -135,8 +128,6 @@
                     android:text="@string/text_sign_in"
                     android:textAllCaps="true"
                     android:textColor="?attr/colorOnPrimary"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/et_password" />
 
                 <androidx.constraintlayout.widget.ConstraintLayout
@@ -224,7 +215,7 @@
                 android:letterSpacing="0.06"
                 android:text="@string/text_logging_in"
                 android:textAllCaps="true"
-                android:textColor="@color/colorChineseSilver"
+                android:textColor="@color/color_chinese_silver"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/mkloader" />

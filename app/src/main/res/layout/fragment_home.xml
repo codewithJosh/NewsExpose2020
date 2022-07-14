@@ -16,7 +16,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        android:textColor="@color/colorSpanishGray"
+        android:textColor="@color/color_spanish_gray"
         android:textSize="16sp"
         android:textStyle="italic"
         app:layout_constraintEnd_toEndOf="parent"
@@ -64,7 +64,7 @@
                 android:letterSpacing="0.06"
                 android:text="@string/text_loading"
                 android:textAllCaps="true"
-                android:textColor="@color/colorChineseSilver"
+                android:textColor="@color/color_chinese_silver"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/mkloader" />

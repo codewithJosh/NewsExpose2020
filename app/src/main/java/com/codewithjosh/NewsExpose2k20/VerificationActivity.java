@@ -32,84 +32,86 @@ import java.util.concurrent.TimeUnit;
 
 public class VerificationActivity extends AppCompatActivity {
 
-    Button btn_submit;
-    EditText et_otp;
-    ConstraintLayout btn_resend, is_loading;
-    TextView tv_resend;
-
-    String s_user_contact, s_otp, s_verification_id;
-
+    Button btnSubmit;
+    EditText etOTP;
+    ConstraintLayout btnResend;
+    ConstraintLayout isLoading;
+    TextView tvResend;
+    String userContact;
+    String OTP;
+    String verificationId;
     FirebaseAuth firebaseAuth;
     FirebaseFirestore firebaseFirestore;
     FirebaseUser firebaseUser;
-
     DocumentReference documentRef;
-
     SharedPreferences sharedPref;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_verification);
 
         initViews();
-        initInstance();
+        initInstances();
+        initSharedPref();
         load();
         sendVerificationCode();
-        buildButton();
+        buildButtons();
 
     }
 
     private void initViews() {
 
-        btn_submit = findViewById(R.id.btn_submit);
-        et_otp = findViewById(R.id.et_otp);
-        btn_resend = findViewById(R.id.btn_resend);
-        is_loading = findViewById(R.id.is_loading);
-        tv_resend = findViewById(R.id.tv_resend);
+        btnSubmit = findViewById(R.id.btn_submit);
+        etOTP = findViewById(R.id.et_o_t_p);
+        btnResend = findViewById(R.id.btn_resend);
+        isLoading = findViewById(R.id.is_loading);
+        tvResend = findViewById(R.id.tv_resend);
 
     }
 
-    private void initInstance() {
+    private void initInstances() {
 
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseFirestore = FirebaseFirestore.getInstance();
 
     }
 
-    private void load() {
+    private void initSharedPref() {
 
         sharedPref = getSharedPreferences("user", MODE_PRIVATE);
-        s_user_contact = sharedPref.getString("s_user_contact", String.valueOf(MODE_PRIVATE));
+
+    }
+
+    private void load() {
+
+        userContact = sharedPref.getString("user_contact", String.valueOf(MODE_PRIVATE));
 
     }
 
     // TODO: DEBUG
     private void sendVerificationCode() {
 
-        is_loading.setVisibility(View.VISIBLE);
+        isLoading.setVisibility(View.VISIBLE);
 
-        if (!isConnected()) {
-
-            is_loading.setVisibility(View.GONE);
-            Toast.makeText(this, "No Internet Connection!", Toast.LENGTH_SHORT).show();
-        } else {
+        if (isConnected()) {
 
             new CountDownTimer(60000, 1000) {
 
                 @Override
                 public void onTick(long millisUntilFinished) {
 
-                    tv_resend.setText(String.valueOf(millisUntilFinished / 1000));
-                    btn_resend.setEnabled(false);
+                    tvResend.setText(String.valueOf(millisUntilFinished / 1000));
+                    btnResend.setEnabled(false);
 
                 }
 
                 @Override
                 public void onFinish() {
 
-                    tv_resend.setText(R.string.text_resend);
-                    btn_resend.setEnabled(true);
+                    tvResend.setText(R.string.text_resend);
+                    btnResend.setEnabled(true);
 
                 }
 
@@ -117,7 +119,7 @@ public class VerificationActivity extends AppCompatActivity {
 
             PhoneAuthOptions options = PhoneAuthOptions
                     .newBuilder(firebaseAuth)
-                    .setPhoneNumber(s_user_contact)
+                    .setPhoneNumber(userContact)
                     .setTimeout(60L, TimeUnit.SECONDS)
                     .setActivity(this)
                     .setCallbacks(new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
@@ -130,7 +132,7 @@ public class VerificationActivity extends AppCompatActivity {
                         @Override
                         public void onVerificationFailed(@NonNull FirebaseException e) {
 
-                            is_loading.setVisibility(View.GONE);
+                            isLoading.setVisibility(View.GONE);
                             Toast.makeText(VerificationActivity.this, "Verification Failed!", Toast.LENGTH_SHORT).show();
 
                         }
@@ -138,43 +140,53 @@ public class VerificationActivity extends AppCompatActivity {
                         @Override
                         public void onCodeSent(@NonNull String s, @NonNull PhoneAuthProvider.ForceResendingToken forceResendingToken) {
 
-                            is_loading.setVisibility(View.GONE);
+                            isLoading.setVisibility(View.GONE);
                             Toast.makeText(VerificationActivity.this, "You'll receive your OTP shortly", Toast.LENGTH_SHORT).show();
-                            VerificationActivity.this.s_verification_id = s;
+                            VerificationActivity.this.verificationId = s;
 
                         }
+
                     }).build();
 
             PhoneAuthProvider.verifyPhoneNumber(options);
+
+        } else {
+
+            isLoading.setVisibility(View.GONE);
+            Toast.makeText(this, "No Internet Connection!", Toast.LENGTH_SHORT).show();
+
         }
 
     }
 
     private boolean isConnected() {
 
-        ConnectivityManager connectivityManager = (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+        final ConnectivityManager connectivityManager = (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE);
+        final NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
         return networkInfo != null && networkInfo.isConnectedOrConnecting();
 
     }
 
-    private void buildButton() {
+    private void buildButtons() {
 
-        btn_resend.setOnClickListener(v -> {
+        btnResend.setOnClickListener(v ->
+        {
 
-            InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(CommentActivity.INPUT_METHOD_SERVICE);
+            final InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
             inputMethodManager.hideSoftInputFromWindow(v.getWindowToken(), 0);
             if (getCurrentFocus() != null) getCurrentFocus().clearFocus();
             sendVerificationCode();
+
         });
 
-        btn_submit.setOnClickListener(v -> {
+        btnSubmit.setOnClickListener(v ->
+        {
 
-            s_otp = et_otp.getText().toString();
+            OTP = etOTP.getText().toString();
 
             if (validate(v)) onSubmit();
 
-            else is_loading.setVisibility(View.GONE);
+            else isLoading.setVisibility(View.GONE);
 
         });
 
@@ -182,18 +194,17 @@ public class VerificationActivity extends AppCompatActivity {
 
     private boolean validate(final View v) {
 
-        is_loading.setVisibility(View.VISIBLE);
-        InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(CommentActivity.INPUT_METHOD_SERVICE);
+        isLoading.setVisibility(View.VISIBLE);
+        final InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         inputMethodManager.hideSoftInputFromWindow(v.getWindowToken(), 0);
         if (getCurrentFocus() != null) getCurrentFocus().clearFocus();
 
         if (!isConnected())
             Toast.makeText(this, "No Internet Connection!", Toast.LENGTH_SHORT).show();
 
-        else if (s_otp.isEmpty())
-            Toast.makeText(this, "OTP is required!", Toast.LENGTH_SHORT).show();
+        else if (OTP.isEmpty()) Toast.makeText(this, "OTP is required!", Toast.LENGTH_SHORT).show();
 
-        else if (s_otp.length() != 6)
+        else if (OTP.length() != 6)
             Toast.makeText(this, "OTP must be at least 6 characters", Toast.LENGTH_SHORT).show();
 
         else return true;
@@ -204,66 +215,68 @@ public class VerificationActivity extends AppCompatActivity {
 
     private void onSubmit() {
 
-        final PhoneAuthCredential credential = PhoneAuthProvider.getCredential(s_verification_id, s_otp);
+        final PhoneAuthCredential credential = PhoneAuthProvider.getCredential(verificationId, OTP);
         firebaseUser = firebaseAuth.getCurrentUser();
 
-        if (firebaseUser != null) {
+        if (firebaseUser != null)
 
             firebaseUser
                     .linkWithCredential(credential)
-                    .addOnSuccessListener(authResult -> {
+                    .addOnSuccessListener(authResult ->
+                    {
 
-                        final String s_user_id = firebaseUser.getUid();
-                        final boolean user_is_verified = true;
+                        final String userId = firebaseUser.getUid();
+                        final boolean userIsVerified = true;
 
-                        HashMap<String, Object> user = new HashMap<>();
-                        user.put("user_is_verified", user_is_verified);
+                        final HashMap<String, Object> user = new HashMap<>();
+                        user.put("user_is_verified", userIsVerified);
 
-                        updateUser(user, s_user_id);
+                        updateUser(userId, user);
 
-                    }).addOnFailureListener(e -> {
+                    }).addOnFailureListener(e ->
+                    {
 
-                is_loading.setVisibility(View.GONE);
+                        isLoading.setVisibility(View.GONE);
 
-                final String s_e = e.toString().toLowerCase();
+                        final String _e = e.toString().toLowerCase();
 
-                if (s_e.contains("expired"))
-                    Toast.makeText(this, "OTP has expired", Toast.LENGTH_SHORT).show();
+                        if (_e.contains("expired"))
+                            Toast.makeText(this, "OTP has expired", Toast.LENGTH_SHORT).show();
 
-                else if (s_e.contains("invalid"))
-                    Toast.makeText(this, "OTP doesn't match", Toast.LENGTH_SHORT).show();
+                        else if (_e.contains("invalid"))
+                            Toast.makeText(this, "OTP doesn't match", Toast.LENGTH_SHORT).show();
 
-                else
-                    Toast.makeText(this, "Please Contact Your Service Provider", Toast.LENGTH_SHORT).show();
+                        else
+                            Toast.makeText(this, "Please Contact Your Service Provider", Toast.LENGTH_SHORT).show();
 
-            });
-        }
+                    });
 
     }
 
-    private void updateUser(final HashMap<String, Object> user, final String s_user_id) {
+    private void updateUser(final String userId, final HashMap<String, Object> user) {
 
         documentRef = firebaseFirestore
                 .collection("Users")
-                .document(s_user_id);
+                .document(userId);
 
         documentRef
                 .get()
-                .addOnSuccessListener(documentSnapshot -> {
+                .addOnSuccessListener(documentSnapshot ->
+                {
 
-                    if (documentSnapshot != null)
+                    if (documentSnapshot != null && documentSnapshot.exists())
 
-                        if (documentSnapshot.exists())
+                        documentRef
+                                .update(user)
+                                .addOnSuccessListener(unused ->
+                                {
 
-                            documentRef
-                                    .update(user)
-                                    .addOnSuccessListener(unused -> {
+                                    firebaseAuth.signOut();
+                                    Toast.makeText(this, "You're Successfully Added!", Toast.LENGTH_LONG).show();
+                                    startActivity(new Intent(this, LoginActivity.class));
+                                    finish();
 
-                                        firebaseAuth.signOut();
-                                        Toast.makeText(this, "You're Successfully Added!", Toast.LENGTH_LONG).show();
-                                        startActivity(new Intent(this, LoginActivity.class));
-                                        finish();
-                                    });
+                                });
 
                 });
 

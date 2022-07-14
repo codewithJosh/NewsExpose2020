@@ -33,49 +33,48 @@ import java.util.Random;
 
 public class CreateUpdateActivity extends AppCompatActivity {
 
-    ConstraintLayout is_loading;
-    EditText et_update_content;
-    ImageButton btn_back, btn_create_update;
-    ImageView iv_update_image;
-
-    String s_user_id, s_update_content, s_update_image;
-
+    ConstraintLayout isLoading;
+    EditText etUpdateContent;
+    ImageButton btnBack;
+    ImageButton btnCreateUpdate;
+    ImageView ivUpdateImage;
+    String userId;
+    String updateContent;
+    String updateImage;
+    FirebaseFirestore firebaseFirestore;
+    FirebaseStorage firebaseStorage;
+    DocumentReference documentRef;
+    SharedPreferences sharedPref;
+    StorageReference storageRef;
     UploadTask uTask;
     Uri uri;
 
-    FirebaseFirestore firebaseFirestore;
-    FirebaseStorage firebaseStorage;
-
-    DocumentReference documentRef;
-    StorageReference storageRef;
-
-    SharedPreferences sharedPref;
-
     @Override
     protected void onStart() {
+
         super.onStart();
 
         firebaseFirestore = FirebaseFirestore.getInstance();
 
         load();
-        loadUserBio(s_user_id);
+        loadUserBio(userId);
 
     }
 
     private void load() {
 
         sharedPref = getSharedPreferences("user", MODE_PRIVATE);
-
-        s_user_id = sharedPref.getString("s_user_id", String.valueOf(MODE_PRIVATE));
+        userId = sharedPref.getString("user_id", String.valueOf(MODE_PRIVATE));
 
     }
 
-    private void loadUserBio(final String s_user_id) {
+    private void loadUserBio(final String userId) {
 
         firebaseFirestore
                 .collection("Users")
-                .document(s_user_id)
-                .addSnapshotListener((value, error) -> {
+                .document(userId)
+                .addSnapshotListener((value, error) ->
+                {
 
                     if (value != null) {
 
@@ -83,27 +82,30 @@ public class CreateUpdateActivity extends AppCompatActivity {
 
                         if (user != null) {
 
-                            final String s_user_bio = user.getUser_bio();
-                            final String s_hint = "What's on your mind, " + s_user_bio + "?";
-                            final String s_hint_empty = "Add a caption…";
+                            final String userBio = user.getUser_bio();
 
-                            if (!s_user_bio.isEmpty()) et_update_content.setHint(s_hint);
-
-                            else et_update_content.setHint(s_hint_empty);
+                            etUpdateContent.setHint(
+                                    !userBio.isEmpty()
+                                            ? "What's on your mind, %?".replace("%", userBio)
+                                            : getString(R.string.hint_update_content)
+                            );
 
                         }
+
                     }
+
                 });
 
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_update);
 
         initViews();
-        initInstance();
+        initInstances();
         load();
         build();
 
@@ -111,15 +113,15 @@ public class CreateUpdateActivity extends AppCompatActivity {
 
     private void initViews() {
 
-        et_update_content = findViewById(R.id.et_update_content);
-        btn_back = findViewById(R.id.btn_back);
-        btn_create_update = findViewById(R.id.btn_create_update);
-        iv_update_image = findViewById(R.id.iv_update_image);
-        is_loading = findViewById(R.id.is_loading);
+        etUpdateContent = findViewById(R.id.et_update_content);
+        btnBack = findViewById(R.id.btn_back);
+        btnCreateUpdate = findViewById(R.id.btn_create_update);
+        ivUpdateImage = findViewById(R.id.iv_update_image);
+        isLoading = findViewById(R.id.is_loading);
 
     }
 
-    private void initInstance() {
+    private void initInstances() {
 
         firebaseFirestore = FirebaseFirestore.getInstance();
         firebaseStorage = FirebaseStorage.getInstance();
@@ -128,34 +130,38 @@ public class CreateUpdateActivity extends AppCompatActivity {
 
     private void build() {
 
-        btn_back.setOnClickListener(v -> onBackPressed());
+        btnBack.setOnClickListener(v -> onBackPressed());
 
-        btn_create_update.setOnClickListener(v -> {
+        btnCreateUpdate.setOnClickListener(v ->
+        {
 
-            is_loading.setVisibility(View.VISIBLE);
-            InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(CommentActivity.INPUT_METHOD_SERVICE);
+            isLoading.setVisibility(View.VISIBLE);
+            final InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
             inputMethodManager.hideSoftInputFromWindow(v.getWindowToken(), 0);
             if (getCurrentFocus() != null) getCurrentFocus().clearFocus();
 
-            s_update_content = et_update_content.getText().toString().trim();
+            updateContent = etUpdateContent.getText().toString().trim();
             if (isConnected() && uri != null) onCreateUpdate();
+
             else {
 
-                is_loading.setVisibility(View.GONE);
+                isLoading.setVisibility(View.GONE);
                 Toast.makeText(this, "No Internet Connection!", Toast.LENGTH_SHORT).show();
+
             }
+
         });
 
         getImage();
 
-        iv_update_image.setOnClickListener(v -> getImage());
+        ivUpdateImage.setOnClickListener(v -> getImage());
 
     }
 
     private boolean isConnected() {
 
-        ConnectivityManager connectivityManager = (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+        final ConnectivityManager connectivityManager = (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE);
+        final NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
         return networkInfo != null && networkInfo.isConnectedOrConnecting();
 
     }
@@ -163,46 +169,48 @@ public class CreateUpdateActivity extends AppCompatActivity {
     private void onCreateUpdate() {
 
         final Random ran = new Random();
-        final String s_file_extension = getFileExtension(uri);
+        final String fileExtension = getFileExtension(uri);
 
-        if (s_file_extension != null) {
+        if (fileExtension != null) {
 
-            final int i_file_extension = s_file_extension.lastIndexOf(".");
+            final int _fileExtension = fileExtension.lastIndexOf(".");
 
             storageRef = firebaseStorage
                     .getReference("Updates")
                     .child(ran.nextInt(999999999)
-                            + s_file_extension.substring(i_file_extension));
+                            + fileExtension.substring(_fileExtension));
+
         }
 
         uTask = storageRef.putFile(uri);
-
-        uTask.continueWithTask(task -> {
+        uTask.continueWithTask(task ->
+        {
 
             if (!task.isSuccessful()) throw task.getException();
 
             return storageRef.getDownloadUrl();
 
-        }).addOnSuccessListener(uri -> {
+        }).addOnSuccessListener(uri ->
+        {
 
-            final String s_update_id = firebaseFirestore
+            final String updateId = firebaseFirestore
                     .collection("Updates")
                     .document()
                     .getId();
 
-            if (uri != null) s_update_image = uri.toString();
+            if (uri != null) updateImage = String.valueOf(uri);
             final Calendar calendar = Calendar.getInstance();
-            final Date date_update_timestamp = calendar.getTime();
+            final Date updateTimestamp = calendar.getTime();
 
             final UpdateModel update = new UpdateModel(
-                    s_update_id,
-                    s_update_image,
-                    s_update_content,
-                    date_update_timestamp,
-                    s_user_id
+                    updateId,
+                    updateImage,
+                    updateContent,
+                    updateTimestamp,
+                    userId
             );
 
-            onUpdate(s_update_id, update);
+            onUpdate(updateId, update);
 
         });
 
@@ -211,31 +219,33 @@ public class CreateUpdateActivity extends AppCompatActivity {
     private String getFileExtension(final Uri uri) {
 
         final String result = uri.getPath();
-        int cut = result.lastIndexOf('/');
+        final int cut = result.lastIndexOf('/');
         if (cut != -1) return result.substring(cut + 1);
         return null;
 
     }
 
-    private void onUpdate(final String s_update_id, final UpdateModel update) {
+    private void onUpdate(final String updateId, final UpdateModel update) {
 
         documentRef = firebaseFirestore
                 .collection("Updates")
-                .document(s_update_id);
+                .document(updateId);
 
-        documentRef.addSnapshotListener((value, error) -> {
+        documentRef.addSnapshotListener((value, error) ->
+        {
 
-            if (value != null)
+            if (value != null && !value.exists())
 
-                if (!value.exists())
+                documentRef
+                        .set(update)
+                        .addOnSuccessListener(unused ->
+                        {
 
-                    documentRef
-                            .set(update)
-                            .addOnSuccessListener(unused -> {
+                            isLoading.setVisibility(View.GONE);
+                            onBackPressed();
 
-                                is_loading.setVisibility(View.GONE);
-                                onBackPressed();
-                            });
+                        });
+
         });
 
     }
@@ -257,7 +267,8 @@ public class CreateUpdateActivity extends AppCompatActivity {
             final CropImage.ActivityResult result = CropImage.getActivityResult(data);
 
             if (result != null) uri = result.getUri();
-            iv_update_image.setImageURI(uri);
+            ivUpdateImage.setImageURI(uri);
+
         } else onBackPressed();
 
     }

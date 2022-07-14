@@ -22,7 +22,7 @@
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/civ_user_image"
+        app:layout_constraintStart_toEndOf="@id/civ_user_image"
         app:layout_constraintTop_toTopOf="parent">
 
         <TextView
@@ -32,18 +32,14 @@
             android:textColor="?attr/colorOnPrimary"
             android:textSize="16sp"
             android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/tv_subtitle"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:textColor="@color/colorSpanishGray"
+            android:textColor="@color/color_spanish_gray"
             android:textSize="14sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_user_bio" />
 
         <TextView
@@ -52,8 +48,6 @@
             android:layout_height="match_parent"
             android:textColor="?attr/colorOnPrimary"
             android:textSize="14sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_subtitle" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

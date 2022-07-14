@@ -12,8 +12,6 @@
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:background="@drawable/create_linear_appbar"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
         <androidx.appcompat.widget.Toolbar
@@ -44,27 +42,20 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         app:layout_constraintBottom_toTopOf="@id/linear_comment"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/appbar">
 
-        <ScrollView
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycler_comments"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recycler_comments"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-
-        </ScrollView>
+            android:layout_height="match_parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/tv_status"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:textColor="@color/colorSpanishGray"
+            android:textColor="@color/color_spanish_gray"
             android:textSize="16sp"
             android:textStyle="italic"
             app:layout_constraintEnd_toEndOf="parent"
@@ -80,9 +71,7 @@
         android:background="@drawable/create_linear_appbar"
         android:orientation="horizontal"
         android:padding="4dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
+        app:layout_constraintBottom_toBottomOf="parent">
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/civ_user_image"
@@ -95,7 +84,7 @@
         <EditText
             android:id="@+id/et_comment_content"
             android:layout_width="0dp"
-            android:layout_height="match_parent"
+            android:layout_height="0dp"
             android:layout_marginHorizontal="10dp"
             android:background="@android:color/transparent"
             android:fontFamily="@font/tahoma_regular"
@@ -106,7 +95,7 @@
             android:maxLines="2"
             android:minLines="1"
             android:textColor="?attr/colorPrimary"
-            android:textColorHint="@color/colorChineseSilver1"
+            android:textColorHint="@color/color_chinese_silver_1"
             android:textSize="7pt"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/btn_comment"
@@ -167,7 +156,7 @@
                 android:letterSpacing="0.06"
                 android:text="@string/text_loading"
                 android:textAllCaps="true"
-                android:textColor="@color/colorChineseSilver"
+                android:textColor="@color/color_chinese_silver"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/mkloader" />
