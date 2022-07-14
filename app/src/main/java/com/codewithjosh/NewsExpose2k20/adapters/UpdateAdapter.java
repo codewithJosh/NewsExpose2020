@@ -25,6 +25,8 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -33,108 +35,127 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class UpdateAdapter extends RecyclerView.Adapter<UpdateAdapter.ViewHolder> {
 
-    private static final int SECOND_MILLIS = 1000;
-    private static final int MINUTE_MILLIS = 60 * SECOND_MILLIS;
-    private static final int HOUR_MILLIS = 60 * MINUTE_MILLIS;
-    private static final int DAY_MILLIS = 24 * HOUR_MILLIS;
+    private static final int secondMillis = 1000;
+    private static final int minuteMillis = 60 * secondMillis;
+    private static final int hourMillis = 60 * minuteMillis;
+    private static final int dayMillis = 24 * hourMillis;
+    private static final int weekMillis = 7 * dayMillis;
     public Context context;
-    public List<UpdateModel> updateList;
-    String s_user_id;
+    public List<UpdateModel> updates;
+    String userId;
+    CollectionReference seenRef;
+    CollectionReference commentRef;
+    DateFormat dateFormat;
+    DocumentReference documentRef;
     FirebaseDatabase firebaseDatabase;
     FirebaseFirestore firebaseFirestore;
-    DocumentReference documentRef;
-    CollectionReference seenRef, commentRef;
     SharedPreferences sharedPref;
     SharedPreferences.Editor editor;
 
-    public UpdateAdapter(Context context, List<UpdateModel> updateList) {
+    public UpdateAdapter(final Context context, final List<UpdateModel> updates) {
+
         this.context = context;
-        this.updateList = updateList;
+        this.updates = updates;
+
     }
 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {
+
         View view = LayoutInflater.from(context).inflate(R.layout.item_update, viewGroup, false);
         return new ViewHolder(view);
+
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
 
-        final UpdateModel update = updateList.get(position);
+        final UpdateModel update = updates.get(position);
 
 //        initViews
-        final CircleImageView civ_user_image = holder.civ_user_image;
-        final ImageButton btn_seen = holder.btn_seen;
-        final ImageButton nav_comment = holder.nav_comment;
-        final ImageView iv_update_image = holder.iv_update_image;
-        final TextView tv_seen_count = holder.tv_seen_count;
-        final TextView tv_update_content = holder.tv_update_content;
-        final TextView tv_comment_count = holder.tv_comment_count;
-        final TextView tv_user_bio = holder.tv_user_bio;
-        final TextView tv_subtitle = holder.tv_subtitle;
+        final CircleImageView civUserImage = holder.circleImageView;
+        final ImageButton btnSeen = holder.btnSeen;
+        final ImageButton navComment = holder.navComment;
+        final ImageView ivUpdateImage = holder.ivUpdateImage;
+        final TextView tvSeenCount = holder.tvSeenCount;
+        final TextView tvUpdateContent = holder.tvUpdateContent;
+        final TextView tvCommentCount = holder.tvCommentCount;
+        final TextView tvUserBio = holder.tvUserBio;
+        final TextView tvSubtitle = holder.tvSubtitle;
 
 //        load
-        final String s_update_id = update.getUpdate_id();
-        final String s_update_image = update.getUpdate_image();
-        final String s_update_content = update.getUpdate_content();
-        final Date date_update_timestamp = update.getUpdate_timestamp();
-        final String s_update_user_id = update.getUser_id();
+        final String updateId = update.getUpdate_id();
+        final String updateImage = update.getUpdate_image();
+        final String updateContent = update.getUpdate_content();
+        final Date updateTimestamp = update.getUpdate_timestamp();
+        final String updateUserId = update.getUser_id();
 
-        initInstance();
+        initInstances();
         initSharedPref();
         load();
 
-        loadUser(civ_user_image, tv_user_bio, tv_subtitle, s_update_user_id, date_update_timestamp);
+        loadUser(civUserImage, tvUserBio, tvSubtitle, updateUserId, updateTimestamp);
 
-        if (!s_update_content.isEmpty()) {
+        if (!updateContent.isEmpty())
+        {
 
-            tv_update_content.setVisibility(View.VISIBLE);
-            tv_update_content.setText(update.getUpdate_content());
-        } else tv_update_content.setVisibility(View.GONE);
+            tvUpdateContent.setVisibility(View.VISIBLE);
+            tvUpdateContent.setText(update.getUpdate_content());
 
-        Glide.with(context).load(s_update_image).into(iv_update_image);
+        }
+        else tvUpdateContent.setVisibility(View.GONE);
+
+        Glide.with(context).load(updateImage).into(ivUpdateImage);
 
         seenRef = firebaseFirestore
                 .collection("Updates")
-                .document(s_update_id)
+                .document(updateId)
                 .collection("Seen");
 
-        isSeen(btn_seen, tv_seen_count);
+        isSeen(btnSeen, tvSeenCount);
 
-        seenCount(tv_seen_count);
+        seenCount(tvSeenCount);
 
-        btn_seen.setOnClickListener(v -> onSeen(btn_seen, s_update_id));
+        btnSeen.setOnClickListener(v -> onSeen(btnSeen, updateId));
 
         commentRef = firebaseFirestore
                 .collection("Updates")
-                .document(s_update_id)
+                .document(updateId)
                 .collection("Comments");
 
-        commentCount(tv_comment_count);
+        commentCount(tvCommentCount);
 
-        nav_comment.setOnClickListener(v -> {
+        navComment.setOnClickListener(v ->
+        {
 
-            editor.putString("s_update_id", s_update_id);
+            editor.putString("update_id", updateId);
             editor.apply();
             context.startActivity(new Intent(context, CommentActivity.class));
+
         });
 
-        iv_update_image.setOnTouchListener(new View.OnTouchListener() {
+        ivUpdateImage.setOnTouchListener(new View.OnTouchListener()
+        {
 
-            private GestureDetector gestureDetector = new GestureDetector(context, new GestureDetector.SimpleOnGestureListener() {
+            private GestureDetector gestureDetector = new GestureDetector(context, new GestureDetector.SimpleOnGestureListener()
+            {
 
                 @Override
                 public boolean onDoubleTap(MotionEvent e) {
-                    onSeen(btn_seen, s_update_id);
+
+                    onSeen(btnSeen, updateId);
                     return super.onDoubleTap(e);
+
                 }
 
                 @Override
                 public boolean onSingleTapConfirmed(MotionEvent event) {
+
                     return false;
+
                 }
+
             });
 
             @Override
@@ -144,27 +165,28 @@ public class UpdateAdapter extends RecyclerView.Adapter<UpdateAdapter.ViewHolder
                 return true;
 
             }
+
         });
 
     }
 
-    private void onSeen(final ImageButton btn_seen, final String s_update_id) {
+    private void onSeen(final ImageButton btnSeen, final String updateId) {
 
         final UserModel user = new UserModel();
 
         documentRef = firebaseFirestore
                 .collection("Updates")
-                .document(s_update_id)
+                .document(updateId)
                 .collection("Seen")
-                .document(s_user_id);
+                .document(userId);
 
-        if (btn_seen.getTag().equals("seen")) documentRef.set(user);
+        if (btnSeen.getTag().equals("seen")) documentRef.set(user);
 
         else documentRef.delete();
 
     }
 
-    private void initInstance() {
+    private void initInstances() {
 
         firebaseDatabase = FirebaseDatabase.getInstance();
         firebaseFirestore = FirebaseFirestore.getInstance();
@@ -180,137 +202,185 @@ public class UpdateAdapter extends RecyclerView.Adapter<UpdateAdapter.ViewHolder
 
     private void load() {
 
-        s_user_id = sharedPref.getString("s_user_id", String.valueOf(Context.MODE_PRIVATE));
+        userId = sharedPref.getString("user_id", String.valueOf(Context.MODE_PRIVATE));
 
     }
 
-    private void loadUser(final CircleImageView civ_user_image, final TextView tv_user_name, final TextView tv_subtitle, final String s_update_user_id, final Date date_update_timestamp) {
+    private void loadUser(final CircleImageView civUserImage, final TextView tvUserName, final TextView tvSubtitle, final String updateUserId, final Date updateTimestamp) {
 
         firebaseFirestore
                 .collection("Users")
-                .document(s_update_user_id)
-                .addSnapshotListener((value, error) -> {
+                .document(updateUserId)
+                .addSnapshotListener((value, error) ->
+                {
 
-                    if (value != null)
+                    if (value != null && value.exists())
+                    {
 
-                        if (value.exists()) {
+                        final UserModel user = value.toObject(UserModel.class);
 
-                            final UserModel user = value.toObject(UserModel.class);
+                        if (user != null)
+                        {
 
-                            if (user != null) {
+                            final String userImage = user.getUser_image();
+                            final String userBio = user.getUser_bio();
+                            final String userName = user.getUser_name();
+                            final String subtitle = getTimeAgo(updateTimestamp) + " · " + userName;
 
-                                final String s_user_image = user.getUser_image();
-                                final String s_user_bio = user.getUser_bio();
-                                final String s_user_name = user.getUser_name();
-                                final String s_subtitle = getTimeAgo(date_update_timestamp) + " · " + s_user_name;
+                            Glide.with(context).load(userImage).into(civUserImage);
+                            tvUserName.setText(userBio);
+                            tvSubtitle.setText(subtitle);
 
-                                Glide.with(context).load(s_user_image).into(civ_user_image);
-                                tv_user_name.setText(s_user_bio);
-                                tv_subtitle.setText(s_subtitle);
-                            }
                         }
+
+                    }
+
                 });
 
     }
 
-    private String getTimeAgo(final Date date_update_timestamp) {
+    private String getTimeAgo(final Date updateTimestamp) {
 
         final Calendar calendar = Calendar.getInstance();
+        final String yearFormat = "yyyy";
+        final String updateTimestampWithinTheYearFormat = "MMMM d";
+        final String updateTimestampFormat = "MMMM d, yyyy";
 
-        long now = calendar.getTime().getTime();
-        long time = date_update_timestamp.getTime();
+        dateFormat = new SimpleDateFormat(yearFormat);
+        final int yearNow = calendar.get(Calendar.YEAR);
+        final int year = Integer.parseInt(dateFormat.format(updateTimestamp));
+
+        dateFormat = new SimpleDateFormat(updateTimestampWithinTheYearFormat);
+        final String updateTimestampWithinTheYear = dateFormat.format(updateTimestamp);
+
+        dateFormat = new SimpleDateFormat(updateTimestampFormat);
+        final String _updateTimestamp = dateFormat.format(updateTimestamp);
+
+        final long now = calendar.getTime().getTime();
+        long time = updateTimestamp.getTime();
 
         if (time < 1000000000000L) time *= 1000;
         final long diff = now - time;
 
-        if (diff < MINUTE_MILLIS) return "Just now";
+        if (diff < minuteMillis) return "Just now";
 
-        else if (diff < 60 * MINUTE_MILLIS) return diff / MINUTE_MILLIS + "m";
+        else if (diff < 60 * minuteMillis) return diff / minuteMillis + "m";
 
-        else if (diff < 24 * HOUR_MILLIS) return diff / HOUR_MILLIS + "h";
+        else if (diff < 24 * hourMillis) return diff / hourMillis + "h";
 
-        else if (diff < 48 * HOUR_MILLIS) return "yesterday";
+        else if (diff < 48 * hourMillis) return "yesterday";
 
-        else return diff / DAY_MILLIS + "d";
+        else if (diff < 7 * dayMillis) return diff / dayMillis + "d";
+
+        else if (diff < 4L * weekMillis) return diff / weekMillis + "w";
+
+        else if (year == yearNow) return updateTimestampWithinTheYear;
+
+        else return _updateTimestamp;
 
     }
 
-    private void isSeen(final ImageButton btn_seen, final TextView tv_seen_count) {
+    private void isSeen(final ImageButton btnSeen, final TextView tvSeenCount) {
 
         seenRef
-                .document(s_user_id)
-                .addSnapshotListener((value, error) -> {
+                .document(userId)
+                .addSnapshotListener((value, error) ->
+                {
 
                     if (value != null)
+                    {
 
-                        if (value.exists()) {
+                        if (value.exists())
+                        {
 
-                            btn_seen.setImageResource(R.drawable.ic_seened);
-                            btn_seen.setTag("");
-                            tv_seen_count.setTextColor(context.getColor(R.color.color_fulvous));
-                        } else {
-                            btn_seen.setTag("seen");
-                            btn_seen.setImageResource(R.drawable.ic_seen);
-                            tv_seen_count.setTextColor(context.getColor(R.color.color_white_ff));
+                            btnSeen.setImageResource(R.drawable.ic_seened);
+                            btnSeen.setTag("");
+                            tvSeenCount.setTextColor(context.getColor(R.color.color_fulvous));
+
                         }
+                        else
+                        {
+
+                            btnSeen.setTag("seen");
+                            btnSeen.setImageResource(R.drawable.ic_seen);
+                            tvSeenCount.setTextColor(context.getColor(R.color.color_white_ff));
+
+                        }
+
+                    }
+
                 });
 
     }
 
-    private void seenCount(final TextView tv_seen_count) {
+    private void seenCount(final TextView tvSeenCount) {
 
         seenRef
-                .addSnapshotListener((value, error) -> {
+                .addSnapshotListener((value, error) ->
+                {
 
-                    if (value != null) {
+                    if (value != null)
+                    {
 
-                        final String s_seen_count = String.valueOf(value.size());
+                        final String seenCount = String.valueOf(value.size());
+                        tvSeenCount.setText(seenCount);
 
-                        tv_seen_count.setText(s_seen_count);
                     }
+
                 });
 
     }
 
-    private void commentCount(final TextView tv_comment_count) {
+    private void commentCount(final TextView tvCommentCount) {
 
         commentRef
-                .addSnapshotListener((value, error) -> {
+                .addSnapshotListener((value, error) ->
+                {
 
-                    if (value != null) {
+                    if (value != null)
+                    {
 
-                        final String s_comment_count = String.valueOf(value.size());
+                        final String commentCount = String.valueOf(value.size());
+                        tvCommentCount.setText(commentCount);
 
-                        tv_comment_count.setText(s_comment_count);
                     }
+
                 });
 
     }
 
     @Override
     public int getItemCount() {
-        return updateList.size();
+
+        return updates.size();
+
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
-        CircleImageView civ_user_image;
-        ImageButton btn_seen, nav_comment;
-        ImageView iv_update_image;
-        TextView tv_seen_count, tv_update_content, tv_comment_count, tv_user_bio, tv_subtitle;
+        public CircleImageView circleImageView;
+        public ImageButton btnSeen;
+        public ImageButton navComment;
+        public ImageView ivUpdateImage;
+        public TextView tvSeenCount;
+        public TextView tvUpdateContent;
+        public TextView tvCommentCount;
+        public TextView tvUserBio;
+        public TextView tvSubtitle;
 
         public ViewHolder(@NonNull View itemView) {
+
             super(itemView);
 
-            civ_user_image = itemView.findViewById(R.id.civ_user_image);
-            btn_seen = itemView.findViewById(R.id.btn_seen);
-            nav_comment = itemView.findViewById(R.id.nav_comment);
-            iv_update_image = itemView.findViewById(R.id.iv_update_image);
-            tv_user_bio = itemView.findViewById(R.id.tv_user_bio);
-            tv_update_content = itemView.findViewById(R.id.tv_update_content);
-            tv_seen_count = itemView.findViewById(R.id.tv_seen_count);
-            tv_comment_count = itemView.findViewById(R.id.tv_comment_count);
-            tv_subtitle = itemView.findViewById(R.id.tv_subtitle);
+            circleImageView = itemView.findViewById(R.id.civ_user_image);
+            btnSeen = itemView.findViewById(R.id.btn_seen);
+            navComment = itemView.findViewById(R.id.nav_comment);
+            ivUpdateImage = itemView.findViewById(R.id.iv_update_image);
+            tvUserBio = itemView.findViewById(R.id.tv_user_bio);
+            tvUpdateContent = itemView.findViewById(R.id.tv_update_content);
+            tvSeenCount = itemView.findViewById(R.id.tv_seen_count);
+            tvCommentCount = itemView.findViewById(R.id.tv_comment_count);
+            tvSubtitle = itemView.findViewById(R.id.tv_subtitle);
 
         }
 
