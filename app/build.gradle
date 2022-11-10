@@ -4,12 +4,12 @@ plugins {
 }
 
 android {
-    compileSdk 32
+    compileSdk 33
 
     defaultConfig {
         applicationId "com.codewithjosh.NewsExpose2k20"
         minSdk 23
-        targetSdk 32
+        targetSdk 33
         versionCode 13
         versionName "0.12.0"
 
