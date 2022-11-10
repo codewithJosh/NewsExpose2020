@@ -135,7 +135,7 @@ public class UpdateAdapter extends RecyclerView.Adapter<UpdateAdapter.ViewHolder
 
         ivUpdateImage.setOnTouchListener(new View.OnTouchListener() {
 
-            private GestureDetector gestureDetector = new GestureDetector(context, new GestureDetector.SimpleOnGestureListener() {
+            private final GestureDetector gestureDetector = new GestureDetector(context, new GestureDetector.SimpleOnGestureListener() {
 
                 @Override
                 public boolean onDoubleTap(MotionEvent e) {
